@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Habitat Match (NestAI) - AI Lifestyle Real Estate</title>
-  <!-- Tailwind CSS CDN -->
+  <title>Habitat Match (NestAI) - Premium Real Estate</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script>
@@ -16,65 +13,1037 @@
       darkMode: 'class',
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Plus Jakarta Sans', 'sans-serif'],
-          },
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
           colors: {
-            brand: {
-              50: '#eef2ff',
-              100: '#e0e7ff',
-              500: '#6366f1',
-              600: '#4f46e5',
-              700: '#4338ca',
-            }
+            brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
           }
         }
       }
     }
   </script>
 </head>
-<body class="h-full font-sans bg-slate-950 text-slate-100 antialiased selection:bg-brand-500 selection:text-white flex flex-col items-center justify-center min-h-screen p-0 sm:p-4">
+<body class="h-full font-sans bg-slate-950 text-slate-100 antialiased flex flex-col items-center justify-center min-h-screen p-0 sm:p-4 selection:bg-brand-500 selection:text-white">
 
-  <!-- Main Container / Mobile Device Frame -->
-  <div id="appContainer" class="w-full max-w-[420px] h-[100vh] sm:h-[840px] bg-slate-900 sm:rounded-[48px] shadow-2xl shadow-indigo-950/50 border-0 sm:border-[10px] border-slate-800 relative flex flex-col overflow-hidden transition-all duration-500">
+  <!-- Mobile Device Frame -->
+  <div id="appContainer" class="w-full max-w-[430px] h-[100vh] sm:h-[880px] bg-slate-900 sm:rounded-[50px] shadow-2xl shadow-indigo-950/80 border-0 sm:border-[10px] border-slate-800 relative flex flex-col overflow-hidden">
     
-    <!-- Top Status / Header Bar -->
-    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800/80 px-5 pt-4 pb-3 flex items-center justify-between z-30 shrink-0">
+    <!-- Header -->
+    <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 pt-4 pb-3 flex items-center justify-between z-30 shrink-0">
       <div class="flex items-center gap-2 cursor-pointer" onclick="goToScreen('feed')">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-black text-sm shadow-lg shadow-brand-500/30">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-black text-sm shadow-md shadow-brand-500/30">
           <i class="fa-solid fa-house-signal"></i>
         </div>
         <div>
-          <h1 class="font-bold text-sm tracking-tight text-white leading-tight">Habitat<span class="text-brand-500">Match</span></h1>
-          <p class="text-[10px] text-slate-400 font-medium">NestAI Engine v2.4</p>
+          <h1 class="font-extrabold text-sm tracking-tight text-white leading-tight">Habitat<span class="text-brand-500">Match</span></h1>
+          <p class="text-[9px] text-slate-400 font-medium" id="headerRoleBadge">Client Mode</p>
         </div>
       </div>
 
-      <!-- Action Buttons Header -->
-      <div class="flex items-center gap-2">
-        <!-- Language Switcher -->
-        <button onclick="toggleLanguage()" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-xs font-bold text-brand-500 border border-slate-700 transition-all flex items-center gap-1.5">
-          <i class="fa-solid fa-globe text-[11px]"></i>
+      <!-- Controls Header -->
+      <div class="flex items-center gap-1.5">
+        <button onclick="toggleLanguage()" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-[11px] font-bold text-brand-400 border border-slate-700 transition-all flex items-center gap-1">
+          <i class="fa-solid fa-globe text-[10px]"></i>
           <span id="langLabel">EN</span>
         </button>
 
-        <!-- Admin Modal Trigger -->
-        <button onclick="openAdminModal()" class="px-2.5 py-1 rounded-full bg-indigo-950/80 hover:bg-indigo-900 text-xs font-bold text-indigo-300 border border-indigo-700/50 transition-all flex items-center gap-1">
-          <i class="fa-solid fa-shield-halved text-[11px]"></i>
-          <span id="adminBtnLabel">Admin</span>
-          <span id="pendingBadge" class="hidden bg-amber-500 text-slate-950 text-[10px] font-extrabold px-1.5 py-0.2 rounded-full ml-0.5">0</span>
+        <button onclick="toggleRole()" id="roleToggleBtn" class="px-2.5 py-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[11px] font-bold text-amber-400 border border-amber-500/30 transition-all flex items-center gap-1">
+          <i class="fa-solid fa-user-shield text-[10px]"></i>
+          <span id="roleLabel">Agent</span>
+          <span id="pendingBadge" class="hidden bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 rounded-full">0</span>
         </button>
       </div>
     </header>
 
-    <!-- Content Screen Area -->
+    <!-- Main Content Container -->
     <main class="flex-1 overflow-y-auto relative bg-slate-950 pb-20 scrollbar-none" id="mainContent">
 
-      <!-- ================= 1. ONBOARDING QUIZ ================= -->
-      <section id="screen-quiz" class="p-5 flex flex-col justify-between min-h-full">
-        <div>
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-500 text-xs font-semibold mb-4">
+      <!-- ================= 1. DETAILED AI ONBOARDING ================= -->
+      <section id="screen-quiz" class="p-5 flex flex-col justify-between min-h-full space-y-4">
+        <div class="space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-semibold">
             <i class="fa-solid fa-sparkles"></i>
-            <span data-i18n="quizBadge">AI Lifestyle Profiler</span>
+            <span data-i18n="quizBadge">Smart AI Preferences</span>
           </div>
-          <h2 class="text-2xl font-bold text-white mb-2 leading-tight" data-i18n="quizTitle">Βρες το σπίτι & τη γειτονιά που σου
+          <h2 class="text-xl font-extrabold text-white leading-tight" data-i18n="quizTitle">Σχεδίασε το ιδανικό σου προφίλ κατοικίας.</h2>
+          <p class="text-xs text-slate-400" data-i18n="quizSub">Όσο πιο αναλυτικά απαντήσεις, τόσο ακριβέστερο θα είναι το AI Match Score.</p>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="emailLabel">Email Επικοινωνίας</label>
+            <input type="email" id="userEmailInput" value="eleni@nexus-estates.gr" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+          </div>
+
+          <!-- Budget Range Slider -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-bold text-slate-200" data-i18n="budgetLabel">Μέγιστο Budget</span>
+              <span id="budgetValueLabel" class="font-extrabold text-brand-400">€900 / μήνα</span>
+            </div>
+            <input type="range" id="budgetSlider" min="400" max="2500" step="50" value="900" oninput="document.getElementById('budgetValueLabel').innerText = '€' + this.value + ' / μήνα'" class="w-full accent-brand-500 cursor-pointer">
+          </div>
+
+          <!-- Grid Choices -->
+          <div class="grid grid-cols-2 gap-2">
+            <!-- Vibe -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
+              <label class="block text-[11px] font-bold text-slate-200 mb-1.5" data-i18n="qVibe">Ατμόσφαιρα</label>
+              <select id="quizVibe" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-white">
+                <option value="quiet" data-i18n="vibeQuiet">Ήσυχη & Πράσινη</option>
+                <option value="lively" data-i18n="vibeLively">Ζωντανή / Κέντρο</option>
+              </select>
+            </div>
+            <!-- Transit -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
+              <label class="block text-[11px] font-bold text-slate-200 mb-1.5" data-i18n="qTransit">Μετακίνηση</label>
+              <select id="quizTransit" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-white">
+                <option value="metro" data-i18n="transitMetro">Μετρό & ΜΜΜ</option>
+                <option value="car" data-i18n="transitCar">Αυτοκίνητο</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Feature Toggles -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-2">
+            <label class="block text-[11px] font-bold text-slate-200" data-i18n="mustHaves">Απαραίτητα Χαρακτηριστικά</label>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
+                <input type="checkbox" id="reqPets" checked class="accent-brand-500 rounded">
+                <span data-i18n="reqPets">Pet Friendly</span>
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
+                <input type="checkbox" id="reqParking" class="accent-brand-500 rounded">
+                <span data-i18n="reqParking">Πάρκινγκ</span>
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
+                <input type="checkbox" id="reqElevator" checked class="accent-brand-500 rounded">
+                <span data-i18n="reqElevator">Ανελκυστήρας</span>
+              </label>
+              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
+                <input type="checkbox" id="reqFurnished" class="accent-brand-500 rounded">
+                <span data-i18n="reqFurnished">Επιπλωμένο</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="applyQuizAndGoFeed()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-4">
+          <span data-i18n="quizSubmitBtn">Υπολογισμός AI Matches</span>
+          <i class="fa-solid fa-arrow-right text-xs"></i>
+        </button>
+      </section>
+
+      <!-- ================= 2. MATCH FEED ================= -->
+      <section id="screen-feed" class="hidden p-4 space-y-4">
+        
+        <!-- Top Control Bar -->
+        <div class="flex items-center justify-between gap-2 bg-slate-900 p-1.5 rounded-2xl border border-slate-800">
+          <div class="flex gap-1 flex-1">
+            <button onclick="setFilterCategory('all')" id="cat-all" class="cat-btn flex-1 py-1.5 text-center text-xs font-bold rounded-xl bg-brand-600 text-white transition-all" data-i18n="catAll">Όλα</button>
+            <button onclick="setFilterCategory('rent')" id="cat-rent" class="cat-btn flex-1 py-1.5 text-center text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all" data-i18n="catRent">Ενοίκιο</button>
+            <button onclick="setFilterCategory('buy')" id="cat-buy" class="cat-btn flex-1 py-1.5 text-center text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all" data-i18n="catBuy">Αγορά</button>
+          </div>
+          
+          <button onclick="openAddPropertyModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1">
+            <i class="fa-solid fa-plus text-[10px]"></i>
+            <span data-i18n="addBtn">+ Καταχώρηση</span>
+          </button>
+        </div>
+
+        <!-- Agency Control Banner (Visible in Agent Mode) -->
+        <div id="agencyControlBar" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-building-circle-check text-amber-400 text-sm"></i>
+            <div>
+              <p class="text-xs font-bold text-amber-300" data-i18n="agencyPanelTitle">Agency Control Panel</p>
+              <p class="text-[10px] text-amber-400/80" id="agencyPanelSub">0 Εκκρεμή για Έγκριση</p>
+            </div>
+          </div>
+          <button onclick="openAdminModal()" class="px-3 py-1 bg-amber-500 text-slate-950 font-extrabold text-xs rounded-xl hover:bg-amber-400 transition-all" data-i18n="manageBtn">Έγκριση</button>
+        </div>
+
+        <!-- Property List -->
+        <div id="propertyContainer" class="space-y-4"></div>
+      </section>
+
+      <!-- ================= 3. MODERN LIVE VECTOR MAP ================= -->
+      <section id="screen-map" class="hidden h-full flex flex-col relative">
+        <div class="p-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between z-10">
+          <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
+            <i class="fa-solid fa-map-location-dot text-brand-500"></i>
+            <span data-i18n="mapHeader">Live Interactive Map</span>
+          </span>
+          <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800/50 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> GPS Live
+          </span>
+        </div>
+
+        <!-- Styled Dark Mode Map Graphics -->
+        <div class="flex-1 bg-slate-950 relative overflow-hidden">
+          <!-- Grid & Street Network SVG -->
+          <svg class="w-full h-full opacity-40" viewBox="0 0 400 600" fill="none">
+            <!-- Major Avenues -->
+            <path d="M-50 120 Q 180 180 450 100" stroke="#475569" stroke-width="22" />
+            <path d="M120 -50 Q 150 300 290 650" stroke="#475569" stroke-width="18" />
+            <path d="M-20 420 Q 200 360 430 500" stroke="#334155" stroke-width="14" />
+            
+            <!-- Secondary Streets -->
+            <path d="M20 200 L 380 280" stroke="#1e293b" stroke-width="8" stroke-dasharray="6 6" />
+            <path d="M220 80 L 250 520" stroke="#1e293b" stroke-width="8" stroke-dasharray="6 6" />
+
+            <!-- Metro Line & Stations -->
+            <path d="M-10 280 Q 200 250 410 320" stroke="#6366f1" stroke-width="5" opacity="0.6" />
+            <circle cx="110" cy="265" r="5" fill="#818cf8" />
+            <circle cx="260" cy="285" r="5" fill="#818cf8" />
+
+            <!-- Parks & Green Zones -->
+            <circle cx="160" cy="210" r="65" fill="#10b981" fill-opacity="0.15" />
+            <circle cx="310" cy="410" r="55" fill="#10b981" fill-opacity="0.12" />
+          </svg>
+
+          <!-- Interactive Floating Pins -->
+          <div id="mapPinsContainer" class="absolute inset-0"></div>
+
+          <!-- Map Property Bottom Preview Drawer -->
+          <div id="mapPreviewCard" class="absolute bottom-4 inset-x-4 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-3 hidden shadow-2xl transition-all">
+            <div class="flex gap-3 items-center">
+              <img id="mapPrevImg" src="" class="w-16 h-16 rounded-xl object-cover">
+              <div class="flex-1 cursor-pointer" onclick="openDetailFromMap()">
+                <div class="flex justify-between items-center">
+                  <h4 id="mapPrevTitle" class="text-xs font-bold text-white line-clamp-1">Τίτλος</h4>
+                  <span id="mapPrevPrice" class="text-xs font-extrabold text-brand-400">€0</span>
+                </div>
+                <p id="mapPrevLoc" class="text-[10px] text-slate-400 mt-0.5">Περιοχή</p>
+                <div class="flex items-center gap-2 mt-1.5">
+                  <span id="mapPrevBadge" class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white">Match 95%</span>
+                  <span class="text-[10px] text-brand-400 font-bold underline" data-i18n="viewDetails">Προβολή</span>
+                </div>
+              </div>
+              <button onclick="closeMapPreview()" class="text-slate-500 hover:text-white p-1 text-xs">&times;</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. RICH PROPERTY DETAIL ================= -->
+      <section id="screen-detail" class="hidden p-4 space-y-4">
+        <button onclick="goToScreen('feed')" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white font-semibold">
+          <i class="fa-solid fa-chevron-left text-[10px]"></i>
+          <span data-i18n="backToFeed">Πίσω στη ροή</span>
+        </button>
+
+        <!-- Photo Carousel Frame -->
+        <div class="relative rounded-2xl overflow-hidden h-56 bg-slate-900 group">
+          <img id="detailImg" src="" class="w-full h-full object-cover transition-all duration-300">
+          
+          <!-- Image Carousel Controls -->
+          <button onclick="prevPhoto()" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-950/70 text-white flex items-center justify-center text-xs hover:bg-slate-950">&lsaquo;</button>
+          <button onclick="nextPhoto()" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-950/70 text-white flex items-center justify-center text-xs hover:bg-slate-950">&rsaquo;</button>
+
+          <!-- Badges -->
+          <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-extrabold text-brand-400 border border-brand-500/30 flex items-center gap-1">
+            <i class="fa-solid fa-bolt"></i>
+            <span id="detailMatch">94% Match</span>
+          </div>
+          <div id="detailCategoryBadge" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
+            ΕΝΟΙΚΙΑΣΗ
+          </div>
+        </div>
+
+        <!-- Title & Price -->
+        <div>
+          <div class="flex justify-between items-start">
+            <div>
+              <h2 id="detailTitle" class="text-base font-bold text-white">Τίτλος Ακινήτου</h2>
+              <p id="detailLocation" class="text-xs text-slate-400"><i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>Περιοχή</p>
+            </div>
+            <div id="detailPrice" class="text-lg font-extrabold text-brand-400">€720/μήνα</div>
+          </div>
+        </div>
+
+        <!-- Extended Key Features Grid -->
+        <div class="grid grid-cols-4 gap-2 text-center text-xs bg-slate-900 border border-slate-800 p-3 rounded-2xl">
+          <div>
+            <p class="text-slate-500 text-[10px]" data-i18n="featBeds">Δωμάτια</p>
+            <p id="detailBeds" class="font-extrabold text-slate-200 mt-0.5">2</p>
+          </div>
+          <div>
+            <p class="text-slate-500 text-[10px]" data-i18n="featSqm">Εμβαδόν</p>
+            <p id="detailSqm" class="font-extrabold text-slate-200 mt-0.5">75 m²</p>
+          </div>
+          <div>
+            <p class="text-slate-500 text-[10px]" data-i18n="featFloor">Όροφος</p>
+            <p id="detailFloor" class="font-extrabold text-slate-200 mt-0.5">3ος</p>
+          </div>
+          <div>
+            <p class="text-slate-500 text-[10px]" data-i18n="featEnergy">Ενέργεια</p>
+            <p id="detailEnergy" class="font-extrabold text-emerald-400 mt-0.5">A+</p>
+          </div>
+        </div>
+
+        <!-- Detailed Specifications Tags -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2">
+          <h4 class="text-xs font-bold text-slate-200" data-i18n="specsTitle">Χαρακτηριστικά Ακινήτου</h4>
+          <div id="detailTagsContainer" class="flex flex-wrap gap-1.5">
+            <!-- Inserted via JS -->
+          </div>
+        </div>
+
+        <!-- Interactive Predictive Living Calculator -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-xs font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-calculator text-brand-500"></i>
+              <span data-i18n="predictiveTitle">Predictive Living Cost Model</span>
+            </span>
+          </div>
+
+          <div class="bg-slate-950 p-3 rounded-xl space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-slate-300 font-semibold" data-i18n="occupantsLabel">Άτομα συγκατοίκησης:</span>
+              <span id="occupantCountLabel" class="text-xs font-bold text-brand-400">1 Άτομο</span>
+            </div>
+            <input type="range" id="occupantSlider" min="1" max="4" value="1" oninput="updatePredictiveCalculator()" class="w-full accent-brand-500 cursor-pointer">
+          </div>
+
+          <div class="bg-slate-950 p-3 rounded-xl space-y-2">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-semibold text-slate-200" data-i18n="totalCostLabel">Εκτιμώμενο Συνολικό Κόστος</span>
+              <span id="detailTotalCost" class="text-xs font-extrabold text-emerald-400">€865 / μήνα</span>
+            </div>
+            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex">
+              <div id="barRent" class="bg-brand-500 h-full" style="width: 70%"></div>
+              <div id="barPower" class="bg-amber-400 h-full" style="width: 20%"></div>
+              <div id="barCommon" class="bg-sky-400 h-full" style="width: 10%"></div>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="scheduleViewing()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-brand-500/20 transition-all flex items-center justify-center gap-2">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span data-i18n="scheduleBtn">Κλείσε VR / 360° Viewing</span>
+        </button>
+      </section>
+
+      <!-- ================= 5. SAVED FAVORITES ================= -->
+      <section id="screen-saved" class="hidden p-4 space-y-3">
+        <h2 class="text-sm font-bold text-white mb-2" data-i18n="savedTitle">Αποθηκευμένα Ακίνητα</h2>
+        <div id="savedContainer" class="space-y-3"></div>
+      </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="absolute bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-30">
+      <button onclick="goToScreen('feed')" id="nav-feed" class="nav-btn flex flex-col items-center gap-1 text-brand-500">
+        <i class="fa-solid fa-compass text-base"></i>
+        <span class="text-[10px] font-semibold" data-i18n="navFeed">Matches</span>
+      </button>
+      <button onclick="goToScreen('map')" id="nav-map" class="nav-btn flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300">
+        <i class="fa-solid fa-map-location-dot text-base"></i>
+        <span class="text-[10px] font-semibold" data-i18n="navMap">Χάρτης</span>
+      </button>
+      <button onclick="goToScreen('saved')" id="nav-saved" class="nav-btn flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300 relative">
+        <i class="fa-solid fa-heart text-base"></i>
+        <span class="text-[10px] font-semibold" data-i18n="navSaved">Saved</span>
+        <span id="savedBadge" class="hidden absolute -top-1 right-2 w-2 h-2 rounded-full bg-brand-500"></span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- ================= MODAL 1: ADD PROPERTY ================= -->
+  <div id="addPropertyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-plus-circle text-brand-500"></i>
+          <span data-i18n="modalAddTitle">Καταχώρηση Νέου Ακινήτου</span>
+        </h3>
+        <button onclick="closeAddPropertyModal()" class="text-slate-400 hover:text-white text-base">&times;</button>
+      </div>
+
+      <form id="addPropertyForm" onsubmit="handlePropertySubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldTitle">Τίτλος Ακινήτου</label>
+          <input type="text" id="formTitle" required placeholder="π.χ. Πολυτελές Διαμέρισμα" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldCategory">Τύπος</label>
+            <select id="formCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+              <option value="rent" data-i18n="optRent">Ενοικίαση</option>
+              <option value="buy" data-i18n="optBuy">Αγορά</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldPrice">Τιμή (€)</label>
+            <input type="number" id="formPrice" required placeholder="700" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldLocation">Περιοχή</label>
+            <input type="text" id="formLocation" required placeholder="π.χ. Κολωνάκι" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldBeds">Δωμάτια</label>
+            <input type="number" id="formBeds" value="2" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldImg">URL Φωτογραφίας</label>
+          <input type="url" id="formImg" placeholder="https://images.unsplash.com/..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-md mt-2" data-i18n="btnSubmitProperty">
+          Αποστολή στο Γραφείο για Έγκριση
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL 2: AGENCY ADMIN APPROVAL ================= -->
+  <div id="adminModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-building-circle-check text-amber-400"></i>
+          <span data-i18n="adminModalTitle">Agency Admin - Έγκριση Ακινήτων</span>
+        </h3>
+        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white text-base">&times;</button>
+      </div>
+      <div id="adminPendingList" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-slate-800 text-white border border-slate-700 px-4 py-2 rounded-full text-xs font-semibold shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg">Notification</span>
+  </div>
+
+  <!-- JavaScript Code -->
+  <script>
+    const i18n = {
+      el: {
+        quizBadge: "Smart AI Preferences",
+        quizTitle: "Σχεδίασε το ιδανικό σου προφίλ κατοικίας.",
+        quizSub: "Όσο πιο αναλυτικά απαντήσεις, τόσο ακριβέστερο θα είναι το AI Match Score.",
+        emailLabel: "Email Επικοινωνίας",
+        budgetLabel: "Μέγιστο Budget",
+        qVibe: "Ατμόσφαιρα",
+        vibeQuiet: "Ήσυχη & Πράσινη",
+        vibeLively: "Ζωντανή / Κέντρο",
+        qTransit: "Μετακίνηση",
+        transitMetro: "Μετρό & ΜΜΜ",
+        transitCar: "Αυτοκίνητο",
+        mustHaves: "Απαραίτητα Χαρακτηριστικά",
+        reqPets: "Pet Friendly",
+        reqParking: "Πάρκινγκ",
+        reqElevator: "Ανελκυστήρας",
+        reqFurnished: "Επιπλωμένο",
+        quizSubmitBtn: "Υπολογισμός AI Matches",
+        catAll: "Όλα",
+        catRent: "Ενοίκιο",
+        catBuy: "Αγορά",
+        addBtn: "+ Καταχώρηση",
+        agencyPanelTitle: "Agency Control Panel",
+        manageBtn: "Έγκριση",
+        mapHeader: "Live Interactive Map",
+        viewDetails: "Προβολή",
+        backToFeed: "Πίσω στη ροή",
+        featBeds: "Δωμάτια",
+        featSqm: "Εμβαδόν",
+        featFloor: "Όροφος",
+        featEnergy: "Ενέργεια",
+        specsTitle: "Χαρακτηριστικά Ακινήτου",
+        predictiveTitle: "Predictive Living Cost Model",
+        occupantsLabel: "Άτομα συγκατοίκησης:",
+        totalCostLabel: "Εκτιμώμενο Συνολικό Κόστος",
+        scheduleBtn: "Κλείσε VR / 360° Viewing",
+        savedTitle: "Αποθηκευμένα Ακίνητα",
+        navFeed: "Matches",
+        navMap: "Χάρτης",
+        navSaved: "Saved",
+        modalAddTitle: "Καταχώρηση Νέου Ακινήτου",
+        fieldTitle: "Τίτλος Ακινήτου",
+        fieldCategory: "Τύπος",
+        optRent: "Ενοικίαση",
+        optBuy: "Αγορά",
+        fieldPrice: "Τιμή (€)",
+        fieldLocation: "Περιοχή",
+        fieldBeds: "Δωμάτια",
+        fieldImg: "URL Φωτογραφίας",
+        btnSubmitProperty: "Αποστολή στο Γραφείο για Έγκριση",
+        adminModalTitle: "Agency Admin - Έγκριση Ακινήτων"
+      },
+      en: {
+        quizBadge: "Smart AI Preferences",
+        quizTitle: "Design your ultimate home preference profile.",
+        quizSub: "Detailed answers result in higher AI Match accuracy.",
+        emailLabel: "Contact Email",
+        budgetLabel: "Max Budget",
+        qVibe: "Vibe",
+        vibeQuiet: "Quiet & Green",
+        vibeLively: "Lively / Central",
+        qTransit: "Transit Mode",
+        transitMetro: "Metro & Transit",
+        transitCar: "Car / Driving",
+        mustHaves: "Must-Have Features",
+        reqPets: "Pet Friendly",
+        reqParking: "Parking Space",
+        reqElevator: "Elevator",
+        reqFurnished: "Furnished",
+        quizSubmitBtn: "Calculate AI Matches",
+        catAll: "All",
+        catRent: "Rent",
+        catBuy: "Buy",
+        addBtn: "+ Add Listing",
+        agencyPanelTitle: "Agency Control Panel",
+        manageBtn: "Approve",
+        mapHeader: "Live Interactive Map",
+        viewDetails: "View Details",
+        backToFeed: "Back to Feed",
+        featBeds: "Bedrooms",
+        featSqm: "Area",
+        featFloor: "Floor",
+        featEnergy: "Energy",
+        specsTitle: "Property Amenities",
+        predictiveTitle: "Predictive Living Cost Model",
+        occupantsLabel: "Occupants Count:",
+        totalCostLabel: "Estimated Total Cost",
+        scheduleBtn: "Schedule VR / 360° Viewing",
+        savedTitle: "Saved Favorites",
+        navFeed: "Matches",
+        navMap: "Map",
+        navSaved: "Saved",
+        modalAddTitle: "Submit New Listing",
+        fieldTitle: "Listing Title",
+        fieldCategory: "Type",
+        optRent: "Rent",
+        optBuy: "Buy",
+        fieldPrice: "Price (€)",
+        fieldLocation: "Location",
+        fieldBeds: "Bedrooms",
+        fieldImg: "Photo URL",
+        btnSubmitProperty: "Submit for Agency Approval",
+        adminModalTitle: "Agency Admin - Property Approval"
+      }
+    };
+
+    let currentLang = 'el';
+    let isAgentMode = false;
+    let userEmail = "eleni@nexus-estates.gr";
+    let filterCategory = 'all';
+    let savedIds = [];
+    let activeDetailId = null;
+    let currentPhotoIdx = 0;
+    let activeMapSelectedId = null;
+
+    // Rich Property Database with Multiple Photos & Specs
+    let properties = [
+      {
+        id: 1,
+        title: "Μοντέρνο Ρετιρέ με Θέα & Roof Garden",
+        titleEn: "Modern Penthouse with Roof Garden",
+        category: "rent",
+        price: 720,
+        pricePeriod: "/μήνα",
+        location: "Παγκράτι, Αθήνα",
+        locationEn: "Pangrati, Athens",
+        beds: 2,
+        sqm: 78,
+        floor: "4ος",
+        energy: "A+",
+        vibe: "lively",
+        transit: "metro",
+        pets: true,
+        parking: true,
+        elevator: true,
+        furnished: true,
+        heating: "Φυσικό Αέριο",
+        commuteMin: 12,
+        estPower: 85,
+        estCommon: 40,
+        status: "approved",
+        mapPos: { top: '38%', left: '46%' },
+        images: [
+          "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=800&q=80"
+        ]
+      },
+      {
+        id: 2,
+        title: "Ήσυχο Διαμέρισμα Δίπλα σε Πάρκο",
+        titleEn: "Quiet Apartment Next to Park",
+        category: "rent",
+        price: 580,
+        pricePeriod: "/μήνα",
+        location: "Νέα Σμύρνη, Αθήνα",
+        locationEn: "Nea Smyrni, Athens",
+        beds: 1,
+        sqm: 55,
+        floor: "2ος",
+        energy: "B+",
+        vibe: "quiet",
+        transit: "metro",
+        pets: true,
+        parking: false,
+        elevator: true,
+        furnished: false,
+        heating: "Αντλία Θερμότητας",
+        commuteMin: 18,
+        estPower: 60,
+        estCommon: 30,
+        status: "approved",
+        mapPos: { top: '58%', left: '32%' },
+        images: [
+          "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=800&q=80"
+        ]
+      },
+      {
+        id: 3,
+        title: "Πολυτελής Μεζονέτα με Πάρκινγκ",
+        titleEn: "Luxury Maisonette with Parking",
+        category: "buy",
+        price: 290000,
+        pricePeriod: "",
+        location: "Γλυφάδα, Αθήνα",
+        locationEn: "Glyfada, Athens",
+        beds: 3,
+        sqm: 135,
+        floor: "1ος-2ος",
+        energy: "A+",
+        vibe: "quiet",
+        transit: "car",
+        pets: true,
+        parking: true,
+        elevator: true,
+        furnished: true,
+        heating: "Ενδοδαπέδια",
+        commuteMin: 25,
+        estPower: 120,
+        estCommon: 65,
+        status: "approved",
+        mapPos: { top: '70%', left: '62%' },
+        images: [
+          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+        ]
+      }
+    ];
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadFromLocalStorage();
+      updateLanguageUI();
+      renderFeed();
+      updatePendingBadge();
+    });
+
+    function toggleRole() {
+      isAgentMode = !isAgentMode;
+      document.getElementById('roleLabel').innerText = isAgentMode ? "Client" : "Agent";
+      document.getElementById('headerRoleBadge').innerText = isAgentMode ? "Agency Admin" : "Client Mode";
+      
+      const agencyBar = document.getElementById('agencyControlBar');
+      if (isAgentMode) agencyBar.classList.remove('hidden');
+      else agencyBar.classList.add('hidden');
+
+      showToast(isAgentMode ? "Agency Admin Mode Activated!" : "Switched to Client Mode");
+      renderFeed();
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'el' ? 'en' : 'el';
+      document.getElementById('langLabel').innerText = currentLang === 'el' ? 'EN' : 'GR';
+      updateLanguageUI();
+      renderFeed();
+      if (activeDetailId) renderDetail(activeDetailId);
+    }
+
+    function updateLanguageUI() {
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
+      });
+    }
+
+    function goToScreen(screenId) {
+      document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+      document.getElementById(`screen-${screenId}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('text-brand-500');
+        b.classList.add('text-slate-500');
+      });
+      const activeNav = document.getElementById(`nav-${screenId}`);
+      if (activeNav) {
+        activeNav.classList.remove('text-slate-500');
+        activeNav.classList.add('text-brand-500');
+      }
+
+      if (screenId === 'saved') renderSaved();
+      if (screenId === 'map') renderMapPins();
+    }
+
+    function applyQuizAndGoFeed() {
+      renderFeed();
+      goToScreen('feed');
+      showToast(currentLang === 'el' ? "AI Matches υπολογίστηκαν!" : "AI Matches calculated!");
+    }
+
+    function setFilterCategory(cat) {
+      filterCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.remove('bg-brand-600', 'text-white');
+        b.classList.add('text-slate-400');
+      });
+      const activeBtn = document.getElementById(`cat-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-brand-600', 'text-white');
+        activeBtn.classList.remove('text-slate-400');
+      }
+      renderFeed();
+    }
+
+    function calculateMatchScore(prop) {
+      let score = 75;
+      const vibeVal = document.getElementById('quizVibe').value;
+      const transitVal = document.getElementById('quizTransit').value;
+      const budgetVal = parseFloat(document.getElementById('budgetSlider').value);
+
+      if (prop.vibe === vibeVal) score += 10;
+      if (prop.transit === transitVal) score += 10;
+      if (prop.price <= budgetVal) score += 5;
+      return Math.min(score, 99);
+    }
+
+    function renderFeed() {
+      const container = document.getElementById('propertyContainer');
+      container.innerHTML = '';
+
+      let list = properties.filter(p => p.status === 'approved');
+      if (filterCategory !== 'all') list = list.filter(p => p.category === filterCategory);
+
+      list.sort((a, b) => calculateMatchScore(b) - calculateMatchScore(a));
+
+      list.forEach(prop => {
+        const match = calculateMatchScore(prop);
+        const isSaved = savedIds.includes(prop.id);
+        const title = currentLang === 'en' ? prop.titleEn : prop.title;
+        const location = currentLang === 'en' ? prop.locationEn : prop.location;
+
+        const card = document.createElement('div');
+        card.className = "bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-slate-700 transition-all duration-300 shadow-lg";
+        card.innerHTML = `
+          <div class="relative h-44 overflow-hidden cursor-pointer" onclick="openDetail(${prop.id})">
+            <img src="${prop.images[0]}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+            <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-extrabold text-brand-400 border border-brand-500/30 flex items-center gap-1">
+              <i class="fa-solid fa-bolt text-[10px]"></i> ${match}% Match
+            </div>
+            <div class="absolute top-3 left-3 ${prop.category === 'rent' ? 'bg-emerald-600' : 'bg-indigo-600'} text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider">
+              ${prop.category === 'rent' ? 'RENT' : 'BUY'}
+            </div>
+            <button onclick="event.stopPropagation(); toggleSave(${prop.id})" class="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-slate-950/70 backdrop-blur-md flex items-center justify-center text-xs ${isSaved ? 'text-rose-500' : 'text-slate-300'} hover:scale-110 transition-all">
+              <i class="fa-${isSaved ? 'solid' : 'regular'} fa-heart"></i>
+            </button>
+          </div>
+          <div class="p-3.5 space-y-2 cursor-pointer" onclick="openDetail(${prop.id})">
+            <div class="flex justify-between items-start">
+              <h3 class="text-xs font-bold text-white line-clamp-1 flex-1 pr-2">${title}</h3>
+              <span class="text-xs font-extrabold text-brand-400 whitespace-nowrap">€${prop.price.toLocaleString()}${prop.pricePeriod}</span>
+            </div>
+            <p class="text-[11px] text-slate-400"><i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>${location}</p>
+            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
+              <span><i class="fa-solid fa-bed text-slate-500 mr-1"></i>${prop.beds} Beds</span>
+              <span><i class="fa-solid fa-ruler-combined text-slate-500 mr-1"></i>${prop.sqm} m²</span>
+              <span class="text-emerald-400 font-bold"><i class="fa-solid fa-leaf mr-1"></i>Class ${prop.energy}</span>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function openDetail(id) {
+      activeDetailId = id;
+      currentPhotoIdx = 0;
+      renderDetail(id);
+      goToScreen('detail');
+    }
+
+    function renderDetail(id) {
+      const prop = properties.find(p => p.id === id);
+      if (!prop) return;
+
+      const match = calculateMatchScore(prop);
+      document.getElementById('detailImg').src = prop.images[currentPhotoIdx];
+      document.getElementById('detailMatch').innerText = `${match}% Match`;
+      document.getElementById('detailTitle').innerText = currentLang === 'en' ? prop.titleEn : prop.title;
+      document.getElementById('detailLocation').innerHTML = `<i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>${currentLang === 'en' ? prop.locationEn : prop.location}`;
+      document.getElementById('detailPrice').innerText = `€${prop.price.toLocaleString()}${prop.pricePeriod}`;
+
+      document.getElementById('detailBeds').innerText = prop.beds;
+      document.getElementById('detailSqm').innerText = `${prop.sqm} m²`;
+      document.getElementById('detailFloor').innerText = prop.floor;
+      document.getElementById('detailEnergy').innerText = prop.energy;
+
+      // Tags
+      const tagsContainer = document.getElementById('detailTagsContainer');
+      tagsContainer.innerHTML = '';
+      const tags = [
+        `Θέρμανση: ${prop.heating}`,
+        prop.pets ? 'Pet Friendly' : null,
+        prop.parking ? 'Θέση Πάρκινγκ' : null,
+        prop.elevator ? 'Ανελκυστήρας' : null,
+        prop.furnished ? 'Επιπλωμένο' : null
+      ].filter(Boolean);
+
+      tags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = "px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[10px] text-slate-300 font-medium";
+        span.innerText = tag;
+        tagsContainer.appendChild(span);
+      });
+
+      updatePredictiveCalculator();
+    }
+
+    function prevPhoto() {
+      const prop = properties.find(p => p.id === activeDetailId);
+      if (!prop) return;
+      currentPhotoIdx = (currentPhotoIdx - 1 + prop.images.length) % prop.images.length;
+      document.getElementById('detailImg').src = prop.images[currentPhotoIdx];
+    }
+
+    function nextPhoto() {
+      const prop = properties.find(p => p.id === activeDetailId);
+      if (!prop) return;
+      currentPhotoIdx = (currentPhotoIdx + 1) % prop.images.length;
+      document.getElementById('detailImg').src = prop.images[currentPhotoIdx];
+    }
+
+    function updatePredictiveCalculator() {
+      const prop = properties.find(p => p.id === activeDetailId);
+      if (!prop) return;
+
+      const occupants = parseInt(document.getElementById('occupantSlider').value);
+      document.getElementById('occupantCountLabel').innerText = `${occupants} ${occupants === 1 ? 'Person' : 'People'}`;
+
+      const adjustedPower = prop.estPower * (1 + (occupants - 1) * 0.35);
+      const totalCost = Math.round(prop.price + adjustedPower + prop.estCommon);
+      document.getElementById('detailTotalCost').innerText = `€${totalCost.toLocaleString()} / mo`;
+    }
+
+    function renderMapPins() {
+      const container = document.getElementById('mapPinsContainer');
+      container.innerHTML = '';
+      const approved = properties.filter(p => p.status === 'approved');
+
+      approved.forEach(prop => {
+        const pin = document.createElement('div');
+        pin.className = "absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer group";
+        pin.style.top = prop.mapPos.top;
+        pin.style.left = prop.mapPos.left;
+        pin.onclick = () => selectMapPin(prop);
+
+        pin.innerHTML = `
+          <div class="px-2.5 py-1 rounded-full bg-brand-600 text-white text-[10px] font-extrabold shadow-2xl border border-white/20 flex items-center gap-1 group-hover:scale-110 transition-all">
+            <i class="fa-solid fa-house text-[9px]"></i> €${prop.price}
+          </div>
+        `;
+        container.appendChild(pin);
+      });
+    }
+
+    function selectMapPin(prop) {
+      activeMapSelectedId = prop.id;
+      document.getElementById('mapPrevImg').src = prop.images[0];
+      document.getElementById('mapPrevTitle').innerText = currentLang === 'en' ? prop.titleEn : prop.title;
+      document.getElementById('mapPrevLoc').innerText = currentLang === 'en' ? prop.locationEn : prop.location;
+      document.getElementById('mapPrevPrice').innerText = `€${prop.price}${prop.pricePeriod}`;
+      document.getElementById('mapPreviewCard').classList.remove('hidden');
+    }
+
+    function closeMapPreview() {
+      document.getElementById('mapPreviewCard').classList.add('hidden');
+    }
+
+    function openDetailFromMap() {
+      if (activeMapSelectedId) openDetail(activeMapSelectedId);
+    }
+
+    function toggleSave(id) {
+      if (savedIds.includes(id)) {
+        savedIds = savedIds.filter(i => i !== id);
+        showToast("Removed from saved");
+      } else {
+        savedIds.push(id);
+        showToast("Saved to favorites!");
+      }
+      saveToLocalStorage();
+      updateSavedBadge();
+      renderFeed();
+    }
+
+    function updateSavedBadge() {
+      const badge = document.getElementById('savedBadge');
+      if (savedIds.length > 0) badge.classList.remove('hidden');
+      else badge.classList.add('hidden');
+    }
+
+    function renderSaved() {
+      const container = document.getElementById('savedContainer');
+      container.innerHTML = '';
+
+      const list = properties.filter(p => savedIds.includes(p.id));
+      if (list.length === 0) {
+        container.innerHTML = `<div class="text-center py-12 text-xs text-slate-500">No saved properties yet.</div>`;
+        return;
+      }
+
+      list.forEach(prop => {
+        const item = document.createElement('div');
+        item.className = "bg-slate-900 border border-slate-800 rounded-xl p-3 flex gap-3 items-center";
+        item.innerHTML = `
+          <img src="${prop.images[0]}" class="w-14 h-14 rounded-lg object-cover">
+          <div class="flex-1 cursor-pointer" onclick="openDetail(${prop.id})">
+            <h4 class="text-xs font-bold text-white line-clamp-1">${currentLang === 'en' ? prop.titleEn : prop.title}</h4>
+            <p class="text-[10px] text-slate-400">${currentLang === 'en' ? prop.locationEn : prop.location}</p>
+            <p class="text-xs font-extrabold text-brand-400 mt-0.5">€${prop.price}${prop.pricePeriod}</p>
+          </div>
+          <button onclick="toggleSave(${prop.id})" class="text-rose-500 p-2 text-sm"><i class="fa-solid fa-trash"></i></button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function openAddPropertyModal() { document.getElementById('addPropertyModal').classList.remove('hidden'); }
+    function closeAddPropertyModal() { document.getElementById('addPropertyModal').classList.add('hidden'); }
+
+    function handlePropertySubmit(e) {
+      e.preventDefault();
+      const newProp = {
+        id: Date.now(),
+        title: document.getElementById('formTitle').value,
+        titleEn: document.getElementById('formTitle').value,
+        category: document.getElementById('formCategory').value,
+        price: parseFloat(document.getElementById('formPrice').value),
+        pricePeriod: document.getElementById('formCategory').value === 'rent' ? '/μήνα' : '',
+        location: document.getElementById('formLocation').value,
+        locationEn: document.getElementById('formLocation').value,
+        beds: parseInt(document.getElementById('formBeds').value),
+        sqm: 65, floor: "2ος", energy: "A", vibe: "quiet", transit: "metro",
+        pets: true, parking: true, elevator: true, furnished: false, heating: "A/C",
+        commuteMin: 15, estPower: 70, estCommon: 35, status: "pending",
+        mapPos: { top: '50%', left: '50%' },
+        images: [document.getElementById('formImg').value || "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"]
+      };
+
+      properties.push(newProp);
+      saveToLocalStorage();
+      updatePendingBadge();
+      closeAddPropertyModal();
+      document.getElementById('addPropertyForm').reset();
+      showToast("Submitted to Real Estate Agency for approval!");
+    }
+
+    function openAdminModal() {
+      renderAdminPendingList();
+      document.getElementById('adminModal').classList.remove('hidden');
+    }
+
+    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
+
+    function updatePendingBadge() {
+      const pendingCount = properties.filter(p => p.status === 'pending').length;
+      const badge = document.getElementById('pendingBadge');
+      const agencySub = document.getElementById('agencyPanelSub');
+
+      if (agencySub) agencySub.innerText = `${pendingCount} Εκκρεμή για Έγκριση`;
+      if (pendingCount > 0) {
+        badge.innerText = pendingCount;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function renderAdminPendingList() {
+      const container = document.getElementById('adminPendingList');
+      container.innerHTML = '';
+      const pending = properties.filter(p => p.status === 'pending');
+
+      if (pending.length === 0) {
+        container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">Δεν υπάρχουν εκκρεμή ακίνητα.</div>`;
+        return;
+      }
+
+      pending.forEach(prop => {
+        const item = document.createElement('div');
+        item.className = "bg-slate-950 border border-slate-800 rounded-2xl p-3 space-y-2";
+        item.innerHTML = `
+          <div class="flex gap-3 items-center">
+            <img src="${prop.images[0]}" class="w-14 h-14 rounded-xl object-cover">
+            <div class="flex-1">
+              <h4 class="text-xs font-bold text-white leading-tight">${prop.title}</h4>
+              <p class="text-[10px] text-slate-400">${prop.location} • €${prop.price}</p>
+            </div>
+          </div>
+          <div class="flex gap-2 pt-1">
+            <button onclick="approveProperty(${prop.id})" class="flex-1 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold">Έγκριση</button>
+            <button onclick="rejectProperty(${prop.id})" class="flex-1 py-1.5 bg-rose-600/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold">Απόρριψη</button>
+          </div>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function approveProperty(id) {
+      const prop = properties.find(p => p.id === id);
+      if (prop) {
+        prop.status = 'approved';
+        saveToLocalStorage();
+        updatePendingBadge();
+        renderAdminPendingList();
+        renderFeed();
+        showToast("Property Approved!");
+      }
+    }
+
+    function rejectProperty(id) {
+      properties = properties.filter(p => p.id !== id);
+      saveToLocalStorage();
+      updatePendingBadge();
+      renderAdminPendingList();
+      showToast("Property Rejected.");
+    }
+
+    function scheduleViewing() { showToast(`Request sent to agency for ${userEmail}`); }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('habitat_properties_v3', JSON.stringify(properties));
+      localStorage.setItem('habitat_saved_v3', JSON.stringify(savedIds));
+    }
+
+    function loadFromLocalStorage() {
+      const localProps = localStorage.getItem('habitat_properties_v3');
+      const localSaved = localStorage.getItem('habitat_saved_v3');
+      if (localProps) properties = JSON.parse(localProps);
+      if (localSaved) savedIds = JSON.parse(localSaved);
+      updateSavedBadge();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none');
+      setTimeout(() => { toast.classList.add('opacity-0', 'pointer-events-none'); }, 2500);
+    }
+  </script>
+</body>
+</html>
