@@ -1,1023 +1,156 @@
-<!DOCTYPE html>
-<html lang="el" class="h-full bg-slate-950 text-slate-100">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Habitat Match (NestAI) - Luxury Real Estate Platform</title>
-  
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Font Awesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Leaflet.js Real Interactive Map Engine -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
-          colors: {
-            brand: { 50: '#eef2ff', 100: '#e0e7ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' }
-          }
-        }
-      }
-    }
-  </script>
-  <style>
-    /* Custom Leaflet Map Dark Styling */
-    .leaflet-tile { filter: brightness(0.6) invert(1) contrast(3) hue-rotate(200deg) saturate(0.3) brightness(0.7); }
-    .leaflet-container { background: #020617 !important; }
-    .custom-map-pin {
-      background: #4f46e5;
-      color: white;
-      font-weight: 800;
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 9999px;
-      border: 2px solid white;
-      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
-      white-space: nowrap;
-    }
-  </style>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#080b12">
+	<title>Habitat Match | Luxury Nexus Estates</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+		tailwind.config = { theme: { extend: { colors: { ink: '#080b12', panel: '#10151f', line: '#252d3a', accent: '#a5b4fc', mint: '#9de3c3' }, fontFamily: { display: ['Manrope', 'sans-serif'], sans: ['DM Sans', 'sans-serif'] } } } };
+	</script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+	<style>
+		:root{color-scheme:dark;--ink:#080b12;--panel:#10151f;--line:#252d3a;--muted:#929bad;--accent:#a5b4fc;--mint:#9de3c3}
+		*{box-sizing:border-box} body{margin:0;background:var(--ink);color:#f4f5f8;font-family:'DM Sans',sans-serif;min-height:100vh;background-image:radial-gradient(ellipse at 70% -15%,rgba(73,83,137,.2),transparent 42%),linear-gradient(180deg,#0b0e16 0,#080b12 48rem)}
+		button,input,select{font:inherit} button{cursor:pointer} .display-font{font-family:Manrope,sans-serif}.muted{color:var(--muted)}
+		.app-shell{max-width:1480px;margin:0 auto;min-height:100vh;transition:max-width .35s ease,box-shadow .35s ease}.app-shell.phone-mode{max-width:390px;height:min(844px,100vh);min-height:0;overflow:auto;border:1px solid #394150;border-radius:28px;box-shadow:0 24px 90px #000b;margin:14px auto;background:#080b12;scrollbar-width:thin}
+		.phone-mode .topbar{position:sticky;top:0}.phone-mode .header-inner{padding-left:16px;padding-right:16px}.phone-mode .nav-label{display:none}.phone-mode .hero{padding-top:36px}.phone-mode .hero-title{font-size:38px}.phone-mode .content-grid{grid-template-columns:1fr}.phone-mode .map-column{display:none}.phone-mode .listing-grid{grid-template-columns:1fr}.phone-mode .hero-actions .secondary-action{display:none}
+		.topbar{height:76px;border-bottom:1px solid rgba(255,255,255,.07);background:rgba(8,11,18,.84);backdrop-filter:blur(16px);z-index:500}.header-inner{height:100%;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(18px,4vw,56px);gap:18px}.brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{height:36px;width:36px;border-radius:11px;background:linear-gradient(145deg,#c7d2fe,#7c8bd5);color:#121829;display:grid;place-items:center;font-size:16px;box-shadow:0 5px 22px #818cf833}.brand-name{font:800 15px Manrope,sans-serif;letter-spacing:0}.brand-sub{font-size:10px;color:#8d96a8;letter-spacing:0;margin-top:1px}.header-actions{display:flex;align-items:center;gap:9px}.icon-btn,.language-btn,.role-btn{height:38px;border:1px solid #28303d;background:#111722;color:#e5e7ee;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:.2s}.icon-btn{width:39px;position:relative}.language-btn,.role-btn{padding:0 12px;font-size:12px;font-weight:700}.icon-btn:hover,.language-btn:hover,.role-btn:hover{border-color:#6471a3;background:#171e2b}.count-badge{position:absolute;right:-5px;top:-6px;background:#a5b4fc;color:#111626;border-radius:99px;min-width:17px;height:17px;font-size:10px;font-weight:800;display:grid;place-items:center;padding:0 4px}.role-btn.active{background:#d5ddff;color:#151a2d;border-color:#d5ddff}.role-dot{height:7px;width:7px;border-radius:50%;background:#a2e3c3}
+		main{padding:0 clamp(18px,4vw,56px) 60px}.hero{padding:54px 0 34px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between;align-items:flex-end;gap:32px}.eyebrow{display:flex;align-items:center;gap:9px;color:#b8c2f4;font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase}.eyebrow:before{content:'';height:1px;width:22px;background:#a5b4fc}.hero-title{font:600 clamp(38px,5.2vw,66px)/1.07 Manrope,sans-serif;letter-spacing:0;margin:17px 0 14px;max-width:750px}.hero-title span{color:#a5b4fc}.hero-copy{font-size:14px;color:#9da6b6;max-width:500px;line-height:1.75;margin:0}.hero-actions{display:flex;gap:10px;flex-shrink:0}.button-primary,.button-secondary,.button-danger{height:43px;border-radius:10px;padding:0 16px;display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:700;transition:transform .18s,background .18s,border .18s}.button-primary{background:#c4ceff;color:#121829;border:1px solid #c4ceff}.button-primary:hover{background:#d5dcff;transform:translateY(-1px)}.button-secondary{background:#141a25;color:#e8eaf0;border:1px solid #2b3443}.button-secondary:hover{background:#1b2331;border-color:#58647c}.button-danger{background:#28191c;color:#ffb7b7;border:1px solid #543136}.button-danger:hover{background:#3a2024}
+		.search-row{display:flex;align-items:center;gap:12px;padding:22px 0}.searchbox{height:43px;max-width:390px;flex:1;display:flex;align-items:center;gap:10px;padding:0 13px;border:1px solid #29313e;background:#10151e;border-radius:10px;color:#8790a0}.searchbox input{border:0;outline:0;background:transparent;color:#f1f3f8;width:100%;font-size:12px}.searchbox input::placeholder{color:#737d8e}.segmented{height:43px;border:1px solid #29313e;background:#10151e;border-radius:10px;padding:4px;display:flex;gap:3px}.segment-btn{border:0;background:transparent;color:#9ba4b4;padding:0 15px;border-radius:7px;font-size:11px;font-weight:700}.segment-btn.active{color:#f3f4f8;background:#252d3a}.filter-select{height:43px;background:#10151e;border:1px solid #29313e;border-radius:10px;color:#c9ced8;padding:0 12px;font-size:11px;outline:none}.favorite-filter{height:43px;padding:0 13px;border:1px solid #29313e;background:#10151e;color:#b8c0ce;border-radius:10px;font-size:11px;font-weight:700}.favorite-filter.active{border-color:#727fc1;color:#c8d0ff;background:#171d2d}
+		.content-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);gap:20px;align-items:start}.section-head{display:flex;justify-content:space-between;align-items:center;padding:4px 0 15px;gap:12px}.section-title{font:700 17px Manrope,sans-serif;margin:0}.result-count{font-size:11px;color:#8f98a8;margin-top:5px}.sort-select{border:0;background:transparent;color:#aab2c0;font-size:11px;outline:none}.listing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.property-card{min-width:0;border:1px solid #242c38;border-radius:13px;background:#10151e;overflow:hidden;transition:transform .22s,border-color .22s,box-shadow .22s;animation:rise .35s both}.property-card:hover{transform:translateY(-3px);border-color:#4b5672;box-shadow:0 14px 36px #0004}.card-image{height:clamp(150px,15vw,220px);position:relative;background:#171c26;overflow:hidden}.card-image img{width:100%;height:100%;object-fit:cover;transition:transform .45s}.property-card:hover .card-image img{transform:scale(1.035)}.image-shade{position:absolute;inset:auto 0 0;height:50%;background:linear-gradient(transparent,#090c12b8)}.pill{position:absolute;top:11px;left:11px;border:1px solid #ffffff36;background:#0a0d14c9;color:#f6f7fa;border-radius:6px;padding:5px 8px;font-size:9px;font-weight:700;letter-spacing:.04em;backdrop-filter:blur(8px)}.match-pill{position:absolute;bottom:11px;left:11px;display:flex;align-items:center;gap:6px;color:#dbffe9;background:#12392cde;border:1px solid #a2edc152;border-radius:6px;padding:5px 8px;font-size:10px;font-weight:700}.heart-btn{position:absolute;right:10px;top:10px;height:32px;width:32px;border:1px solid #ffffff40;background:#0a0d14c9;color:white;border-radius:8px;display:grid;place-items:center;backdrop-filter:blur(8px)}.heart-btn.saved{color:#ffb4c0;background:#351a25e8}.card-body{padding:13px 14px 14px}.card-location{font-size:10px;color:#9aa3b3;display:flex;align-items:center;gap:6px}.card-title{font:700 14px/1.35 Manrope,sans-serif;margin:8px 0 11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-meta{display:flex;gap:11px;color:#a8b0be;font-size:10px;padding-bottom:12px;border-bottom:1px solid #242c38}.card-meta span{display:flex;align-items:center;gap:5px}.price-row{display:flex;align-items:center;justify-content:space-between;padding-top:11px}.price{font:800 16px Manrope,sans-serif}.price small{font:500 10px 'DM Sans',sans-serif;color:#8791a1}.card-open{border:0;background:transparent;color:#c2cbff;font-size:10px;font-weight:700;padding:5px}.empty-state{grid-column:1/-1;padding:52px 20px;text-align:center;border:1px dashed #303846;border-radius:12px;color:#a2aab8}.empty-state i{font-size:22px;color:#8998db;margin-bottom:12px}.empty-state strong{display:block;color:#e9ebf1;font-size:14px;margin-bottom:5px}.empty-state p{font-size:11px;margin:0}
+		.map-column{position:sticky;top:92px}.map-heading{display:flex;justify-content:space-between;align-items:center;margin:3px 0 12px}.map-heading h2{font:700 14px Manrope,sans-serif;margin:0}.map-label{color:#9aa4b6;font-size:10px;display:flex;align-items:center;gap:6px}.live-dot{height:6px;width:6px;background:#81d6a8;border-radius:50%;box-shadow:0 0 9px #81d6a8}.map-wrap{height:520px;position:relative;border-radius:13px;overflow:hidden;border:1px solid #2b3340;background:#151b23}.leaflet-container{height:100%;width:100%;background:#18212a;font-family:'DM Sans',sans-serif}.leaflet-control-attribution{font-size:8px!important}.leaflet-control-zoom a{background:#10151f!important;color:#e7eaf0!important;border-color:#343d4c!important}.price-marker{background:#10151feF;color:#eef0f6;border:1px solid #8997d8;border-radius:7px;padding:6px 9px;white-space:nowrap;font:700 10px 'DM Sans',sans-serif;box-shadow:0 4px 12px #0008}.price-marker:after{content:'';position:absolute;bottom:-5px;left:calc(50% - 5px);height:8px;width:8px;background:#10151f;border-right:1px solid #8997d8;border-bottom:1px solid #8997d8;transform:rotate(45deg)}.leaflet-div-icon{background:transparent!important;border:0!important}.map-preview{position:absolute;z-index:450;left:12px;right:12px;bottom:12px;border-radius:11px;background:#0d121beF;border:1px solid #4a5363;backdrop-filter:blur(14px);padding:9px;display:flex;gap:11px;align-items:center;box-shadow:0 8px 30px #0008;animation:rise .2s}.map-preview img{width:72px;height:60px;object-fit:cover;border-radius:7px}.preview-info{min-width:0;flex:1}.preview-info small{color:#a5b4fc;font-size:9px;font-weight:700}.preview-info strong{display:block;font:700 11px Manrope,sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:3px 0}.preview-info span{font-size:10px;color:#aab2bf}.preview-open{border:0;background:#20283a;color:#cbd2ff;width:31px;height:31px;border-radius:8px;flex-shrink:0}
+		.admin-banner{border:1px solid #46527a;background:linear-gradient(100deg,#181f31,#121925);border-radius:12px;padding:18px 20px;margin-top:24px;display:none;align-items:center;justify-content:space-between;gap:16px}.admin-banner.visible{display:flex}.admin-banner h2{font:700 15px Manrope,sans-serif;margin:0 0 5px}.admin-banner p{font-size:11px;color:#a2adbf;margin:0}.pending-count{background:#282f46;color:#d7dcff;border:1px solid #515e8f;padding:7px 10px;border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap}.admin-section{display:none;padding-top:22px}.admin-section.visible{display:block}.admin-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.pending-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.pending-card{display:flex;gap:11px;padding:10px;border:1px solid #2a3241;background:#111722;border-radius:10px}.pending-card img{width:78px;height:76px;object-fit:cover;border-radius:7px}.pending-details{min-width:0;flex:1}.pending-details strong{font:700 11px Manrope,sans-serif;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pending-details p{color:#9ba4b3;font-size:10px;margin:5px 0 9px}.pending-actions{display:flex;gap:6px}.pending-actions button{height:27px;padding:0 8px;font-size:9px;border-radius:6px}
+		.modal-backdrop{position:fixed;inset:0;background:#03050bc9;backdrop-filter:blur(7px);z-index:1000;display:none;align-items:center;justify-content:center;padding:18px;overflow-y:auto}.modal-backdrop.open{display:flex;animation:fade .18s}.modal{width:min(590px,100%);max-height:calc(100vh - 36px);overflow:auto;border:1px solid #333c4b;background:#10151f;border-radius:16px;box-shadow:0 26px 90px #000a;animation:rise .22s}.modal.wide{width:min(900px,100%)}.modal-header{position:sticky;top:0;z-index:2;background:#10151ff2;backdrop-filter:blur(10px);padding:19px 21px 14px;border-bottom:1px solid #252d3a;display:flex;justify-content:space-between;align-items:flex-start}.modal-header h2{font:700 18px Manrope,sans-serif;margin:0}.modal-header p{margin:5px 0 0;font-size:11px;color:#9ba4b4}.close-btn{border:0;background:#1a202c;color:#aab2c0;height:31px;width:31px;border-radius:8px}.modal-content{padding:20px 21px 22px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label,.field-label{font-size:10px;font-weight:700;color:#c3cad6}.input-control{height:40px;width:100%;border:1px solid #303948;background:#0c1119;border-radius:8px;padding:0 11px;color:#edf0f5;font-size:11px;outline:none}.input-control:focus{border-color:#8390d0;box-shadow:0 0 0 2px #a5b4fc1c}.input-control::placeholder{color:#6e7889}.range-line{display:flex;align-items:center;gap:11px}.range-line input{flex:1;accent-color:#a5b4fc}.range-output{min-width:94px;text-align:right;font-size:11px;color:#d4dafc;font-weight:700}.choice-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}.choice-card{position:relative}.choice-card input{position:absolute;opacity:0}.choice-card label{min-height:53px;padding:9px 10px;border:1px solid #2e3745;border-radius:9px;display:flex;align-items:center;gap:9px;color:#c3cad5;font-size:10px;cursor:pointer;background:#0d121a}.choice-card label i{color:#a5b4fc;width:15px;text-align:center}.choice-card input:checked+label{border-color:#8792d0;background:#1a2030;color:#e6e9fb}.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.check-item{display:flex;align-items:center;gap:8px;color:#c1c8d4;font-size:10px}.check-item input{accent-color:#a5b4fc;width:14px;height:14px}.form-note{font-size:10px;color:#9da7b7;line-height:1.6;border:1px solid #2a3341;padding:10px;border-radius:8px;background:#0c1119}.modal-footer{display:flex;justify-content:flex-end;gap:9px;padding-top:18px}.gallery{height:330px;position:relative;background:#0c1017}.gallery img{width:100%;height:100%;object-fit:cover}.gallery-gradient{position:absolute;inset:40% 0 0;background:linear-gradient(transparent,#05070bbd)}.gallery-title{position:absolute;bottom:17px;left:20px}.gallery-title span{font-size:10px;color:#e0e4f4}.gallery-title h2{font:700 22px Manrope,sans-serif;margin:5px 0 0}.gallery-control{position:absolute;top:50%;transform:translateY(-50%);height:36px;width:36px;border:1px solid #ffffff45;background:#080b12a8;color:white;border-radius:50%;display:grid;place-items:center}.gallery-control.prev{left:15px}.gallery-control.next{right:15px}.gallery-dots{position:absolute;right:18px;bottom:20px;display:flex;gap:5px}.gallery-dots button{border:0;width:6px;height:6px;border-radius:99px;padding:0;background:#ffffff76}.gallery-dots button.active{width:19px;background:white}.detail-content{padding:18px 21px 22px}.detail-topline{display:flex;align-items:center;justify-content:space-between;gap:12px}.detail-price{font:800 21px Manrope,sans-serif}.detail-price small{font:500 11px 'DM Sans',sans-serif;color:#929bad}.detail-score{color:#caffdf;background:#173429;border:1px solid #315c49;border-radius:7px;font-size:10px;font-weight:700;padding:6px 9px}.detail-address{color:#9ca6b7;font-size:11px;margin:6px 0 18px}.spec-grid{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #2a3240;border-radius:9px;overflow:hidden;margin-bottom:17px}.spec{padding:11px 8px;text-align:center;border-right:1px solid #2a3240}.spec:last-child{border:0}.spec strong{font:700 13px Manrope,sans-serif;display:block}.spec span{font-size:9px;color:#939eaf;margin-top:4px;display:block}.detail-section-title{font:700 12px Manrope,sans-serif;margin:17px 0 9px}.amenities{display:flex;gap:7px;flex-wrap:wrap}.amenity{border:1px solid #303948;background:#161c27;color:#c5ccd7;border-radius:6px;padding:6px 8px;font-size:9px}.cost-box{border:1px solid #2d3645;background:#0c1119;border-radius:10px;padding:13px;margin-top:17px}.cost-head{display:flex;justify-content:space-between;align-items:center}.cost-head strong{font:700 12px Manrope,sans-serif}.cost-total{font:800 16px Manrope,sans-serif;color:#d1d8ff}.cost-total small{font:500 9px 'DM Sans',sans-serif;color:#929bad}.cost-controls{display:flex;gap:13px;align-items:center;margin-top:11px}.cost-controls input{flex:1;accent-color:#a5b4fc}.occupants-label{color:#a9b2c0;font-size:10px}.cost-breakdown{font-size:9px;color:#939dad;display:flex;justify-content:space-between;margin-top:9px}.detail-actions{display:flex;gap:9px;margin-top:16px}.detail-actions button{flex:1}
+		.toast{position:fixed;z-index:1500;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#d6e0ff;color:#121829;border:1px solid #f1f3ff;border-radius:10px;padding:11px 15px;box-shadow:0 10px 35px #0009;font-size:11px;font-weight:700;transition:.25s;display:flex;gap:8px;align-items:center;white-space:nowrap}.toast.show{transform:translate(-50%,0);opacity:1}.toast i{color:#5263ad}.phone-mode~.toast{bottom:24px}
+		@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes fade{from{opacity:0}to{opacity:1}}
+		@media(max-width:980px){.hero{align-items:flex-start;flex-direction:column}.hero-actions{margin-top:0}.content-grid{grid-template-columns:minmax(0,1fr) minmax(300px,.8fr)}.map-wrap{height:480px}.search-row{flex-wrap:wrap}.searchbox{max-width:none;flex-basis:100%}}
+		@media(max-width:700px){.topbar{height:64px}.header-inner{padding:0 15px;gap:10px}.brand-name{font-size:13px}.brand-sub{font-size:9px}.header-actions{gap:6px}.role-btn{font-size:0;width:38px;padding:0}.role-btn i{font-size:13px}.language-btn{padding:0 9px;height:35px;font-size:10px}.icon-btn{height:35px;width:35px}.nav-label{display:none}main{padding:0 16px 40px}.hero{padding:38px 0 25px;gap:19px}.hero-title{font-size:41px;margin:13px 0 10px}.hero-copy{font-size:12px}.hero-actions{width:100%}.hero-actions button{flex:1;padding:0 10px;font-size:10px}.search-row{padding:15px 0;gap:8px}.searchbox{height:40px}.segmented{height:40px;flex:1}.segment-btn{flex:1;padding:0 8px}.favorite-filter{height:40px}.filter-select{height:40px;flex:1}.content-grid{grid-template-columns:1fr;gap:25px}.map-column{position:static;order:-1}.map-wrap{height:290px}.map-heading{margin-top:0}.listing-grid{gap:10px}.card-image{height:145px}.card-body{padding:11px}.card-title{font-size:12px}.card-meta{gap:8px;font-size:9px}.price{font-size:14px}.card-open{font-size:9px}.section-title{font-size:15px}.sort-select{max-width:110px}.admin-banner{padding:13px}.admin-banner p{max-width:220px}.phone-mode{margin:0 auto!important;border-radius:0!important;border:0!important;height:100dvh!important;max-height:100dvh}.modal-backdrop{padding:9px}.modal{max-height:calc(100vh - 18px)}.modal-header{padding:16px}.modal-content,.detail-content{padding:16px}.gallery{height:250px}.gallery-title h2{font-size:18px}.spec-grid{grid-template-columns:repeat(2,1fr)}.spec:nth-child(2){border-right:0}.spec:nth-child(-n+2){border-bottom:1px solid #2a3240}.detail-actions{flex-direction:column}.form-grid{gap:12px}.map-preview{left:8px;right:8px;bottom:8px}}
+		@media(max-width:370px){.brand-sub{display:none}.listing-grid{grid-template-columns:1fr}.card-image{height:190px}.choice-row{grid-template-columns:1fr}.role-btn{display:none}}
+	</style>
 </head>
-<body class="h-full font-sans bg-slate-950 text-slate-100 antialiased flex flex-col items-center justify-center min-h-screen p-0 sm:p-4 selection:bg-brand-500 selection:text-white">
-
-  <!-- Mobile Device Frame Container -->
-  <div id="appContainer" class="w-full max-w-[430px] h-[100vh] sm:h-[880px] bg-slate-900 sm:rounded-[50px] shadow-2xl shadow-indigo-950/80 border-0 sm:border-[10px] border-slate-800 relative flex flex-col overflow-hidden">
-    
-    <!-- Header -->
-    <header class="bg-slate-900/95 backdrop-blur-md border-b border-slate-800 px-4 pt-4 pb-3 flex items-center justify-between z-30 shrink-0">
-      <div class="flex items-center gap-2 cursor-pointer" onclick="goToScreen('feed')">
-        <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 flex items-center justify-center text-white font-black text-sm shadow-md shadow-brand-500/30">
-          <i class="fa-solid fa-house-signal"></i>
-        </div>
-        <div>
-          <h1 class="font-extrabold text-sm tracking-tight text-white leading-tight">Habitat<span class="text-brand-500">Match</span></h1>
-          <p class="text-[9px] text-slate-400 font-medium" id="headerRoleBadge">Client Mode</p>
-        </div>
-      </div>
-
-      <!-- Controls Header -->
-      <div class="flex items-center gap-1.5">
-        <button onclick="toggleLanguage()" class="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-[11px] font-bold text-brand-400 border border-slate-700 transition-all flex items-center gap-1">
-          <i class="fa-solid fa-globe text-[10px]"></i>
-          <span id="langLabel">EN</span>
-        </button>
-
-        <button onclick="toggleRole()" id="roleToggleBtn" class="px-2.5 py-1 rounded-full bg-amber-500/10 hover:bg-amber-500/20 text-[11px] font-bold text-amber-400 border border-amber-500/30 transition-all flex items-center gap-1">
-          <i class="fa-solid fa-user-shield text-[10px]"></i>
-          <span id="roleLabel">Agent</span>
-          <span id="pendingBadge" class="hidden bg-amber-500 text-slate-950 text-[10px] font-black px-1.5 rounded-full">0</span>
-        </button>
-      </div>
-    </header>
-
-    <!-- Main Content Container -->
-    <main class="flex-1 overflow-y-auto relative bg-slate-950 pb-20 scrollbar-none" id="mainContent">
-
-      <!-- ================= 1. DETAILED AI ONBOARDING ================= -->
-      <section id="screen-quiz" class="p-5 flex flex-col justify-between min-h-full space-y-4">
-        <div class="space-y-4">
-          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs font-semibold">
-            <i class="fa-solid fa-sparkles"></i>
-            <span data-i18n="quizBadge">Smart AI Preferences</span>
-          </div>
-          <h2 class="text-xl font-extrabold text-white leading-tight" data-i18n="quizTitle">Σχεδίασε το ιδανικό σου προφίλ κατοικίας.</h2>
-          <p class="text-xs text-slate-400" data-i18n="quizSub">Όσο πιο αναλυτικά απαντήσεις, τόσο ακριβέστερο θα είναι το AI Match Score.</p>
-
-          <!-- Email -->
-          <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="emailLabel">Email Επικοινωνίας</label>
-            <input type="email" id="userEmailInput" value="eleni@nexus-estates.gr" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
-          </div>
-
-          <!-- Budget Range Slider -->
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-2">
-            <div class="flex justify-between items-center text-xs">
-              <span class="font-bold text-slate-200" data-i18n="budgetLabel">Μέγιστο Budget</span>
-              <span id="budgetValueLabel" class="font-extrabold text-brand-400">€900 / μήνα</span>
-            </div>
-            <input type="range" id="budgetSlider" min="400" max="2500" step="50" value="900" oninput="document.getElementById('budgetValueLabel').innerText = '€' + this.value + ' / μήνα'" class="w-full accent-brand-500 cursor-pointer">
-          </div>
-
-          <!-- Grid Choices -->
-          <div class="grid grid-cols-2 gap-2">
-            <!-- Vibe -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
-              <label class="block text-[11px] font-bold text-slate-200 mb-1.5" data-i18n="qVibe">Ατμόσφαιρα</label>
-              <select id="quizVibe" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-white">
-                <option value="quiet" data-i18n="vibeQuiet">Ήσυχη & Πράσινη</option>
-                <option value="lively" data-i18n="vibeLively">Ζωντανή / Κέντρο</option>
-              </select>
-            </div>
-            <!-- Transit -->
-            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3">
-              <label class="block text-[11px] font-bold text-slate-200 mb-1.5" data-i18n="qTransit">Μετακίνηση</label>
-              <select id="quizTransit" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-1.5 text-xs text-white">
-                <option value="metro" data-i18n="transitMetro">Μετρό & ΜΜΜ</option>
-                <option value="car" data-i18n="transitCar">Αυτοκίνητο</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Feature Toggles -->
-          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3 space-y-2">
-            <label class="block text-[11px] font-bold text-slate-200" data-i18n="mustHaves">Απαραίτητα Χαρακτηριστικά</label>
-            <div class="grid grid-cols-2 gap-2 text-xs">
-              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
-                <input type="checkbox" id="reqPets" checked class="accent-brand-500 rounded">
-                <span data-i18n="reqPets">Pet Friendly</span>
-              </label>
-              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
-                <input type="checkbox" id="reqParking" class="accent-brand-500 rounded">
-                <span data-i18n="reqParking">Πάρκινγκ</span>
-              </label>
-              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
-                <input type="checkbox" id="reqElevator" checked class="accent-brand-500 rounded">
-                <span data-i18n="reqElevator">Ανελκυστήρας</span>
-              </label>
-              <label class="flex items-center gap-2 bg-slate-950 p-2 rounded-xl border border-slate-800/80 cursor-pointer">
-                <input type="checkbox" id="reqFurnished" class="accent-brand-500 rounded">
-                <span data-i18n="reqFurnished">Επιπλωμένο</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <button onclick="applyQuizAndGoFeed()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white rounded-2xl font-bold text-xs shadow-lg shadow-brand-500/30 transition-all flex items-center justify-center gap-2 mt-4">
-          <span data-i18n="quizSubmitBtn">Υπολογισμός AI Matches</span>
-          <i class="fa-solid fa-arrow-right text-xs"></i>
-        </button>
-      </section>
-
-      <!-- ================= 2. MATCH FEED ================= -->
-      <section id="screen-feed" class="hidden p-4 space-y-4">
-        
-        <!-- Top Control Bar -->
-        <div class="flex items-center justify-between gap-2 bg-slate-900 p-1.5 rounded-2xl border border-slate-800">
-          <div class="flex gap-1 flex-1">
-            <button onclick="setFilterCategory('all')" id="cat-all" class="cat-btn flex-1 py-1.5 text-center text-xs font-bold rounded-xl bg-brand-600 text-white transition-all" data-i18n="catAll">Όλα</button>
-            <button onclick="setFilterCategory('rent')" id="cat-rent" class="cat-btn flex-1 py-1.5 text-center text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all" data-i18n="catRent">Ενοίκιο</button>
-            <button onclick="setFilterCategory('buy')" id="cat-buy" class="cat-btn flex-1 py-1.5 text-center text-xs font-bold rounded-xl text-slate-400 hover:text-white transition-all" data-i18n="catBuy">Αγορά</button>
-          </div>
-          
-          <button onclick="openAddPropertyModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-xl shadow-md transition-all flex items-center gap-1">
-            <i class="fa-solid fa-plus text-[10px]"></i>
-            <span data-i18n="addBtn">+ Καταχώρηση</span>
-          </button>
-        </div>
-
-        <!-- Agency Control Banner (Visible in Agent Mode) -->
-        <div id="agencyControlBar" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-2xl p-3 flex justify-between items-center">
-          <div class="flex items-center gap-2">
-            <i class="fa-solid fa-building-circle-check text-amber-400 text-sm"></i>
-            <div>
-              <p class="text-xs font-bold text-amber-300" data-i18n="agencyPanelTitle">Agency Control Panel</p>
-              <p class="text-[10px] text-amber-400/80" id="agencyPanelSub">0 Εκκρεμή για Έγκριση</p>
-            </div>
-          </div>
-          <button onclick="openAdminModal()" class="px-3 py-1 bg-amber-500 text-slate-950 font-extrabold text-xs rounded-xl hover:bg-amber-400 transition-all" data-i18n="manageBtn">Έγκριση</button>
-        </div>
-
-        <!-- Property List -->
-        <div id="propertyContainer" class="space-y-4"></div>
-      </section>
-
-      <!-- ================= 3. REAL LIVE LEAFLET MAP ================= -->
-      <section id="screen-map" class="hidden h-full flex flex-col relative">
-        <div class="p-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between z-10">
-          <span class="text-xs font-bold text-slate-200 flex items-center gap-1.5">
-            <i class="fa-solid fa-map-location-dot text-brand-500"></i>
-            <span data-i18n="mapHeader">Live Interactive Map</span>
-          </span>
-          <span class="text-[10px] text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded-full border border-emerald-800/50 flex items-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> GPS Live
-          </span>
-        </div>
-
-        <!-- Leaflet Map Container -->
-        <div id="leafletMap" class="flex-1 w-full h-full z-0"></div>
-
-        <!-- Map Property Bottom Preview Drawer -->
-        <div id="mapPreviewCard" class="absolute bottom-4 inset-x-4 bg-slate-900/95 backdrop-blur-md border border-slate-800 rounded-2xl p-3 hidden shadow-2xl z-20 transition-all">
-          <div class="flex gap-3 items-center">
-            <img id="mapPrevImg" src="" class="w-16 h-16 rounded-xl object-cover">
-            <div class="flex-1 cursor-pointer" onclick="openDetailFromMap()">
-              <div class="flex justify-between items-center">
-                <h4 id="mapPrevTitle" class="text-xs font-bold text-white line-clamp-1">Τίτλος</h4>
-                <span id="mapPrevPrice" class="text-xs font-extrabold text-brand-400">€0</span>
-              </div>
-              <p id="mapPrevLoc" class="text-[10px] text-slate-400 mt-0.5">Περιοχή</p>
-              <div class="flex items-center gap-2 mt-1.5">
-                <span class="text-[9px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white">AI Verified</span>
-                <span class="text-[10px] text-brand-400 font-bold underline" data-i18n="viewDetails">Προβολή</span>
-              </div>
-            </div>
-            <button onclick="closeMapPreview()" class="text-slate-500 hover:text-white p-1 text-xs">&times;</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ================= 4. RICH PROPERTY DETAIL ================= -->
-      <section id="screen-detail" class="hidden p-4 space-y-4">
-        <button onclick="goToScreen('feed')" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white font-semibold">
-          <i class="fa-solid fa-chevron-left text-[10px]"></i>
-          <span data-i18n="backToFeed">Πίσω στη ροή</span>
-        </button>
-
-        <!-- Photo Carousel Frame -->
-        <div class="relative rounded-2xl overflow-hidden h-56 bg-slate-900 group">
-          <img id="detailImg" src="" class="w-full h-full object-cover transition-all duration-300">
-          
-          <!-- Image Carousel Controls -->
-          <button onclick="prevPhoto()" class="absolute left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-950/70 text-white flex items-center justify-center text-xs hover:bg-slate-950">&lsaquo;</button>
-          <button onclick="nextPhoto()" class="absolute right-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-slate-950/70 text-white flex items-center justify-center text-xs hover:bg-slate-950">&rsaquo;</button>
-
-          <!-- Badges -->
-          <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-full text-xs font-extrabold text-brand-400 border border-brand-500/30 flex items-center gap-1">
-            <i class="fa-solid fa-bolt"></i>
-            <span id="detailMatch">94% Match</span>
-          </div>
-          <div id="detailCategoryBadge" class="absolute top-3 left-3 bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider">
-            ΕΝΟΙΚΙΑΣΗ
-          </div>
-        </div>
-
-        <!-- Title & Price -->
-        <div>
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 id="detailTitle" class="text-base font-bold text-white">Τίτλος Ακινήτου</h2>
-              <p id="detailLocation" class="text-xs text-slate-400"><i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>Περιοχή</p>
-            </div>
-            <div id="detailPrice" class="text-lg font-extrabold text-brand-400">€720/μήνα</div>
-          </div>
-        </div>
-
-        <!-- Extended Key Features Grid -->
-        <div class="grid grid-cols-4 gap-2 text-center text-xs bg-slate-900 border border-slate-800 p-3 rounded-2xl">
-          <div>
-            <p class="text-slate-500 text-[10px]" data-i18n="featBeds">Δωμάτια</p>
-            <p id="detailBeds" class="font-extrabold text-slate-200 mt-0.5">2</p>
-          </div>
-          <div>
-            <p class="text-slate-500 text-[10px]" data-i18n="featSqm">Εμβαδόν</p>
-            <p id="detailSqm" class="font-extrabold text-slate-200 mt-0.5">75 m²</p>
-          </div>
-          <div>
-            <p class="text-slate-500 text-[10px]" data-i18n="featFloor">Όροφος</p>
-            <p id="detailFloor" class="font-extrabold text-slate-200 mt-0.5">3ος</p>
-          </div>
-          <div>
-            <p class="text-slate-500 text-[10px]" data-i18n="featEnergy">Ενέργεια</p>
-            <p id="detailEnergy" class="font-extrabold text-emerald-400 mt-0.5">A+</p>
-          </div>
-        </div>
-
-        <!-- Detailed Specifications Tags -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-3.5 space-y-2">
-          <h4 class="text-xs font-bold text-slate-200" data-i18n="specsTitle">Χαρακτηριστικά Ακινήτου</h4>
-          <div id="detailTagsContainer" class="flex flex-wrap gap-1.5"></div>
-        </div>
-
-        <!-- Interactive Predictive Living Calculator -->
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <span class="text-xs font-bold text-white flex items-center gap-1.5">
-              <i class="fa-solid fa-calculator text-brand-500"></i>
-              <span data-i18n="predictiveTitle">Predictive Living Cost Model</span>
-            </span>
-          </div>
-
-          <div class="bg-slate-950 p-3 rounded-xl space-y-2">
-            <div class="flex justify-between items-center">
-              <span class="text-xs text-slate-300 font-semibold" data-i18n="occupantsLabel">Άτομα συγκατοίκησης:</span>
-              <span id="occupantCountLabel" class="text-xs font-bold text-brand-400">1 Άτομο</span>
-            </div>
-            <input type="range" id="occupantSlider" min="1" max="4" value="1" oninput="updatePredictiveCalculator()" class="w-full accent-brand-500 cursor-pointer">
-          </div>
-
-          <div class="bg-slate-950 p-3 rounded-xl space-y-2">
-            <div class="flex justify-between items-center">
-              <span class="text-xs font-semibold text-slate-200" data-i18n="totalCostLabel">Εκτιμώμενο Συνολικό Κόστος</span>
-              <span id="detailTotalCost" class="text-xs font-extrabold text-emerald-400">€865 / μήνα</span>
-            </div>
-            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex">
-              <div id="barRent" class="bg-brand-500 h-full" style="width: 70%"></div>
-              <div id="barPower" class="bg-amber-400 h-full" style="width: 20%"></div>
-              <div id="barCommon" class="bg-sky-400 h-full" style="width: 10%"></div>
-            </div>
-          </div>
-        </div>
-
-        <button onclick="scheduleViewing()" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white rounded-xl font-bold text-xs shadow-lg shadow-brand-500/20 transition-all flex items-center justify-center gap-2">
-          <i class="fa-solid fa-calendar-check"></i>
-          <span data-i18n="scheduleBtn">Κλείσε VR / 360° Viewing</span>
-        </button>
-      </section>
-
-      <!-- ================= 5. SAVED FAVORITES ================= -->
-      <section id="screen-saved" class="hidden p-4 space-y-3">
-        <h2 class="text-sm font-bold text-white mb-2" data-i18n="savedTitle">Αποθηκευμένα Ακίνητα</h2>
-        <div id="savedContainer" class="space-y-3"></div>
-      </section>
-
-    </main>
-
-    <!-- Bottom Navigation Bar -->
-    <nav class="absolute bottom-0 inset-x-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-6 py-2.5 flex justify-between items-center z-30">
-      <button onclick="goToScreen('feed')" id="nav-feed" class="nav-btn flex flex-col items-center gap-1 text-brand-500">
-        <i class="fa-solid fa-compass text-base"></i>
-        <span class="text-[10px] font-semibold" data-i18n="navFeed">Matches</span>
-      </button>
-      <button onclick="goToScreen('map')" id="nav-map" class="nav-btn flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300">
-        <i class="fa-solid fa-map-location-dot text-base"></i>
-        <span class="text-[10px] font-semibold" data-i18n="navMap">Χάρτης</span>
-      </button>
-      <button onclick="goToScreen('saved')" id="nav-saved" class="nav-btn flex flex-col items-center gap-1 text-slate-500 hover:text-slate-300 relative">
-        <i class="fa-solid fa-heart text-base"></i>
-        <span class="text-[10px] font-semibold" data-i18n="navSaved">Saved</span>
-        <span id="savedBadge" class="hidden absolute -top-1 right-2 w-2 h-2 rounded-full bg-brand-500"></span>
-      </button>
-    </nav>
-  </div>
-
-  <!-- ================= MODAL 1: ADD PROPERTY ================= -->
-  <div id="addPropertyModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-plus-circle text-brand-500"></i>
-          <span data-i18n="modalAddTitle">Καταχώρηση Νέου Ακινήτου</span>
-        </h3>
-        <button onclick="closeAddPropertyModal()" class="text-slate-400 hover:text-white text-base">&times;</button>
-      </div>
-
-      <form id="addPropertyForm" onsubmit="handlePropertySubmit(event)" class="space-y-3">
-        <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldTitle">Τίτλος Ακινήτου</label>
-          <input type="text" id="formTitle" required placeholder="π.χ. Πολυτελές Διαμέρισμα" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldCategory">Τύπος</label>
-            <select id="formCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-              <option value="rent" data-i18n="optRent">Ενοικίαση</option>
-              <option value="buy" data-i18n="optBuy">Αγορά</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldPrice">Τιμή (€)</label>
-            <input type="number" id="formPrice" required placeholder="700" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldLocation">Περιοχή</label>
-            <input type="text" id="formLocation" required placeholder="π.χ. Κολωνάκι" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldBeds">Δωμάτια</label>
-            <input type="number" id="formBeds" value="2" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-[11px] font-bold text-slate-300 mb-1" data-i18n="fieldImg">URL Φωτογραφίας</label>
-          <input type="url" id="formImg" placeholder="https://images.unsplash.com/..." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white">
-        </div>
-
-        <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl font-bold text-xs shadow-md mt-2" data-i18n="btnSubmitProperty">
-          Αποστολή στο Γραφείο για Έγκριση
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ================= MODAL 2: AGENCY ADMIN APPROVAL ================= -->
-  <div id="adminModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-md p-5 space-y-4 max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-        <h3 class="text-sm font-bold text-white flex items-center gap-2">
-          <i class="fa-solid fa-building-circle-check text-amber-400"></i>
-          <span data-i18n="adminModalTitle">Agency Admin - Έγκριση Ακινήτων</span>
-        </h3>
-        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-white text-base">&times;</button>
-      </div>
-      <div id="adminPendingList" class="space-y-3"></div>
-    </div>
-  </div>
-
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-16 left-1/2 -translate-x-1/2 bg-slate-800 text-white border border-slate-700 px-4 py-2 rounded-full text-xs font-semibold shadow-2xl opacity-0 pointer-events-none transition-all duration-300 z-50 flex items-center gap-2">
-    <i class="fa-solid fa-circle-check text-emerald-400"></i>
-    <span id="toastMsg">Notification</span>
-  </div>
-
-  <!-- JavaScript Code -->
-  <script>
-    const i18n = {
-      el: {
-        quizBadge: "Smart AI Preferences",
-        quizTitle: "Σχεδίασε το ιδανικό σου προφίλ κατοικίας.",
-        quizSub: "Όσο πιο αναλυτικά απαντήσεις, τόσο ακριβέστερο θα είναι το AI Match Score.",
-        emailLabel: "Email Επικοινωνίας",
-        budgetLabel: "Μέγιστο Budget",
-        qVibe: "Ατμόσφαιρα",
-        vibeQuiet: "Ήσυχη & Πράσινη",
-        vibeLively: "Ζωντανή / Κέντρο",
-        qTransit: "Μετακίνηση",
-        transitMetro: "Μετρό & ΜΜΜ",
-        transitCar: "Αυτοκίνητο",
-        mustHaves: "Απαραίτητα Χαρακτηριστικά",
-        reqPets: "Pet Friendly",
-        reqParking: "Πάρκινγκ",
-        reqElevator: "Ανελκυστήρας",
-        reqFurnished: "Επιπλωμένο",
-        quizSubmitBtn: "Υπολογισμός AI Matches",
-        catAll: "Όλα",
-        catRent: "Ενοίκιο",
-        catBuy: "Αγορά",
-        addBtn: "+ Καταχώρηση",
-        agencyPanelTitle: "Agency Control Panel",
-        manageBtn: "Έγκριση",
-        mapHeader: "Live Interactive Map",
-        viewDetails: "Προβολή",
-        backToFeed: "Πίσω στη ροή",
-        featBeds: "Δωμάτια",
-        featSqm: "Εμβαδόν",
-        featFloor: "Όροφος",
-        featEnergy: "Ενέργεια",
-        specsTitle: "Χαρακτηριστικά Ακινήτου",
-        predictiveTitle: "Predictive Living Cost Model",
-        occupantsLabel: "Άτομα συγκατοίκησης:",
-        totalCostLabel: "Εκτιμώμενο Συνολικό Κόστος",
-        scheduleBtn: "Κλείσε VR / 360° Viewing",
-        savedTitle: "Αποθηκευμένα Ακίνητα",
-        navFeed: "Matches",
-        navMap: "Χάρτης",
-        navSaved: "Saved",
-        modalAddTitle: "Καταχώρηση Νέου Ακινήτου",
-        fieldTitle: "Τίτλος Ακινήτου",
-        fieldCategory: "Τύπος",
-        optRent: "Ενοικίαση",
-        optBuy: "Αγορά",
-        fieldPrice: "Τιμή (€)",
-        fieldLocation: "Περιοχή",
-        fieldBeds: "Δωμάτια",
-        fieldImg: "URL Φωτογραφίας",
-        btnSubmitProperty: "Αποστολή στο Γραφείο για Έγκριση",
-        adminModalTitle: "Agency Admin - Έγκριση Ακινήτων"
-      },
-      en: {
-        quizBadge: "Smart AI Preferences",
-        quizTitle: "Design your ultimate home preference profile.",
-        quizSub: "Detailed answers result in higher AI Match accuracy.",
-        emailLabel: "Contact Email",
-        budgetLabel: "Max Budget",
-        qVibe: "Vibe",
-        vibeQuiet: "Quiet & Green",
-        vibeLively: "Lively / Central",
-        qTransit: "Transit Mode",
-        transitMetro: "Metro & Transit",
-        transitCar: "Car / Driving",
-        mustHaves: "Must-Have Features",
-        reqPets: "Pet Friendly",
-        reqParking: "Parking Space",
-        reqElevator: "Elevator",
-        reqFurnished: "Furnished",
-        quizSubmitBtn: "Calculate AI Matches",
-        catAll: "All",
-        catRent: "Rent",
-        catBuy: "Buy",
-        addBtn: "+ Add Listing",
-        agencyPanelTitle: "Agency Control Panel",
-        manageBtn: "Approve",
-        mapHeader: "Live Interactive Map",
-        viewDetails: "View Details",
-        backToFeed: "Back to Feed",
-        featBeds: "Bedrooms",
-        featSqm: "Area",
-        featFloor: "Floor",
-        featEnergy: "Energy",
-        specsTitle: "Property Amenities",
-        predictiveTitle: "Predictive Living Cost Model",
-        occupantsLabel: "Occupants Count:",
-        totalCostLabel: "Estimated Total Cost",
-        scheduleBtn: "Schedule VR / 360° Viewing",
-        savedTitle: "Saved Favorites",
-        navFeed: "Matches",
-        navMap: "Map",
-        navSaved: "Saved",
-        modalAddTitle: "Submit New Listing",
-        fieldTitle: "Listing Title",
-        fieldCategory: "Type",
-        optRent: "Rent",
-        optBuy: "Buy",
-        fieldPrice: "Price (€)",
-        fieldLocation: "Location",
-        fieldBeds: "Bedrooms",
-        fieldImg: "Photo URL",
-        btnSubmitProperty: "Submit for Agency Approval",
-        adminModalTitle: "Agency Admin - Property Approval"
-      }
-    };
-
-    let currentLang = 'el';
-    let isAgentMode = false;
-    let userEmail = "eleni@nexus-estates.gr";
-    let filterCategory = 'all';
-    let savedIds = [];
-    let activeDetailId = null;
-    let currentPhotoIdx = 0;
-    let activeMapSelectedId = null;
-    let mapInstance = null;
-    let mapMarkers = [];
-
-    // Real Athens Properties Database with Precise GPS Coordinates
-    let properties = [
-      {
-        id: 1,
-        title: "Μοντέρνο Ρετιρέ με Θέα & Roof Garden",
-        titleEn: "Modern Penthouse with Roof Garden",
-        category: "rent",
-        price: 720,
-        pricePeriod: "/μήνα",
-        location: "Παγκράτι, Αθήνα",
-        locationEn: "Pangrati, Athens",
-        lat: 37.9698, lng: 23.7445,
-        beds: 2, sqm: 78, floor: "4ος", energy: "A+",
-        vibe: "lively", transit: "metro", pets: true, parking: true, elevator: true, furnished: true, heating: "Φυσικό Αέριο",
-        commuteMin: 12, estPower: 85, estCommon: 40, status: "approved",
-        images: [
-          "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"
-        ]
-      },
-      {
-        id: 2,
-        title: "Ήσυχο Διαμέρισμα Δίπλα σε Πάρκο",
-        titleEn: "Quiet Apartment Next to Park",
-        category: "rent",
-        price: 580,
-        pricePeriod: "/μήνα",
-        location: "Νέα Σμύρνη, Αθήνα",
-        locationEn: "Nea Smyrni, Athens",
-        lat: 37.9452, lng: 23.7153,
-        beds: 1, sqm: 55, floor: "2ος", energy: "B+",
-        vibe: "quiet", transit: "metro", pets: true, parking: false, elevator: true, furnished: false, heating: "Αντλία Θερμότητας",
-        commuteMin: 18, estPower: 60, estCommon: 30, status: "approved",
-        images: [
-          "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6?auto=format&fit=crop&w=800&q=80"
-        ]
-      },
-      {
-        id: 3,
-        title: "Πολυτελής Μεζονέτα με Πάρκινγκ",
-        titleEn: "Luxury Maisonette with Parking",
-        category: "buy",
-        price: 290000,
-        pricePeriod: "",
-        location: "Γλυφάδα, Αθήνα",
-        locationEn: "Glyfada, Athens",
-        lat: 37.8624, lng: 23.7548,
-        beds: 3, sqm: 135, floor: "1ος-2ος", energy: "A+",
-        vibe: "quiet", transit: "car", pets: true, parking: true, elevator: true, furnished: true, heating: "Ενδοδαπέδια",
-        commuteMin: 25, estPower: 120, estCommon: 65, status: "approved",
-        images: [
-          "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
-        ]
-      }
-    ];
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadFromLocalStorage();
-      updateLanguageUI();
-      renderFeed();
-      updatePendingBadge();
-    });
-
-    function toggleRole() {
-      isAgentMode = !isAgentMode;
-      document.getElementById('roleLabel').innerText = isAgentMode ? "Client" : "Agent";
-      document.getElementById('headerRoleBadge').innerText = isAgentMode ? "Agency Admin" : "Client Mode";
-      
-      const agencyBar = document.getElementById('agencyControlBar');
-      if (isAgentMode) agencyBar.classList.remove('hidden');
-      else agencyBar.classList.add('hidden');
-
-      showToast(isAgentMode ? "Agency Admin Mode Activated!" : "Switched to Client Mode");
-      renderFeed();
-    }
-
-    function toggleLanguage() {
-      currentLang = currentLang === 'el' ? 'en' : 'el';
-      document.getElementById('langLabel').innerText = currentLang === 'el' ? 'EN' : 'GR';
-      updateLanguageUI();
-      renderFeed();
-      if (activeDetailId) renderDetail(activeDetailId);
-    }
-
-    function updateLanguageUI() {
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (i18n[currentLang][key]) el.innerText = i18n[currentLang][key];
-      });
-    }
-
-    function goToScreen(screenId) {
-      document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-      document.getElementById(`screen-${screenId}`).classList.remove('hidden');
-
-      document.querySelectorAll('.nav-btn').forEach(b => {
-        b.classList.remove('text-brand-500');
-        b.classList.add('text-slate-500');
-      });
-      const activeNav = document.getElementById(`nav-${screenId}`);
-      if (activeNav) {
-        activeNav.classList.remove('text-slate-500');
-        activeNav.classList.add('text-brand-500');
-      }
-
-      if (screenId === 'saved') renderSaved();
-      if (screenId === 'map') initLeafletMap();
-    }
-
-    function applyQuizAndGoFeed() {
-      renderFeed();
-      goToScreen('feed');
-      showToast(currentLang === 'el' ? "AI Matches υπολογίστηκαν!" : "AI Matches calculated!");
-    }
-
-    function setFilterCategory(cat) {
-      filterCategory = cat;
-      document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.remove('bg-brand-600', 'text-white');
-        b.classList.add('text-slate-400');
-      });
-      const activeBtn = document.getElementById(`cat-${cat}`);
-      if (activeBtn) {
-        activeBtn.classList.add('bg-brand-600', 'text-white');
-        activeBtn.classList.remove('text-slate-400');
-      }
-      renderFeed();
-    }
-
-    function calculateMatchScore(prop) {
-      let score = 75;
-      const vibeVal = document.getElementById('quizVibe').value;
-      const transitVal = document.getElementById('quizTransit').value;
-      const budgetVal = parseFloat(document.getElementById('budgetSlider').value);
-
-      if (prop.vibe === vibeVal) score += 10;
-      if (prop.transit === transitVal) score += 10;
-      if (prop.price <= budgetVal) score += 5;
-      return Math.min(score, 99);
-    }
-
-    function renderFeed() {
-      const container = document.getElementById('propertyContainer');
-      container.innerHTML = '';
-
-      let list = properties.filter(p => p.status === 'approved');
-      if (filterCategory !== 'all') list = list.filter(p => p.category === filterCategory);
-
-      list.sort((a, b) => calculateMatchScore(b) - calculateMatchScore(a));
-
-      list.forEach(prop => {
-        const match = calculateMatchScore(prop);
-        const isSaved = savedIds.includes(prop.id);
-        const title = currentLang === 'en' ? prop.titleEn : prop.title;
-        const location = currentLang === 'en' ? prop.locationEn : prop.location;
-
-        const card = document.createElement('div');
-        card.className = "bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden hover:border-slate-700 transition-all duration-300 shadow-lg";
-        card.innerHTML = `
-          <div class="relative h-44 overflow-hidden cursor-pointer" onclick="openDetail(${prop.id})">
-            <img src="${prop.images[0]}" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-            <div class="absolute top-3 right-3 bg-slate-950/80 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-extrabold text-brand-400 border border-brand-500/30 flex items-center gap-1">
-              <i class="fa-solid fa-bolt text-[10px]"></i> ${match}% Match
-            </div>
-            <div class="absolute top-3 left-3 ${prop.category === 'rent' ? 'bg-emerald-600' : 'bg-indigo-600'} text-white px-2 py-0.5 rounded-full text-[9px] font-extrabold uppercase tracking-wider">
-              ${prop.category === 'rent' ? 'RENT' : 'BUY'}
-            </div>
-            <button onclick="event.stopPropagation(); toggleSave(${prop.id})" class="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-slate-950/70 backdrop-blur-md flex items-center justify-center text-xs ${isSaved ? 'text-rose-500' : 'text-slate-300'} hover:scale-110 transition-all">
-              <i class="fa-${isSaved ? 'solid' : 'regular'} fa-heart"></i>
-            </button>
-          </div>
-          <div class="p-3.5 space-y-2 cursor-pointer" onclick="openDetail(${prop.id})">
-            <div class="flex justify-between items-start">
-              <h3 class="text-xs font-bold text-white line-clamp-1 flex-1 pr-2">${title}</h3>
-              <span class="text-xs font-extrabold text-brand-400 whitespace-nowrap">€${prop.price.toLocaleString()}${prop.pricePeriod}</span>
-            </div>
-            <p class="text-[11px] text-slate-400"><i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>${location}</p>
-            <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[10px] text-slate-400">
-              <span><i class="fa-solid fa-bed text-slate-500 mr-1"></i>${prop.beds} Beds</span>
-              <span><i class="fa-solid fa-ruler-combined text-slate-500 mr-1"></i>${prop.sqm} m²</span>
-              <span class="text-emerald-400 font-bold"><i class="fa-solid fa-leaf mr-1"></i>Class ${prop.energy}</span>
-            </div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    function openDetail(id) {
-      activeDetailId = id;
-      currentPhotoIdx = 0;
-      renderDetail(id);
-      goToScreen('detail');
-    }
-
-    function renderDetail(id) {
-      const prop = properties.find(p => p.id === id);
-      if (!prop) return;
-
-      const match = calculateMatchScore(prop);
-      document.getElementById('detailImg').src = prop.images[currentPhotoIdx];
-      document.getElementById('detailMatch').innerText = `${match}% Match`;
-      document.getElementById('detailTitle').innerText = currentLang === 'en' ? prop.titleEn : prop.title;
-      document.getElementById('detailLocation').innerHTML = `<i class="fa-solid fa-location-dot text-brand-500 mr-1"></i>${currentLang === 'en' ? prop.locationEn : prop.location}`;
-      document.getElementById('detailPrice').innerText = `€${prop.price.toLocaleString()}${prop.pricePeriod}`;
-
-      document.getElementById('detailBeds').innerText = prop.beds;
-      document.getElementById('detailSqm').innerText = `${prop.sqm} m²`;
-      document.getElementById('detailFloor').innerText = prop.floor;
-      document.getElementById('detailEnergy').innerText = prop.energy;
-
-      // Amenities Tags
-      const tagsContainer = document.getElementById('detailTagsContainer');
-      tagsContainer.innerHTML = '';
-      const tags = [
-        `Θέρμανση: ${prop.heating}`,
-        prop.pets ? 'Pet Friendly' : null,
-        prop.parking ? 'Θέση Πάρκινγκ' : null,
-        prop.elevator ? 'Ανελκυστήρας' : null,
-        prop.furnished ? 'Επιπλωμένο' : null
-      ].filter(Boolean);
-
-      tags.forEach(tag => {
-        const span = document.createElement('span');
-        span.className = "px-2.5 py-1 rounded-lg bg-slate-950 border border-slate-800 text-[10px] text-slate-300 font-medium";
-        span.innerText = tag;
-        tagsContainer.appendChild(span);
-      });
-
-      updatePredictiveCalculator();
-    }
-
-    function prevPhoto() {
-      const prop = properties.find(p => p.id === activeDetailId);
-      if (!prop) return;
-      currentPhotoIdx = (currentPhotoIdx - 1 + prop.images.length) % prop.images.length;
-      document.getElementById('detailImg').src = prop.images[currentPhotoIdx];
-    }
-
-    function nextPhoto() {
-      const prop = properties.find(p => p.id === activeDetailId);
-      if (!prop) return;
-      currentPhotoIdx = (currentPhotoIdx + 1) % prop.images.length;
-      document.getElementById('detailImg').src = prop.images[currentPhotoIdx];
-    }
-
-    function updatePredictiveCalculator() {
-      const prop = properties.find(p => p.id === activeDetailId);
-      if (!prop) return;
-
-      const occupants = parseInt(document.getElementById('occupantSlider').value);
-      document.getElementById('occupantCountLabel').innerText = `${occupants} ${occupants === 1 ? 'Person' : 'People'}`;
-
-      const adjustedPower = prop.estPower * (1 + (occupants - 1) * 0.35);
-      const totalCost = Math.round(prop.price + adjustedPower + prop.estCommon);
-      document.getElementById('detailTotalCost').innerText = `€${totalCost.toLocaleString()} / mo`;
-    }
-
-    // Initialize Real Leaflet Interactive Map
-    function initLeafletMap() {
-      setTimeout(() => {
-        if (!mapInstance) {
-          mapInstance = L.map('leafletMap', { zoomControl: false }).setView([37.9500, 23.7350], 12);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-          }).addTo(mapInstance);
-        } else {
-          mapInstance.invalidateSize();
-        }
-
-        // Clear existing markers
-        mapMarkers.forEach(m => mapInstance.removeLayer(m));
-        mapMarkers = [];
-
-        // Add pins for approved properties
-        const approved = properties.filter(p => p.status === 'approved');
-        approved.forEach(prop => {
-          const customIcon = L.divIcon({
-            className: 'custom-pin-wrapper',
-            html: `<div class="custom-map-pin">€${prop.price}</div>`
-          });
-
-          const marker = L.marker([prop.lat, prop.lng], { icon: customIcon }).addTo(mapInstance);
-          marker.on('click', () => selectMapPin(prop));
-          mapMarkers.push(marker);
-        });
-      }, 200);
-    }
-
-    function selectMapPin(prop) {
-      activeMapSelectedId = prop.id;
-      document.getElementById('mapPrevImg').src = prop.images[0];
-      document.getElementById('mapPrevTitle').innerText = currentLang === 'en' ? prop.titleEn : prop.title;
-      document.getElementById('mapPrevLoc').innerText = currentLang === 'en' ? prop.locationEn : prop.location;
-      document.getElementById('mapPrevPrice').innerText = `€${prop.price}${prop.pricePeriod}`;
-      document.getElementById('mapPreviewCard').classList.remove('hidden');
-    }
-
-    function closeMapPreview() {
-      document.getElementById('mapPreviewCard').classList.add('hidden');
-    }
-
-    function openDetailFromMap() {
-      if (activeMapSelectedId) openDetail(activeMapSelectedId);
-    }
-
-    function toggleSave(id) {
-      if (savedIds.includes(id)) {
-        savedIds = savedIds.filter(i => i !== id);
-        showToast("Removed from saved");
-      } else {
-        savedIds.push(id);
-        showToast("Saved to favorites!");
-      }
-      saveToLocalStorage();
-      updateSavedBadge();
-      renderFeed();
-    }
-
-    function updateSavedBadge() {
-      const badge = document.getElementById('savedBadge');
-      if (savedIds.length > 0) badge.classList.remove('hidden');
-      else badge.classList.add('hidden');
-    }
-
-    function renderSaved() {
-      const container = document.getElementById('savedContainer');
-      container.innerHTML = '';
-
-      const list = properties.filter(p => savedIds.includes(p.id));
-      if (list.length === 0) {
-        container.innerHTML = `<div class="text-center py-12 text-xs text-slate-500">No saved properties yet.</div>`;
-        return;
-      }
-
-      list.forEach(prop => {
-        const item = document.createElement('div');
-        item.className = "bg-slate-900 border border-slate-800 rounded-xl p-3 flex gap-3 items-center";
-        item.innerHTML = `
-          <img src="${prop.images[0]}" class="w-14 h-14 rounded-lg object-cover">
-          <div class="flex-1 cursor-pointer" onclick="openDetail(${prop.id})">
-            <h4 class="text-xs font-bold text-white line-clamp-1">${currentLang === 'en' ? prop.titleEn : prop.title}</h4>
-            <p class="text-[10px] text-slate-400">${currentLang === 'en' ? prop.locationEn : prop.location}</p>
-            <p class="text-xs font-extrabold text-brand-400 mt-0.5">€${prop.price}${prop.pricePeriod}</p>
-          </div>
-          <button onclick="toggleSave(${prop.id})" class="text-rose-500 p-2 text-sm"><i class="fa-solid fa-trash"></i></button>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    function openAddPropertyModal() { document.getElementById('addPropertyModal').classList.remove('hidden'); }
-    function closeAddPropertyModal() { document.getElementById('addPropertyModal').classList.add('hidden'); }
-
-    function handlePropertySubmit(e) {
-      e.preventDefault();
-      const newProp = {
-        id: Date.now(),
-        title: document.getElementById('formTitle').value,
-        titleEn: document.getElementById('formTitle').value,
-        category: document.getElementById('formCategory').value,
-        price: parseFloat(document.getElementById('formPrice').value),
-        pricePeriod: document.getElementById('formCategory').value === 'rent' ? '/μήνα' : '',
-        location: document.getElementById('formLocation').value,
-        locationEn: document.getElementById('formLocation').value,
-        lat: 37.9838, lng: 23.7275, // Default Athens Center GPS
-        beds: parseInt(document.getElementById('formBeds').value),
-        sqm: 65, floor: "2ος", energy: "A", vibe: "quiet", transit: "metro",
-        pets: true, parking: true, elevator: true, furnished: false, heating: "A/C",
-        commuteMin: 15, estPower: 70, estCommon: 35, status: "pending",
-        images: [document.getElementById('formImg').value || "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"]
-      };
-
-      properties.push(newProp);
-      saveToLocalStorage();
-      updatePendingBadge();
-      closeAddPropertyModal();
-      document.getElementById('addPropertyForm').reset();
-      showToast("Submitted to Real Estate Agency for approval!");
-    }
-
-    function openAdminModal() {
-      renderAdminPendingList();
-      document.getElementById('adminModal').classList.remove('hidden');
-    }
-
-    function closeAdminModal() { document.getElementById('adminModal').classList.add('hidden'); }
-
-    function updatePendingBadge() {
-      const pendingCount = properties.filter(p => p.status === 'pending').length;
-      const badge = document.getElementById('pendingBadge');
-      const agencySub = document.getElementById('agencyPanelSub');
-
-      if (agencySub) agencySub.innerText = `${pendingCount} Εκκρεμή για Έγκριση`;
-      if (pendingCount > 0) {
-        badge.innerText = pendingCount;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-    }
-
-    function renderAdminPendingList() {
-      const container = document.getElementById('adminPendingList');
-      container.innerHTML = '';
-      const pending = properties.filter(p => p.status === 'pending');
-
-      if (pending.length === 0) {
-        container.innerHTML = `<div class="text-center py-8 text-xs text-slate-500">Δεν υπάρχουν εκκρεμή ακίνητα.</div>`;
-        return;
-      }
-
-      pending.forEach(prop => {
-        const item = document.createElement('div');
-        item.className = "bg-slate-950 border border-slate-800 rounded-2xl p-3 space-y-2";
-        item.innerHTML = `
-          <div class="flex gap-3 items-center">
-            <img src="${prop.images[0]}" class="w-14 h-14 rounded-xl object-cover">
-            <div class="flex-1">
-              <h4 class="text-xs font-bold text-white leading-tight">${prop.title}</h4>
-              <p class="text-[10px] text-slate-400">${prop.location} • €${prop.price}</p>
-            </div>
-          </div>
-          <div class="flex gap-2 pt-1">
-            <button onclick="approveProperty(${prop.id})" class="flex-1 py-1.5 bg-emerald-600 text-white rounded-xl text-xs font-bold">Έγκριση</button>
-            <button onclick="rejectProperty(${prop.id})" class="flex-1 py-1.5 bg-rose-600/20 text-rose-400 border border-rose-500/30 rounded-xl text-xs font-bold">Απόρριψη</button>
-          </div>
-        `;
-        container.appendChild(item);
-      });
-    }
-
-    function approveProperty(id) {
-      const prop = properties.find(p => p.id === id);
-      if (prop) {
-        prop.status = 'approved';
-        saveToLocalStorage();
-        updatePendingBadge();
-        renderAdminPendingList();
-        renderFeed();
-        showToast("Property Approved!");
-      }
-    }
-
-    function rejectProperty(id) {
-      properties = properties.filter(p => p.id !== id);
-      saveToLocalStorage();
-      updatePendingBadge();
-      renderAdminPendingList();
-      showToast("Property Rejected.");
-    }
-
-    function scheduleViewing() { showToast(`Request sent to agency for ${userEmail}`); }
-
-    function saveToLocalStorage() {
-      localStorage.setItem('habitat_properties_final', JSON.stringify(properties));
-      localStorage.setItem('habitat_saved_final', JSON.stringify(savedIds));
-    }
-
-    function loadFromLocalStorage() {
-      const localProps = localStorage.getItem('habitat_properties_final');
-      const localSaved = localStorage.getItem('habitat_saved_final');
-      if (localProps) properties = JSON.parse(localProps);
-      if (localSaved) savedIds = JSON.parse(localSaved);
-      updateSavedBadge();
-    }
-
-    function showToast(msg) {
-      const toast = document.getElementById('toast');
-      document.getElementById('toastMsg').innerText = msg;
-      toast.classList.remove('opacity-0', 'pointer-events-none');
-      setTimeout(() => { toast.classList.add('opacity-0', 'pointer-events-none'); }, 2500);
-    }
-  </script>
+<body>
+	<div class="app-shell" id="appShell">
+		<header class="topbar"><div class="header-inner">
+			<div class="brand"><div class="brand-mark"><i class="fa-solid fa-house-chimney"></i></div><div><div class="brand-name">Habitat Match</div><div class="brand-sub">NESTAI · LUXURY NEXUS ESTATES</div></div></div>
+			<div class="header-actions">
+				<button class="language-btn" id="languageToggle" aria-label="Change language">GR <span style="color:#596273">/</span> <b>EN</b></button>
+				<button class="icon-btn" id="viewToggle" aria-label="Toggle device preview" title="Toggle device preview"><i class="fa-solid fa-mobile-screen-button"></i></button>
+				<button class="icon-btn" id="favoritesToggle" aria-label="Show favorites" title="Favorites"><i class="fa-regular fa-heart"></i><span class="count-badge" id="favoritesCount">0</span></button>
+				<button class="role-btn" id="roleToggle"><span class="role-dot"></span><span class="nav-label" data-i18n="agentMode">Agent Mode</span><i class="fa-solid fa-chevron-down" style="font-size:9px"></i></button>
+			</div>
+		</div></header>
+		<main>
+			<section class="hero">
+				<div><div class="eyebrow" data-i18n="eyebrow">A more personal way home</div><h1 class="hero-title display-font" data-i18n-html="heroTitle">Find a place<br>that feels like <span>you.</span></h1><p class="hero-copy" data-i18n="heroCopy">Thoughtful homes, matched to the way you want to live. Explore Athens with a little help from NestAI.</p></div>
+				<div class="hero-actions"><button class="button-primary" id="profileOpen"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="buildProfile">Build my profile</span></button><button class="button-secondary secondary-action" id="submitOpen"><i class="fa-solid fa-plus"></i><span data-i18n="listProperty">List a property</span></button></div>
+			</section>
+			<section class="search-row" aria-label="Property filters">
+				<label class="searchbox"><i class="fa-solid fa-magnifying-glass"></i><input id="searchInput" type="search" data-i18n-placeholder="searchPlaceholder" placeholder="Search by area or property"></label>
+				<div class="segmented" id="typeTabs"><button class="segment-btn active" data-type="all" data-i18n="all">All</button><button class="segment-btn" data-type="rent" data-i18n="rent">Rent</button><button class="segment-btn" data-type="buy" data-i18n="buy">Buy</button></div>
+				<select class="filter-select" id="vibeFilter" aria-label="Neighborhood vibe"><option value="all" data-i18n="allVibes">All vibes</option><option value="quiet" data-i18n="quiet">Quiet & green</option><option value="lively" data-i18n="lively">Lively / city</option></select>
+				<button class="favorite-filter" id="favoriteFilter"><i class="fa-regular fa-heart"></i> <span data-i18n="favorites">Favorites</span></button>
+			</section>
+			<section class="admin-banner" id="adminBanner"><div><h2 data-i18n="agencyDesk">Luxury Nexus · Agency desk</h2><p data-i18n="agencyCopy">Review new listings before they join the public collection.</p></div><span class="pending-count" id="pendingBadge">0 pending</span></section>
+			<section class="admin-section" id="adminSection"><div class="admin-section-header"><div><h2 class="section-title" data-i18n="approvalTitle">Awaiting your approval</h2><div class="result-count" data-i18n="approvalHint">Client-submitted properties are private until approved.</div></div></div><div class="pending-list" id="pendingList"></div></section>
+			<div class="content-grid">
+				<section class="listings-column"><div class="section-head"><div><h2 class="section-title" data-i18n="curatedHomes">Curated homes</h2><div class="result-count" id="resultCount">0 homes in Athens</div></div><select class="sort-select" id="sortSelect" aria-label="Sort listings"><option value="match" data-i18n="sortMatch">Best match</option><option value="priceAsc" data-i18n="sortLow">Price: low to high</option><option value="priceDesc" data-i18n="sortHigh">Price: high to low</option></select></div><div class="listing-grid" id="listingGrid"></div></section>
+				<aside class="map-column"><div class="map-heading"><h2 data-i18n="exploreMap">Explore the map</h2><span class="map-label"><i class="live-dot"></i><span data-i18n="liveAthens">LIVE · ATHENS</span></span></div><div class="map-wrap"><div id="map"></div><div id="mapPreview"></div></div></aside>
+			</div>
+		</main>
+	</div>
+	<div class="toast" id="toast" role="status"><i class="fa-solid fa-circle-check"></i><span></span></div>
+
+	<div class="modal-backdrop" id="profileModal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="profileTitle"><div class="modal-header"><div><h2 id="profileTitle" data-i18n="profileTitle">Your lifestyle profile</h2><p data-i18n="profileIntro">A few details help NestAI find your kind of place.</p></div><button class="close-btn" data-close="profileModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div><form id="profileForm" class="modal-content"><div class="form-grid">
+		<div class="field full"><label for="profileEmail" data-i18n="email">Contact email</label><input class="input-control" id="profileEmail" type="email" data-i18n-placeholder="emailPlaceholder" placeholder="you@example.com"></div>
+		<div class="field full"><div class="field-label"><span data-i18n="budget">Monthly budget</span> <span class="muted" data-i18n="saleEquivalent">(or equivalent sale price)</span></div><div class="range-line"><input type="range" id="budgetRange" min="400" max="3000" step="50" value="1400"><output class="range-output" id="budgetOutput">€1,400 / mo</output></div></div>
+		<div class="field full"><span class="field-label" data-i18n="neighborhoodVibe">Neighborhood vibe</span><div class="choice-row"><div class="choice-card"><input type="radio" name="vibe" id="vibeQuiet" value="quiet" checked><label for="vibeQuiet"><i class="fa-solid fa-tree"></i><span data-i18n="quietOption">Quiet & green</span></label></div><div class="choice-card"><input type="radio" name="vibe" id="vibeLively" value="lively"><label for="vibeLively"><i class="fa-solid fa-martini-glass"></i><span data-i18n="livelyOption">Lively / city center</span></label></div></div></div>
+		<div class="field full"><span class="field-label" data-i18n="transit">Getting around</span><div class="choice-row"><div class="choice-card"><input type="radio" name="transit" id="transitMetro" value="metro" checked><label for="transitMetro"><i class="fa-solid fa-train-subway"></i><span data-i18n="metroOption">Metro / public transport</span></label></div><div class="choice-card"><input type="radio" name="transit" id="transitCar" value="car"><label for="transitCar"><i class="fa-solid fa-car"></i><span data-i18n="carOption">Car / parking</span></label></div></div></div>
+		<div class="field full"><span class="field-label" data-i18n="mustHave">Must-haves</span><div class="check-grid"><label class="check-item"><input type="checkbox" name="needs" value="pets"><span data-i18n="petFriendly">Pet friendly</span></label><label class="check-item"><input type="checkbox" name="needs" value="parking"><span data-i18n="dedicatedParking">Dedicated parking</span></label><label class="check-item"><input type="checkbox" name="needs" value="elevator"><span data-i18n="elevator">Elevator</span></label><label class="check-item"><input type="checkbox" name="needs" value="furnished"><span data-i18n="furnished">Furnished</span></label></div></div>
+		<div class="field full"><div class="form-note"><i class="fa-solid fa-sparkles" style="color:#a5b4fc;margin-right:6px"></i><span data-i18n="profileNote">Your match score updates instantly as you explore. Your profile stays on this device.</span></div></div>
+	</div><div class="modal-footer"><button type="button" class="button-secondary" data-close="profileModal" data-i18n="cancel">Cancel</button><button type="submit" class="button-primary"><i class="fa-solid fa-wand-magic-sparkles"></i><span data-i18n="saveProfile">Save my profile</span></button></div></form></section></div>
+
+	<div class="modal-backdrop" id="submitModal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="submitTitle"><div class="modal-header"><div><h2 id="submitTitle" data-i18n="submitTitle">Share your property</h2><p data-i18n="submitIntro">Your listing will be reviewed by Luxury Nexus Estates before it goes live.</p></div><button class="close-btn" data-close="submitModal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div><form id="submitForm" class="modal-content"><div class="form-grid">
+		<div class="field full"><label for="listingTitle" data-i18n="propertyTitle">Property title</label><input class="input-control" id="listingTitle" required maxlength="70" placeholder="e.g. Sunlit apartment near the gardens"></div>
+		<div class="field"><label for="listingType" data-i18n="listingType">Listing type</label><select class="input-control" id="listingType"><option value="rent" data-i18n="rent">Rent</option><option value="buy" data-i18n="buy">Buy</option></select></div>
+		<div class="field"><label for="listingPrice" data-i18n="price">Price (€)</label><input class="input-control" id="listingPrice" type="number" min="1" required placeholder="1200"></div>
+		<div class="field"><label for="listingLocation" data-i18n="neighborhood">Neighborhood</label><input class="input-control" id="listingLocation" required placeholder="Pangrati"></div>
+		<div class="field"><label for="listingRooms" data-i18n="bedrooms">Bedrooms</label><input class="input-control" id="listingRooms" type="number" min="0" max="12" value="2" required></div>
+		<div class="field full"><label for="listingPhoto" data-i18n="photoUrl">Photo URL</label><input class="input-control" id="listingPhoto" type="url" placeholder="https://..."><span class="muted" style="font-size:9px" data-i18n="photoHint">Optional. Use a direct link to a property photo.</span></div>
+		<div class="field full"><div class="form-note"><i class="fa-solid fa-shield-halved" style="color:#a5b4fc;margin-right:6px"></i><span data-i18n="pendingNotice">Submitted listings are not public until an agent approves them.</span></div></div>
+	</div><div class="modal-footer"><button type="button" class="button-secondary" data-close="submitModal" data-i18n="cancel">Cancel</button><button type="submit" class="button-primary"><i class="fa-solid fa-paper-plane"></i><span data-i18n="sendReview">Send for review</span></button></div></form></section></div>
+
+	<div class="modal-backdrop" id="detailModal"><section class="modal wide" role="dialog" aria-modal="true" aria-labelledby="detailTitle"><div id="detailMount"></div></section></div>
+
+	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+	<script>
+		const translations = {
+			en:{agentMode:'Agent Mode',eyebrow:'A more personal way home',heroTitle:'Find a place<br>that feels like <span>you.</span>',heroCopy:'Thoughtful homes, matched to the way you want to live. Explore Athens with a little help from NestAI.',buildProfile:'Build my profile',listProperty:'List a property',searchPlaceholder:'Search by area or property',all:'All',rent:'Rent',buy:'Buy',allVibes:'All vibes',quiet:'Quiet & green',lively:'Lively / city',favorites:'Favorites',agencyDesk:'Luxury Nexus · Agency desk',agencyCopy:'Review new listings before they join the public collection.',approvalTitle:'Awaiting your approval',approvalHint:'Client-submitted properties are private until approved.',curatedHomes:'Curated homes',sortMatch:'Best match',sortLow:'Price: low to high',sortHigh:'Price: high to low',exploreMap:'Explore the map',liveAthens:'LIVE · ATHENS',profileTitle:'Your lifestyle profile',profileIntro:'A few details help NestAI find your kind of place.',email:'Contact email',emailPlaceholder:'you@example.com',budget:'Monthly budget',saleEquivalent:'(or equivalent sale price)',neighborhoodVibe:'Neighborhood vibe',quietOption:'Quiet & green',livelyOption:'Lively / city center',transit:'Getting around',metroOption:'Metro / public transport',carOption:'Car / parking',mustHave:'Must-haves',petFriendly:'Pet friendly',dedicatedParking:'Dedicated parking',elevator:'Elevator',furnished:'Furnished',profileNote:'Your match score updates instantly as you explore. Your profile stays on this device.',cancel:'Cancel',saveProfile:'Save my profile',submitTitle:'Share your property',submitIntro:'Your listing will be reviewed by Luxury Nexus Estates before it goes live.',propertyTitle:'Property title',listingType:'Listing type',price:'Price (€)',neighborhood:'Neighborhood',bedrooms:'Bedrooms',photoUrl:'Photo URL',photoHint:'Optional. Use a direct link to a property photo.',pendingNotice:'Submitted listings are not public until an agent approves them.',sendReview:'Send for review',sqm:'sqm',floor:'Floor',energy:'Energy',bathrooms:'baths',bedroom:'beds',area:'area',viewDetails:'View details',monthly:' / mo',sale:'sale',saved:'Saved to favorites',unsaved:'Removed from favorites',homesAthens:'homes in Athens',noResults:'No homes match these filters',noResultsHint:'Try another search or clear a filter.',noFavorites:'No saved homes yet',noFavoritesHint:'Tap the heart on a home to keep it close.',pending:'pending',pendingEmpty:'Nothing waiting for review',approve:'Approve',reject:'Reject',approved:'Listing approved and published',rejected:'Listing rejected',profileSaved:'Your profile is saved. Matches are updated.',profileNeeded:'Build your profile to personalize match scores.',sentReview:'Listing sent for approval',vrToast:'Viewing request received. An agent will be in touch.',loadingMap:'Map unavailable',heat:'Heating',amenities:'Home details',livingCost:'Predictive living cost',occupants:'Occupants',monthlyTotal:'predicted / mo',rentCost:'Rent',utilities:'Power & utilities',buildingFees:'Building fees',scheduleVR:'Schedule 360° VR viewing',close:'Close',published:'Published',awaiting:'Pending approval',rental:'For rent',forSale:'For sale',sort:'Sort',match:'Match',furnishedYes:'Furnished',furnishedNo:'Unfurnished',petsYes:'Pets allowed',petsNo:'No pets',parkingYes:'Parking',parkingNo:'No parking',elevatorYes:'Elevator',heatingGas:'Natural gas',heatingHeatPump:'Heat pump',heatingCentral:'Central heating',energyLabel:'Energy class',photoFallback:'No photo available',pendingCount:n=>`${n} pending`,resultCount:n=>`${n} ${n===1?'home':'homes'} in Athens`,priceUnit:type=>type==='rent'?'/ mo':'',distance:'Transit nearby',share:'Share',searchResult:'Search'} ,
+			el:{agentMode:'Λειτουργία Μεσίτη',eyebrow:'Ένας πιο προσωπικός δρόμος για το σπίτι',heroTitle:'Βρείτε έναν χώρο<br>που σας ταιριάζει.',heroCopy:'Προσεγμένα σπίτια, ταιριασμένα στον τρόπο που θέλετε να ζείτε. Ανακαλύψτε την Αθήνα με τη βοήθεια του NestAI.',buildProfile:'Το προφίλ μου',listProperty:'Καταχώριση ακινήτου',searchPlaceholder:'Αναζήτηση περιοχής ή ακινήτου',all:'Όλα',rent:'Ενοικίαση',buy:'Αγορά',allVibes:'Όλες οι γειτονιές',quiet:'Ήσυχη & πράσινη',lively:'Ζωντανή / κέντρο',favorites:'Αγαπημένα',agencyDesk:'Luxury Nexus · Γραφείο μεσιτών',agencyCopy:'Ελέγξτε νέες καταχωρίσεις πριν δημοσιευτούν.',approvalTitle:'Αναμονή έγκρισης',approvalHint:'Οι καταχωρίσεις πελατών παραμένουν ιδιωτικές μέχρι να εγκριθούν.',curatedHomes:'Επιλεγμένα ακίνητα',sortMatch:'Καλύτερη αντιστοίχιση',sortLow:'Τιμή: αύξουσα',sortHigh:'Τιμή: φθίνουσα',exploreMap:'Εξερευνήστε τον χάρτη',liveAthens:'ΖΩΝΤΑΝΑ · ΑΘΗΝΑ',profileTitle:'Το προφίλ τρόπου ζωής',profileIntro:'Μερικές πληροφορίες βοηθούν το NestAI να βρει το κατάλληλο σπίτι.',email:'Email επικοινωνίας',emailPlaceholder:'you@example.com',budget:'Μηνιαίος προϋπολογισμός',saleEquivalent:'(ή αντίστοιχη τιμή αγοράς)',neighborhoodVibe:'Ατμόσφαιρα γειτονιάς',quietOption:'Ήσυχη & πράσινη',livelyOption:'Ζωντανή / κέντρο',transit:'Μετακινήσεις',metroOption:'Μετρό / δημόσια συγκοινωνία',carOption:'Αυτοκίνητο / πάρκινγκ',mustHave:'Απαραίτητα',petFriendly:'Φιλικό προς κατοικίδια',dedicatedParking:'Ιδιωτικό πάρκινγκ',elevator:'Ανελκυστήρας',furnished:'Επιπλωμένο',profileNote:'Η βαθμολογία ταιριάσματος ενημερώνεται καθώς εξερευνάτε. Το προφίλ σας αποθηκεύεται σε αυτή τη συσκευή.',cancel:'Ακύρωση',saveProfile:'Αποθήκευση προφίλ',submitTitle:'Μοιραστείτε το ακίνητό σας',submitIntro:'Η Luxury Nexus Estates θα ελέγξει την καταχώριση πριν τη δημοσίευση.',propertyTitle:'Τίτλος ακινήτου',listingType:'Τύπος καταχώρισης',price:'Τιμή (€)',neighborhood:'Περιοχή',bedrooms:'Υπνοδωμάτια',photoUrl:'URL φωτογραφίας',photoHint:'Προαιρετικό. Προσθέστε απευθείας σύνδεσμο φωτογραφίας.',pendingNotice:'Οι καταχωρίσεις δεν εμφανίζονται δημόσια πριν εγκριθούν από μεσίτη.',sendReview:'Αποστολή για έλεγχο',sqm:'τ.μ.',floor:'Όροφος',energy:'Ενέργεια',bathrooms:'μπάνια',bedroom:'υπν.',area:'εμβαδόν',viewDetails:'Προβολή',monthly:' / μήνα',sale:'πώληση',saved:'Προστέθηκε στα αγαπημένα',unsaved:'Αφαιρέθηκε από τα αγαπημένα',homesAthens:'ακίνητα στην Αθήνα',noResults:'Δεν βρέθηκαν ακίνητα με αυτά τα φίλτρα',noResultsHint:'Δοκιμάστε άλλη αναζήτηση ή αφαιρέστε ένα φίλτρο.',noFavorites:'Δεν έχετε αποθηκευμένα ακίνητα',noFavoritesHint:'Πατήστε την καρδιά σε ένα ακίνητο για να το αποθηκεύσετε.',pending:'σε αναμονή',pendingEmpty:'Δεν υπάρχουν ακίνητα για έλεγχο',approve:'Έγκριση',reject:'Απόρριψη',approved:'Το ακίνητο εγκρίθηκε και δημοσιεύτηκε',rejected:'Η καταχώριση απορρίφθηκε',profileSaved:'Το προφίλ αποθηκεύτηκε. Οι αντιστοιχίσεις ενημερώθηκαν.',profileNeeded:'Δημιουργήστε προφίλ για εξατομικευμένες βαθμολογίες.',sentReview:'Η καταχώριση στάλθηκε για έγκριση',vrToast:'Το αίτημα προβολής ελήφθη. Θα επικοινωνήσει μαζί σας ένας μεσίτης.',loadingMap:'Ο χάρτης δεν είναι διαθέσιμος',heat:'Θέρμανση',amenities:'Χαρακτηριστικά',livingCost:'Εκτίμηση κόστους διαβίωσης',occupants:'Ένοικοι',monthlyTotal:'εκτίμηση / μήνα',rentCost:'Ενοίκιο',utilities:'Ρεύμα & κοινόχρηστα',buildingFees:'Κοινόχρηστα',scheduleVR:'Προγραμματισμός 360° VR',close:'Κλείσιμο',published:'Δημοσιευμένο',awaiting:'Αναμονή έγκρισης',rental:'Προς ενοικίαση',forSale:'Προς πώληση',sort:'Ταξινόμηση',match:'Ταίριασμα',furnishedYes:'Επιπλωμένο',furnishedNo:'Μη επιπλωμένο',petsYes:'Επιτρέπονται κατοικίδια',petsNo:'Δεν επιτρέπονται κατοικίδια',parkingYes:'Πάρκινγκ',parkingNo:'Χωρίς πάρκινγκ',elevatorYes:'Ανελκυστήρας',heatingGas:'Φυσικό αέριο',heatingHeatPump:'Αντλία θερμότητας',heatingCentral:'Κεντρική θέρμανση',energyLabel:'Ενεργειακή κλάση',photoFallback:'Δεν υπάρχει διαθέσιμη φωτογραφία',pendingCount:n=>`${n} σε αναμονή`,resultCount:n=>`${n} ακίνητα στην Αθήνα`,priceUnit:type=>type==='rent'?'/ μήνα':'',distance:'Κοντά σε συγκοινωνία',share:'Κοινή χρήση',searchResult:'Αναζήτηση'}
+		};
+		const images={
+			ap1:['https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+			ap2:['https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85'],
+			ap3:['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
+			ap4:['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+			ap5:['https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85']
+		};
+		const seedProperties=[
+			{id:'ap1',title:'Quiet light in Pangrati',neighborhood:'Pangrati',type:'rent',price:1350,bedrooms:2,baths:1,area:92,floor:3,energy:'A',vibe:'quiet',transit:'metro',pets:true,parking:true,elevator:true,furnished:true,heating:'heatPump',fees:65,power:115,lat:37.9688,lng:23.7528,photos:images.ap1},
+			{id:'ap2',title:'A city atelier in Koukaki',neighborhood:'Koukaki',type:'rent',price:980,bedrooms:1,baths:1,area:64,floor:2,energy:'B',vibe:'lively',transit:'metro',pets:true,parking:false,elevator:true,furnished:true,heating:'gas',fees:48,power:95,lat:37.9636,lng:23.7275,photos:images.ap2},
+			{id:'ap3',title:'The garden-facing residence',neighborhood:'Kolonaki',type:'buy',price:385000,bedrooms:2,baths:2,area:118,floor:4,energy:'A+',vibe:'quiet',transit:'car',pets:true,parking:true,elevator:true,furnished:false,heating:'central',fees:110,power:150,lat:37.9792,lng:23.7412,photos:images.ap3},
+			{id:'ap4',title:'Terrace days in Neos Kosmos',neighborhood:'Neos Kosmos',type:'rent',price:1100,bedrooms:2,baths:1,area:80,floor:5,energy:'A',vibe:'lively',transit:'metro',pets:false,parking:false,elevator:true,furnished:false,heating:'heatPump',fees:58,power:105,lat:37.9567,lng:23.7278,photos:images.ap4},
+			{id:'ap5',title:'A classic home near the park',neighborhood:'Thiseio',type:'buy',price:298000,bedrooms:2,baths:1,area:88,floor:1,energy:'B',vibe:'quiet',transit:'car',pets:true,parking:true,elevator:false,furnished:true,heating:'gas',fees:72,power:125,lat:37.9761,lng:23.7209,photos:images.ap5}
+		];
+		const storageKey='habitat-match-state-v1';
+		let savedState={};try{savedState=JSON.parse(localStorage.getItem(storageKey)||'{}')}catch(e){}
+		let properties=Array.isArray(savedState.properties)?savedState.properties:seedProperties;
+		let favorites=Array.isArray(savedState.favorites)?savedState.favorites:[];
+		let profile=savedState.profile||null;
+		let language=savedState.language==='el'?'el':'en';
+		let agentMode=!!savedState.agentMode;
+		let activeType='all',showFavorites=false,activeDetail=null,carouselIndex=0,map=null,markers=[],toastTimer=null;
+		const $=selector=>document.querySelector(selector);const $$=selector=>[...document.querySelectorAll(selector)];const tr=(key,...args)=>{const value=translations[language][key]??translations.en[key]??key;return typeof value==='function'?value(...args):value};
+		function persist(){localStorage.setItem(storageKey,JSON.stringify({properties,favorites,profile,language,agentMode}))}
+		function escapeHtml(value=''){return String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]))}
+		function toast(message){const element=$('#toast');element.querySelector('span').textContent=message;element.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>element.classList.remove('show'),2800)}
+		function openModal(id){$('#'+id).classList.add('open');document.body.style.overflow='hidden'}function closeModal(id){$('#'+id).classList.remove('open');if(!$('.modal-backdrop.open'))document.body.style.overflow=''}
+		function applyTranslations(){document.documentElement.lang=language;$$('[data-i18n]').forEach(el=>el.textContent=tr(el.dataset.i18n));$$('[data-i18n-html]').forEach(el=>el.innerHTML=tr(el.dataset.i18nHtml));$$('[data-i18n-placeholder]').forEach(el=>el.placeholder=tr(el.dataset.i18nPlaceholder));$('#languageToggle').innerHTML=language==='en'?'<span>GR</span> <span style="color:#596273">/</span> <b>EN</b>':'<b>GR</b> <span style="color:#596273">/</span> <span>EN</span>';$('#budgetOutput').textContent=formatBudget(Number($('#budgetRange').value));renderAll()}
+		function formatBudget(value){return '€'+Number(value).toLocaleString(language==='el'?'el-GR':'en-US')+(language==='el'?' / μήνα':' / mo')}
+		function formatPrice(property){return '€'+Number(property.price).toLocaleString(language==='el'?'el-GR':'en-US')+(property.type==='rent'?tr('monthly'):'')}
+		function matchScore(property){if(!profile)return 82;let score=0;const budget=Number(profile.budget||1400);if(property.type==='buy'){score+=property.price<=budget*280?35:property.price<=budget*350?20:5}else{score+=property.price<=budget?35:Math.max(0,35-Math.round((property.price-budget)/90))}score+=property.vibe===profile.vibe?20:5;score+=property.transit===profile.transit?15:6;const needs=profile.needs||[];if(needs.length){score+=Math.round(needs.reduce((sum,key)=>sum+(property[key]?1:0),0)/needs.length*30)}else score+=24;return Math.min(99,Math.max(38,score))}
+		function getVisibleProperties(){let list=properties.filter(p=>p.status!=='pending');if(activeType!=='all')list=list.filter(p=>p.type===activeType);const vibe=$('#vibeFilter').value;if(vibe!=='all')list=list.filter(p=>p.vibe===vibe);if(showFavorites)list=list.filter(p=>favorites.includes(p.id));const query=$('#searchInput').value.trim().toLowerCase();if(query)list=list.filter(p=>(p.title+' '+p.neighborhood).toLowerCase().includes(query));const sort=$('#sortSelect').value;if(sort==='priceAsc')list.sort((a,b)=>a.price-b.price);else if(sort==='priceDesc')list.sort((a,b)=>b.price-a.price);else list.sort((a,b)=>matchScore(b)-matchScore(a));return list}
+		function renderCard(p,index){const saved=favorites.includes(p.id);const photo=(p.photos&&p.photos[0])||p.photo||images.ap1[0];return `<article class="property-card" style="animation-delay:${Math.min(index*45,240)}ms"><div class="card-image"><img src="${escapeHtml(photo)}" alt="${escapeHtml(p.title)}" loading="lazy" onerror="this.src='${images.ap1[0]}'"><div class="image-shade"></div><span class="pill">${p.type==='rent'?tr('rental'):tr('forSale')}</span><span class="match-pill"><i class="fa-solid fa-sparkles"></i>${matchScore(p)}% ${tr('match')}</span><button class="heart-btn ${saved?'saved':''}" data-favorite="${escapeHtml(p.id)}" aria-label="${saved?'Remove favorite':'Save favorite'}"><i class="${saved?'fa-solid':'fa-regular'} fa-heart"></i></button></div><div class="card-body"><div class="card-location"><i class="fa-solid fa-location-dot"></i>${escapeHtml(p.neighborhood)}, Athens</div><h3 class="card-title">${escapeHtml(p.title)}</h3><div class="card-meta"><span><i class="fa-solid fa-bed"></i>${p.bedrooms} ${tr('bedroom')}</span><span><i class="fa-solid fa-maximize"></i>${p.area} ${tr('sqm')}</span><span><i class="fa-solid fa-bolt"></i>${escapeHtml(p.energy||'A')}</span></div><div class="price-row"><div class="price">${formatPrice(p)}</div><button class="card-open" data-detail="${escapeHtml(p.id)}">${tr('viewDetails')} <i class="fa-solid fa-arrow-right"></i></button></div></div></article>`}
+		function renderListings(){const list=getVisibleProperties();$('#resultCount').textContent=tr('resultCount',list.length);$('#listingGrid').innerHTML=list.length?list.map(renderCard).join(''):`<div class="empty-state"><i class="fa-regular fa-compass"></i><strong>${showFavorites?tr('noFavorites'):tr('noResults')}</strong><p>${showFavorites?tr('noFavoritesHint'):tr('noResultsHint')}</p></div>`;$$('[data-favorite]').forEach(button=>button.addEventListener('click',()=>toggleFavorite(button.dataset.favorite)));$$('[data-detail]').forEach(button=>button.addEventListener('click',()=>openDetail(button.dataset.detail)));updateMap(list)}
+		function renderPending(){const pending=properties.filter(p=>p.status==='pending');$('#pendingBadge').textContent=tr('pendingCount',pending.length);$('#adminSection').classList.toggle('visible',agentMode);$('#adminBanner').classList.toggle('visible',agentMode);$('#pendingList').innerHTML=pending.length?pending.map(p=>`<article class="pending-card"><img src="${escapeHtml((p.photos&&p.photos[0])||p.photo||images.ap1[0])}" alt="" onerror="this.src='${images.ap1[0]}'"><div class="pending-details"><strong>${escapeHtml(p.title)}</strong><p>${escapeHtml(p.neighborhood)} · ${formatPrice(p)}</p><div class="pending-actions"><button class="button-primary" data-approve="${escapeHtml(p.id)}"><i class="fa-solid fa-check"></i> ${tr('approve')}</button><button class="button-danger" data-reject="${escapeHtml(p.id)}"><i class="fa-solid fa-xmark"></i> ${tr('reject')}</button></div></div></article>`).join():`<div class="empty-state" style="padding:23px"><strong>${tr('pendingEmpty')}</strong></div>`;$$('[data-approve]').forEach(b=>b.onclick=()=>moderate(b.dataset.approve,true));$$('[data-reject]').forEach(b=>b.onclick=()=>moderate(b.dataset.reject,false))}
+		function renderAll(){renderListings();renderPending();$('#favoritesCount').textContent=favorites.length;$('#favoriteFilter').classList.toggle('active',showFavorites);$('#roleToggle').classList.toggle('active',agentMode);if(map)map.invalidateSize()}
+		function toggleFavorite(id){favorites=favorites.includes(id)?favorites.filter(item=>item!==id):[...favorites,id];persist();renderAll();toast(tr(favorites.includes(id)?'saved':'unsaved'))}
+		function moderate(id,approved){const property=properties.find(p=>p.id===id);if(!property)return;if(approved)delete property.status;else properties=properties.filter(p=>p.id!==id);persist();renderAll();toast(tr(approved?'approved':'rejected'))}
+		function initMap(){if(!window.L){$('#map').innerHTML=`<div class="empty-state"><strong>${tr('loadingMap')}</strong></div>`;return}map=L.map('map',{zoomControl:true,scrollWheelZoom:false}).setView([37.9685,23.735],13);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'}).addTo(map);map.on('click',()=>$('#mapPreview').innerHTML='');updateMap(getVisibleProperties())}
+		function updateMap(list){if(!map)return;markers.forEach(marker=>map.removeLayer(marker));markers=[];list.forEach(p=>{if(typeof p.lat!=='number'||typeof p.lng!=='number')return;const icon=L.divIcon({className:'',html:`<div class="price-marker">€${p.type==='rent'?Number(p.price).toLocaleString():Math.round(p.price/1000)+'k'}${p.type==='rent'?'<small style="font-weight:500;color:#aab2c0"> / mo</small>':''}</div>`,iconSize:[94,34],iconAnchor:[47,34]});const marker=L.marker([p.lat,p.lng],{icon}).addTo(map);marker.on('click',()=>showMapPreview(p));markers.push(marker)})}
+		function showMapPreview(p){$('#mapPreview').innerHTML=`<div class="map-preview"><img src="${escapeHtml((p.photos&&p.photos[0])||p.photo||images.ap1[0])}" alt="" onerror="this.src='${images.ap1[0]}'"><div class="preview-info"><small>${matchScore(p)}% ${tr('match')} · ${escapeHtml(p.neighborhood)}</small><strong>${escapeHtml(p.title)}</strong><span>${formatPrice(p)}</span></div><button class="preview-open" data-preview-detail="${escapeHtml(p.id)}" aria-label="${tr('viewDetails')}"><i class="fa-solid fa-arrow-up-right-from-square"></i></button></div>`;$('#mapPreview button').onclick=()=>openDetail(p.id)}
+		function openDetail(id){const p=properties.find(item=>item.id===id);if(!p)return;activeDetail=p;carouselIndex=0;renderDetail();openModal('detailModal')}
+		function renderDetail(){const p=activeDetail;if(!p)return;const photos=p.photos&&p.photos.length?p.photos:[p.photo||images.ap1[0]];const monthlyTotal=(p.type==='rent'?p.price:Math.round(p.price*.004))+p.power*Number($('#occupantsRange')?.value||1)+p.fees;$('#detailMount').innerHTML=`<div class="gallery"><img id="galleryImage" src="${escapeHtml(photos[carouselIndex%photos.length])}" alt="${escapeHtml(p.title)}" onerror="this.src='${images.ap1[0]}'"><div class="gallery-gradient"></div><button class="gallery-control prev" id="galleryPrev" aria-label="Previous photo"><i class="fa-solid fa-chevron-left"></i></button><button class="gallery-control next" id="galleryNext" aria-label="Next photo"><i class="fa-solid fa-chevron-right"></i></button><div class="gallery-title"><span>${escapeHtml(p.neighborhood)} · Athens</span><h2 id="detailTitle">${escapeHtml(p.title)}</h2></div><div class="gallery-dots">${photos.map((_,i)=>`<button class="${i===carouselIndex?'active':''}" data-gallery-index="${i}" aria-label="Photo ${i+1}"></button>`).join('')}</div></div><div class="detail-content"><div class="detail-topline"><div class="detail-price">${formatPrice(p)}</div><span class="detail-score"><i class="fa-solid fa-sparkles"></i> ${matchScore(p)}% ${tr('match')}</span></div><div class="detail-address"><i class="fa-solid fa-location-dot"></i> ${escapeHtml(p.neighborhood)}, Athens · ${tr('distance')}</div><div class="spec-grid"><div class="spec"><strong>${p.bedrooms}</strong><span>${tr('bedrooms')}</span></div><div class="spec"><strong>${p.area} ${tr('sqm')}</strong><span>${tr('area')}</span></div><div class="spec"><strong>${escapeHtml(String(p.floor||1))}</strong><span>${tr('floor')}</span></div><div class="spec"><strong>${escapeHtml(p.energy||'A')}</strong><span>${tr('energyLabel')}</span></div></div><h3 class="detail-section-title">${tr('amenities')}</h3><div class="amenities"><span class="amenity"><i class="fa-solid fa-temperature-half"></i> ${tr(p.heating==='gas'?'heatingGas':p.heating==='heatPump'?'heatingHeatPump':'heatingCentral')}</span><span class="amenity"><i class="fa-solid fa-paw"></i> ${tr(p.pets?'petsYes':'petsNo')}</span><span class="amenity"><i class="fa-solid fa-car"></i> ${tr(p.parking?'parkingYes':'parkingNo')}</span>${p.elevator?`<span class="amenity"><i class="fa-solid fa-elevator"></i> ${tr('elevatorYes')}</span>`:''}<span class="amenity"><i class="fa-solid fa-couch"></i> ${tr(p.furnished?'furnishedYes':'furnishedNo')}</span></div><div class="cost-box"><div class="cost-head"><strong>${tr('livingCost')}</strong><span class="cost-total" id="costTotal">€${monthlyTotal.toLocaleString()}<small> ${tr('monthlyTotal')}</small></span></div><div class="cost-controls"><span class="occupants-label">${tr('occupants')}</span><input id="occupantsRange" type="range" min="1" max="4" value="1"><output id="occupantCount" class="occupants-label">1</output></div><div class="cost-breakdown"><span>${tr('rentCost')}: ${p.type==='rent'?'€'+p.price.toLocaleString():'€'+Math.round(p.price*.004).toLocaleString()}</span><span>${tr('utilities')}: €${p.power}</span><span>${tr('buildingFees')}: €${p.fees}</span></div></div><div class="detail-actions"><button class="button-secondary" id="detailFavorite"><i class="${favorites.includes(p.id)?'fa-solid':'fa-regular'} fa-heart"></i> ${tr('favorites')}</button><button class="button-primary" id="vrButton"><i class="fa-solid fa-vr-cardboard"></i> ${tr('scheduleVR')}</button></div></div>`;
+			$('#galleryPrev').onclick=()=>{carouselIndex=(carouselIndex-1+photos.length)%photos.length;renderDetail()};$('#galleryNext').onclick=()=>{carouselIndex=(carouselIndex+1)%photos.length;renderDetail()};$$('[data-gallery-index]').forEach(b=>b.onclick=()=>{carouselIndex=Number(b.dataset.galleryIndex);renderDetail()});$('#occupantsRange').oninput=e=>{const occupants=Number(e.target.value),base=p.type==='rent'?p.price:Math.round(p.price*.004);$('#occupantCount').textContent=occupants;$('#costTotal').innerHTML=`€${(base+p.power*occupants+p.fees).toLocaleString()}<small> ${tr('monthlyTotal')}</small>`};$('#detailFavorite').onclick=()=>{toggleFavorite(p.id);renderDetail()};$('#vrButton').onclick=()=>toast(tr('vrToast'))}
+		function setLanguage(next){language=next;persist();applyTranslations()}
+		$('#languageToggle').addEventListener('click',()=>setLanguage(language==='en'?'el':'en'));
+		$('#viewToggle').addEventListener('click',()=>{const on=$('#appShell').classList.toggle('phone-mode');$('#viewToggle').innerHTML=`<i class="fa-solid ${on?'fa-desktop':'fa-mobile-screen-button'}"></i>`;$('#viewToggle').title=on?'Desktop preview':'Mobile preview';setTimeout(()=>map&&map.invalidateSize(),360)});
+		$('#roleToggle').addEventListener('click',()=>{agentMode=!agentMode;persist();renderAll();toast(agentMode?tr('agencyDesk'):'')});
+		$('#favoritesToggle').addEventListener('click',()=>{showFavorites=!showFavorites;renderAll()});$('#favoriteFilter').addEventListener('click',()=>{showFavorites=!showFavorites;renderAll()});
+		$('#typeTabs').addEventListener('click',event=>{const button=event.target.closest('[data-type]');if(!button)return;activeType=button.dataset.type;$$('#typeTabs .segment-btn').forEach(item=>item.classList.toggle('active',item===button));renderAll()});
+		$('#searchInput').addEventListener('input',renderAll);$('#vibeFilter').addEventListener('change',renderAll);$('#sortSelect').addEventListener('change',renderAll);
+		$('#budgetRange').addEventListener('input',e=>$('#budgetOutput').textContent=formatBudget(Number(e.target.value)));
+		$('#profileOpen').addEventListener('click',()=>{if(profile){$('#profileEmail').value=profile.email||'';$('#budgetRange').value=profile.budget||1400;$('#budgetOutput').textContent=formatBudget(Number($('#budgetRange').value));$('#'+(profile.vibe==='lively'?'vibeLively':'vibeQuiet')).checked=true;$('#'+(profile.transit==='car'?'transitCar':'transitMetro')).checked=true;$$('input[name="needs"]').forEach(c=>c.checked=(profile.needs||[]).includes(c.value))}openModal('profileModal')});
+		$('#profileForm').addEventListener('submit',event=>{event.preventDefault();profile={email:$('#profileEmail').value,budget:Number($('#budgetRange').value),vibe:$('input[name="vibe"]:checked').value,transit:$('input[name="transit"]:checked').value,needs:$$('input[name="needs"]:checked').map(c=>c.value)};persist();closeModal('profileModal');renderAll();toast(tr('profileSaved'))});
+		$('#submitOpen').addEventListener('click',()=>openModal('submitModal'));
+		$('#submitForm').addEventListener('submit',event=>{event.preventDefault();const title=$('#listingTitle').value.trim(),type=$('#listingType').value,price=Number($('#listingPrice').value),neighborhood=$('#listingLocation').value.trim(),bedrooms=Number($('#listingRooms').value),photo=$('#listingPhoto').value.trim();const photoList=photo?[photo]:[images.ap1[0]];properties.unshift({id:'user-'+Date.now(),title,type,price,neighborhood,bedrooms,baths:1,area:Math.max(40,bedrooms*30+25),floor:1,energy:'A',vibe:'quiet',transit:'metro',pets:false,parking:false,elevator:true,furnished:false,heating:'central',fees:55,power:110,lat:37.967+Math.random()*.018,lng:23.72+Math.random()*.03,photos:photoList,status:'pending'});persist();closeModal('submitModal');event.target.reset();$('#listingRooms').value=2;renderAll();toast(tr('sentReview'))});
+		$$('[data-close]').forEach(button=>button.addEventListener('click',()=>closeModal(button.dataset.close)));$$('.modal-backdrop').forEach(backdrop=>backdrop.addEventListener('click',event=>{if(event.target===backdrop)closeModal(backdrop.id)}));document.addEventListener('keydown',event=>{if(event.key==='Escape')$$('.modal-backdrop.open').forEach(modal=>closeModal(modal.id))});
+		applyTranslations();initMap();
+	</script>
 </body>
 </html>
