@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Habitat Match - AI Lifestyle Real Estate</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              accent: '#10b981',
+              pink: '#ec4899',
+            }
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%, 100%': { opacity: 0.6, transform: 'scale(1)' },
+              '50%': { opacity: 1, transform: 'scale(1.05)' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(20px)', opacity: 0 },
+              '100%': { transform: 'translateY(0)', opacity: 1 },
+            }
+          },
+          animation: {
+            'glow': 'pulseGlow 3s ease-in-out infinite',
+            'slide-up': 'slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    /* Custom Scrollbar for sleek appearance */
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.6);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(99, 102, 241, 0.5);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(99, 102, 241, 0.8);
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-nav {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="h-full font-sans bg-slate-950 text-slate-100 flex flex-col items-center justify-center p-0 md:p-6 antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Desktop Presentation Controls Top Bar -->
+  <header class="w-full max-w-5xl mb-4 hidden md:flex justify-between items-center bg-slate-900/80 px-6 py-3 rounded-2xl border border-slate-800 shadow-xl">
+    <div class="flex items-center space-x-3">
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-brand-pink flex items-center justify-center shadow-lg shadow-brand-500/20">
+        <i class="fa-solid fa-house-signal text-white text-lg"></i>
+      </div>
+      <div>
+        <h1 class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">Habitat Match <span class="text-xs px-2 py-0.5 rounded-full bg-brand-500/20 text-brand-500 border border-brand-500/30">AI Nest</span></h1>
+        <p class="text-xs text-slate-400">Interactive HW1 Mockup • AUEB Real Estate Project</p>
+      </div>
+    </div>
+
+    <!-- Toggle Controls -->
+    <div class="flex items-center space-x-4 text-xs font-medium">
+      <div class="bg-slate-800 p-1 rounded-xl flex items-center border border-slate-700">
+        <button id="viewMobileBtn" onclick="toggleViewport('mobile')" class="px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold shadow transition-all">
+          <i class="fa-solid fa-mobile-screen mr-1.5"></i> Mobile View
+        </button>
+        <button id="viewExpandedBtn" onclick="toggleViewport('expanded')" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all">
+          <i class="fa-solid fa-expand mr-1.5"></i> Expanded Canvas
+        </button>
+      </div>
+      
+      <button onclick="resetAppState()" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 border border-slate-700 transition">
+        <i class="fa-solid fa-rotate-right mr-1"></i> Reset Demo
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container / Phone Mockup Wrapper -->
+  <main id="phoneContainer" class="w-full max-w-[420px] h-[100vh] md:h-[840px] bg-slate-900 md:rounded-[48px] shadow-2xl shadow-indigo-950/50 border-0 md:border-[10px] border-slate-800 relative flex flex-col overflow-hidden transition-all duration-500">
+    
+    <!-- Phone Notch / Island (Visible on Desktop Mode) -->
+    <div class="hidden md:flex justify-center w-full top-0 left-0 absolute z-50 pointer-events-none pt-2">
+      <div class="w-32 h-5 bg-slate-950 rounded-full flex items-center justify-between px-3">
+        <div class="w-2.5 h-2.5 bg-slate-800 rounded-full"></div>
+        <div class="w-3 h-3 bg-slate-900 rounded-full border border-slate-800"></div>
+      </div>
+    </div>
+
+    <!-- Mobile Top Status Bar -->
+    <div class="pt-2 px-6 pb-2 flex justify-between items-center text-xs font-semibold text-slate-400 select-none z-40 bg-slate-900/90 backdrop-blur">
+      <span id="currentTime">09:41</span>
+      <div class="flex items-center space-x-2 text-xs">
+        <i class="fa-solid fa-signal"></i>
+        <i class="fa-solid fa-wifi"></i>
+        <i class="fa-solid fa-battery-three-quarters text-emerald-400"></i>
+      </div>
+    </div>
+
+    <!-- Dynamic Screen Content Area -->
+    <div id="screenViewport" class="flex-1 overflow-y-auto overflow-x-hidden relative hide-scrollbar pb-20">
+      
+      <!-- SCREEN 1: ONBOARDING / LIFESTYLE VIBE QUIZ -->
+      <section id="screen-quiz" class="p-5 space-y-6 animate-slide-up">
+        <!-- Header -->
+        <div class="space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-brand-500 bg-brand-500/10 px-2.5 py-1 rounded-full border border-brand-500/20">AI Recommender Setup</span>
+          <h2 class="text-2xl font-extrabold text-white tracking-tight">Craft Your Ideal Habitat</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">Tell NestAI what matters to your lifestyle. Our recommendation engine matches apartments based on commute, noise, vibe & expenses.</p>
+        </div>
+
+        <!-- Interactive Sliders / Preferences -->
+        <div class="space-y-5 glass-card p-4 rounded-2xl">
+          
+          <!-- Preference 1: Noise Tolerance -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-semibold text-slate-200 flex items-center gap-2">
+                <i class="fa-solid fa-volume-xmark text-brand-500"></i> Quiet & Peaceful
+              </span>
+              <span id="label-noise" class="text-brand-500 font-bold">Ultra Calm (Quiet)</span>
+            </div>
+            <input type="range" id="slider-noise" min="1" max="5" value="2" class="w-full accent-indigo-500 bg-slate-800 h-2 rounded-lg cursor-pointer" oninput="updateQuizValues()">
+            <div class="flex justify-between text-[10px] text-slate-500">
+              <span>Zen Silent</span>
+              <span>Lively Hub</span>
+            </div>
+          </div>
+
+          <!-- Preference 2: Vibe & Culture -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-semibold text-slate-200 flex items-center gap-2">
+                <i class="fa-solid fa-martini-glass-citrus text-brand-pink"></i> Nightlife & Cafes
+              </span>
+              <span id="label-vibe" class="text-brand-pink font-bold">High Priority</span>
+            </div>
+            <input type="range" id="slider-vibe" min="1" max="5" value="4" class="w-full accent-pink-500 bg-slate-800 h-2 rounded-lg cursor-pointer" oninput="updateQuizValues()">
+            <div class="flex justify-between text-[10px] text-slate-500">
+              <span>Residential</span>
+              <span>Trendy Nightlife</span>
+            </div>
+          </div>
+
+          <!-- Preference 3: Destination Anchor (For Predictive Commute) -->
+          <div class="space-y-1.5">
+            <label class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+              <i class="fa-solid fa-location-dot text-emerald-400"></i> Primary Daily Destination
+            </label>
+            <select id="select-destination" class="w-full bg-slate-800/90 border border-slate-700 text-xs rounded-xl p-2.5 text-slate-200 focus:outline-none focus:border-brand-500" onchange="updateQuizValues()">
+              <option value="AUEB Campus (Patision)" selected>AUEB Campus (Athens Center)</option>
+              <option value="Syntagma Tech Hub">Syntagma Square / Tech Hub</option>
+              <option value="Marousi Business District">Marousi Business District</option>
+              <option value="Piraeus University & Port">Piraeus Center</option>
+            </select>
+          </div>
+
+          <!-- Preference 4: Pet Friendly Toggles -->
+          <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400">
+                <i class="fa-solid fa-dog text-sm"></i>
+              </div>
+              <div>
+                <p class="text-xs font-semibold text-slate-200">Pet Friendly Neighborhood</p>
+                <p class="text-[10px] text-slate-400">Near dog parks & vet facilities</p>
+              </div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="toggle-pets" checked class="sr-only peer" onchange="updateQuizValues()">
+              <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <!-- Preference 5: Max Monthly Budget Slider -->
+          <div class="space-y-2 pt-2 border-t border-slate-800">
+            <div class="flex justify-between items-center text-xs">
+              <span class="font-semibold text-slate-200 flex items-center gap-2">
+                <i class="fa-solid fa-wallet text-amber-400"></i> Max Total Housing Budget
+              </span>
+              <span id="label-budget" class="text-amber-400 font-bold">€750 / mo</span>
+            </div>
+            <input type="range" id="slider-budget" min="400" max="1500" step="50" value="750" class="w-full accent-amber-500 bg-slate-800 h-2 rounded-lg cursor-pointer" oninput="updateQuizValues()">
+            <div class="flex justify-between text-[10px] text-slate-500">
+              <span>€400/mo</span>
+              <span>€1,500/mo</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Action Button -->
+        <button onclick="applyQuizAndGoToFeed()" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-brand-600 via-indigo-600 to-brand-pink text-white font-bold text-sm shadow-lg shadow-indigo-600/30 hover:opacity-95 transition-all flex items-center justify-center space-x-2 group">
+          <span>Run AI Match Engine</span>
+          <i class="fa-solid fa-wand-magic-sparkles group-hover:rotate-12 transition-transform"></i>
+        </button>
+      </section>
+
+      <!-- SCREEN 2: RECOMMENDATION MATCH FEED -->
+      <section id="screen-feed" class="p-4 space-y-4 hidden">
+        
+        <!-- Search Header & Filter Bar -->
+        <div class="flex items-center justify-between gap-2">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-xs"></i>
+            <input type="text" placeholder="Filter by neighborhood or feature..." class="w-full bg-slate-800/80 border border-slate-700/80 rounded-xl pl-8 pr-3 py-2 text-xs text-slate-200 placeholder-slate-400 focus:outline-none focus:border-brand-500">
+          </div>
+          <button onclick="goToScreen('quiz')" class="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-brand-500 hover:bg-slate-700">
+            <i class="fa-solid fa-sliders text-xs"></i>
+          </button>
+        </div>
+
+        <!-- Recommender Banner -->
+        <div class="glass-card p-3 rounded-2xl flex items-center justify-between bg-gradient-to-r from-brand-900/40 via-slate-800 to-slate-800/80 border border-brand-500/20">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-xl bg-brand-500/20 text-brand-500 flex items-center justify-center font-bold text-xs">
+              <i class="fa-solid fa-robot"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-100">AI Recommender Active</p>
+              <p class="text-[10px] text-slate-400">Optimized for <span id="active-dest-label" class="text-indigo-300 font-medium">AUEB Campus</span></p>
+            </div>
+          </div>
+          <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">Live Sync</span>
+        </div>
+
+        <!-- Feed Cards Container -->
+        <div id="feedCardsList" class="space-y-4">
+          <!-- Dynamic Property Cards will be injected via JS -->
+        </div>
+
+      </section>
+
+      <!-- SCREEN 3: MAP VIEW WITH HEATMAP TOGGLES -->
+      <section id="screen-map" class="h-full flex flex-col hidden">
+        <!-- Interactive Map Header Controls -->
+        <div class="p-4 space-y-2 bg-slate-900/90 z-10 border-b border-slate-800">
+          <div class="flex justify-between items-center">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-map-location-dot text-brand-500"></i> Interactive Habitat Map
+            </h3>
+            <span class="text-[10px] text-slate-400">Athens Metropolitan Area</span>
+          </div>
+          
+          <!-- Heatmap Overlay Toggles -->
+          <div class="flex items-center gap-1.5 overflow-x-auto hide-scrollbar pt-1 text-[11px]">
+            <span class="text-[10px] text-slate-400 font-semibold whitespace-nowrap">Heatmaps:</span>
+            <button onclick="toggleMapLayer('quiet')" id="layer-quiet" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 whitespace-nowrap font-medium">
+              <i class="fa-solid fa-leaf mr-1"></i> Quiet Zones
+            </button>
+            <button onclick="toggleMapLayer('transit')" id="layer-transit" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 whitespace-nowrap font-medium">
+              <i class="fa-solid fa-train-subway mr-1"></i> Metro Hubs
+            </button>
+            <button onclick="toggleMapLayer('nightlife')" id="layer-nightlife" class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 whitespace-nowrap font-medium">
+              <i class="fa-solid fa-martini-glass mr-1"></i> Nightlife
+            </button>
+          </div>
+        </div>
+
+        <!-- Map Canvas Visual Simulation -->
+        <div class="flex-1 relative bg-slate-950 overflow-hidden min-h-[460px] flex items-center justify-center">
+          
+          <!-- Simulated Dark Grid Map Background -->
+          <div class="absolute inset-0 opacity-30 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:16px_16px]"></div>
+          
+          <!-- Vector Map Route Overlay Lines -->
+          <svg class="absolute inset-0 w-full h-full pointer-events-none stroke-slate-700/60" stroke-width="2" fill="none">
+            <path d="M 20 100 Q 150 180 320 280 T 400 450" stroke-dasharray="4 4" />
+            <path d="M 300 50 Q 200 220 80 400" />
+            <circle cx="200" cy="220" r="120" class="fill-emerald-500/10 stroke-emerald-500/30" id="map-heatmap-overlay" />
+          </svg>
+
+          <!-- Destination Pin (AUEB) -->
+          <div class="absolute top-[28%] left-[48%] -translate-x-1/2 -translate-y-1/2 z-20 text-center pointer-events-none">
+            <div class="bg-indigo-600 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-full shadow-lg border border-indigo-300">
+              <i class="fa-solid fa-graduation-cap mr-1"></i> AUEB Campus
+            </div>
+            <div class="w-3 h-3 bg-indigo-500 rounded-full mx-auto mt-0.5 animate-ping"></div>
+          </div>
+
+          <!-- Property Map Pins -->
+          <!-- Pin 1: Kypseli -->
+          <div onclick="openPropertyDetails(1)" class="absolute top-[20%] left-[30%] z-30 cursor-pointer group hover:scale-110 transition-transform">
+            <div class="bg-slate-900 border-2 border-emerald-400 text-emerald-400 px-2 py-1 rounded-xl shadow-xl flex items-center space-x-1">
+              <i class="fa-solid fa-bolt text-xs"></i>
+              <span class="text-[11px] font-bold">94%</span>
+              <span class="text-[10px] text-slate-300">€580</span>
+            </div>
+            <div class="w-2 h-2 bg-emerald-400 rotate-45 mx-auto -mt-1"></div>
+          </div>
+
+          <!-- Pin 2: Exarcheia -->
+          <div onclick="openPropertyDetails(2)" class="absolute top-[42%] left-[42%] z-30 cursor-pointer group hover:scale-110 transition-transform">
+            <div class="bg-slate-900 border-2 border-emerald-400 text-emerald-400 px-2 py-1 rounded-xl shadow-xl flex items-center space-x-1">
+              <i class="fa-solid fa-bolt text-xs"></i>
+              <span class="text-[11px] font-bold">91%</span>
+              <span class="text-[10px] text-slate-300">€620</span>
+            </div>
+            <div class="w-2 h-2 bg-emerald-400 rotate-45 mx-auto -mt-1"></div>
+          </div>
+
+          <!-- Pin 3: Pagkrati -->
+          <div onclick="openPropertyDetails(3)" class="absolute top-[65%] left-[62%] z-30 cursor-pointer group hover:scale-110 transition-transform">
+            <div class="bg-slate-900 border-2 border-amber-400 text-amber-400 px-2 py-1 rounded-xl shadow-xl flex items-center space-x-1">
+              <i class="fa-solid fa-bolt text-xs"></i>
+              <span class="text-[11px] font-bold">84%</span>
+              <span class="text-[10px] text-slate-300">€710</span>
+            </div>
+            <div class="w-2 h-2 bg-amber-400 rotate-45 mx-auto -mt-1"></div>
+          </div>
+
+          <!-- Pin 4: Ampelokipoi -->
+          <div onclick="openPropertyDetails(4)" class="absolute top-[32%] left-[72%] z-30 cursor-pointer group hover:scale-110 transition-transform">
+            <div class="bg-slate-900 border-2 border-emerald-400 text-emerald-400 px-2 py-1 rounded-xl shadow-xl flex items-center space-x-1">
+              <i class="fa-solid fa-bolt text-xs"></i>
+              <span class="text-[11px] font-bold">89%</span>
+              <span class="text-[10px] text-slate-300">€650</span>
+            </div>
+            <div class="w-2 h-2 bg-emerald-400 rotate-45 mx-auto -mt-1"></div>
+          </div>
+
+          <!-- Map Legend Badge -->
+          <div class="absolute bottom-4 left-4 right-4 glass-card p-2.5 rounded-xl text-[11px] flex justify-between items-center z-20">
+            <span class="text-slate-300"><i class="fa-solid fa-circle-info text-brand-500 mr-1"></i> Tap any pin to open predictive breakdown</span>
+            <span class="text-emerald-400 font-bold">4 Matches</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN 4: PROPERTY DETAILS & PREDICTIVE MODELS -->
+      <section id="screen-details" class="p-4 space-y-5 hidden animate-slide-up">
+        
+        <!-- Back Button Header -->
+        <div class="flex justify-between items-center">
+          <button onclick="goToScreen('feed')" class="px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white border border-slate-700 text-xs font-semibold flex items-center gap-1.5">
+            <i class="fa-solid fa-arrow-left"></i> Back to Feed
+          </button>
+          <div class="flex items-center space-x-2">
+            <button onclick="toggleBookmarkCurrent()" id="detailBookmarkBtn" class="p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-pink-500">
+              <i class="fa-regular fa-heart"></i>
+            </button>
+            <button onclick="shareProperty()" class="p-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300">
+              <i class="fa-solid fa-share-nodes"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Property Hero Card -->
+        <div class="relative rounded-2xl overflow-hidden group shadow-xl">
+          <img id="detail-img" src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" alt="Apartment" class="w-full h-52 object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+          
+          <!-- Match Score Badge Over Image -->
+          <div class="absolute top-3 left-3 bg-slate-950/80 backdrop-blur border border-emerald-500/40 px-3 py-1 rounded-xl text-xs font-extrabold text-emerald-400 flex items-center space-x-1.5">
+            <i class="fa-solid fa-microchip"></i>
+            <span id="detail-match-score">94% Lifestyle Match</span>
+          </div>
+
+          <div class="absolute bottom-3 left-3 right-3 flex justify-between items-end">
+            <div>
+              <span id="detail-neighborhood" class="text-[10px] font-bold uppercase tracking-wider text-indigo-300 bg-indigo-900/60 px-2 py-0.5 rounded-md border border-indigo-500/30">Kypseli • Fokionos Negri</span>
+              <h3 id="detail-title" class="text-lg font-bold text-white mt-1">Sunlit Minimalist Studio</h3>
+            </div>
+            <div class="text-right">
+              <span id="detail-price" class="text-xl font-extrabold text-emerald-400">€580</span>
+              <span class="text-[10px] text-slate-400 block">/ month</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Spec Pills -->
+        <div class="grid grid-cols-4 gap-2 text-center text-xs">
+          <div class="glass-card p-2 rounded-xl">
+            <i class="fa-solid fa-vector-square text-brand-500 block mb-1"></i>
+            <span id="detail-size" class="font-bold text-slate-200">52 m²</span>
+          </div>
+          <div class="glass-card p-2 rounded-xl">
+            <i class="fa-solid fa-bed text-brand-500 block mb-1"></i>
+            <span id="detail-beds" class="font-bold text-slate-200">1 Bed</span>
+          </div>
+          <div class="glass-card p-2 rounded-xl">
+            <i class="fa-solid fa-building text-brand-500 block mb-1"></i>
+            <span id="detail-floor" class="font-bold text-slate-200">2nd Floor</span>
+          </div>
+          <div class="glass-card p-2 rounded-xl">
+            <i class="fa-solid fa-bolt text-emerald-400 block mb-1"></i>
+            <span id="detail-energy" class="font-bold text-slate-200">Class A+</span>
+          </div>
+        </div>
+
+        <!-- PREDICTIVE MODEL 1: Interactive Commute Estimator -->
+        <div class="glass-card p-4 rounded-2xl space-y-3 border border-indigo-500/30 bg-indigo-950/20">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-indigo-300 flex items-center gap-1.5">
+              <i class="fa-solid fa-route text-brand-500"></i> AI Predictive Commute Model
+            </h4>
+            <span class="text-[10px] text-slate-400">Live Traffic AI</span>
+          </div>
+
+          <!-- Interactive Controls for Commute -->
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-1">Destination</label>
+              <select id="commute-dest-select" onchange="recalculateCommute()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-200">
+                <option value="aueb">AUEB Main Building</option>
+                <option value="syntagma">Syntagma Metro</option>
+                <option value="marousi">Marousi Hub</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-[10px] text-slate-400 block mb-1">Arrival Time</label>
+              <select id="commute-time-select" onchange="recalculateCommute()" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-1.5 text-xs text-slate-200">
+                <option value="peak_morning" selected>08:30 AM (Peak)</option>
+                <option value="midday">12:30 PM (Regular)</option>
+                <option value="evening">06:00 PM (Rush)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dynamic Output Card -->
+          <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center font-bold">
+                <i id="commute-icon" class="fa-solid fa-bus text-lg"></i>
+              </div>
+              <div>
+                <p id="commute-summary" class="text-xs font-bold text-slate-200">14 mins via Trolley 2/4</p>
+                <p id="commute-detail" class="text-[10px] text-slate-400">Direct line • 3 stops • 120m walk</p>
+              </div>
+            </div>
+            <div class="text-right">
+              <span id="commute-duration" class="text-base font-extrabold text-emerald-400">14 min</span>
+              <span class="text-[9px] text-slate-500 block">±2 min AI confidence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- PREDICTIVE MODEL 2: Total Living Cost Breakdown -->
+        <div class="glass-card p-4 rounded-2xl space-y-3 border border-emerald-500/20">
+          <div class="flex items-center justify-between">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center gap-1.5">
+              <i class="fa-solid fa-calculator text-emerald-400"></i> Predictive Monthly Living Cost
+            </h4>
+            <!-- Season Toggle -->
+            <div class="flex bg-slate-800 p-0.5 rounded-lg text-[10px]">
+              <button id="season-winter" onclick="setSeason('winter')" class="px-2 py-0.5 rounded bg-brand-600 text-white font-medium">Winter</button>
+              <button id="season-summer" onclick="setSeason('summer')" class="px-2 py-0.5 rounded text-slate-400 font-medium">Summer</button>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-slate-400">AI estimate based on energy rating (A+), square meters, and seasonal utility tariffs.</p>
+
+          <!-- Expense Items -->
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-300">Base Monthly Rent</span>
+              <span id="cost-rent" class="font-bold text-slate-100">€580</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-bolt text-amber-400 text-[10px]"></i> Est. Electricity & Power</span>
+              <span id="cost-power" class="font-semibold text-slate-200">€45</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-temperature-arrow-up text-rose-400 text-[10px]"></i> Heating / AC Adjustment</span>
+              <span id="cost-heating" class="font-semibold text-slate-200">€35</span>
+            </div>
+            <div class="flex justify-between items-center py-1 border-b border-slate-800">
+              <span class="text-slate-400 flex items-center gap-1.5"><i class="fa-solid fa-building-user text-indigo-400 text-[10px]"></i> Building Maintenance (Koinochrista)</span>
+              <span id="cost-building" class="font-semibold text-slate-200">€25</span>
+            </div>
+            <div class="flex justify-between items-center pt-2 font-bold text-sm text-slate-100">
+              <span>Predicted Total / Month</span>
+              <span id="cost-total" class="text-emerald-400 text-base">€685</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Neighborhood Vibe Score Breakdown -->
+        <div class="glass-card p-4 rounded-2xl space-y-3">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-300">Neighborhood Lifestyle Breakdown</h4>
+          <div class="space-y-2 text-xs">
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-400">Quiet & Peacefulness</span>
+                <span id="vibe-score-quiet" class="text-slate-200 font-bold">88/100</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div id="bar-quiet" class="bg-emerald-500 h-full rounded-full" style="width: 88%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-400">Cafes & Nightlife Proximity</span>
+                <span id="vibe-score-nightlife" class="text-slate-200 font-bold">95/100</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div id="bar-nightlife" class="bg-brand-pink h-full rounded-full" style="width: 95%"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between text-[11px] mb-1">
+                <span class="text-slate-400">Public Transit Accessibility</span>
+                <span id="vibe-score-transit" class="text-slate-200 font-bold">92/100</span>
+              </div>
+              <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+                <div id="bar-transit" class="bg-indigo-500 h-full rounded-full" style="width: 92%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Action Callout -->
+        <div class="pt-2 pb-6">
+          <button onclick="openBookingModal()" class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-sm shadow-lg shadow-emerald-500/20 hover:opacity-95 transition flex items-center justify-center space-x-2">
+            <i class="fa-solid fa-calendar-check"></i>
+            <span>Schedule Virtual / In-Person Viewing</span>
+          </button>
+        </div>
+
+      </section>
+
+      <!-- SCREEN 5: SAVED FAVORITES -->
+      <section id="screen-saved" class="p-4 space-y-4 hidden animate-slide-up">
+        <div class="space-y-1">
+          <h2 class="text-xl font-extrabold text-white">Your Saved Habitats</h2>
+          <p class="text-xs text-slate-400">Shortlisted homes with tracked price & match updates</p>
+        </div>
+
+        <div id="savedCardsList" class="space-y-3">
+          <!-- Dynamic Saved Items will be rendered here -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- BOOKING / VIRTUAL VIEWING MODAL OVERLAY -->
+    <div id="bookingModal" class="absolute inset-0 bg-slate-950/80 backdrop-blur-md z-50 flex items-end sm:items-center justify-center p-4 hidden">
+      <div class="glass-card w-full p-5 rounded-3xl space-y-4 border border-slate-700 animate-slide-up">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+          <h3 class="font-bold text-white text-sm flex items-center gap-2">
+            <i class="fa-solid fa-video text-brand-500"></i> Schedule Habitat Tour
+          </h3>
+          <button onclick="closeBookingModal()" class="text-slate-400 hover:text-white text-lg">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <p class="text-xs text-slate-300">Choose your preferred viewing mode with the Habitat agent:</p>
+
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <label class="glass-card p-3 rounded-xl cursor-pointer border border-brand-500/40 flex flex-col items-center space-y-1 text-center">
+            <input type="radio" name="tour-type" checked class="accent-indigo-500">
+            <i class="fa-solid fa-vr-cardboard text-brand-500 text-lg"></i>
+            <span class="font-bold text-slate-200">AI 3D Live Tour</span>
+            <span class="text-[9px] text-slate-400">Instant on phone</span>
+          </label>
+          <label class="glass-card p-3 rounded-xl cursor-pointer border border-slate-700 flex flex-col items-center space-y-1 text-center">
+            <input type="radio" name="tour-type" class="accent-indigo-500">
+            <i class="fa-solid fa-user-check text-emerald-400 text-lg"></i>
+            <span class="font-bold text-slate-200">In-Person Meet</span>
+            <span class="text-[9px] text-slate-400">On-site with agent</span>
+          </label>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs text-slate-300 font-semibold block">Select Available Time Slot</label>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <button onclick="selectTimeSlot(this)" class="time-slot-btn py-2 rounded-xl bg-brand-600 text-white font-semibold">Today 17:30</button>
+            <button onclick="selectTimeSlot(this)" class="time-slot-btn py-2 rounded-xl bg-slate-800 text-slate-300">Tomorrow 12:00</button>
+            <button onclick="selectTimeSlot(this)" class="time-slot-btn py-2 rounded-xl bg-slate-800 text-slate-300">Fri 18:00</button>
+          </div>
+        </div>
+
+        <button onclick="confirmBooking()" class="w-full py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-xs shadow-lg shadow-emerald-500/20 transition">
+          Confirm Viewing Request
+        </button>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toastNotification" class="absolute top-12 left-4 right-4 bg-emerald-500 text-slate-950 px-4 py-2.5 rounded-2xl text-xs font-extrabold shadow-xl flex items-center justify-between z-50 transition-all duration-300 -translate-y-20 opacity-0 pointer-events-none">
+      <span id="toastMessage" class="flex items-center gap-2">
+        <i class="fa-solid fa-circle-check"></i> Action Completed
+      </span>
+    </div>
+
+    <!-- Bottom Mobile Navigation Bar -->
+    <nav class="glass-nav absolute bottom-0 left-0 right-0 py-2.5 px-6 flex justify-between items-center z-40">
+      <button onclick="goToScreen('quiz')" id="nav-quiz" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-sliders text-base"></i>
+        <span class="text-[9px] font-medium">Vibe AI</span>
+      </button>
+      
+      <button onclick="goToScreen('feed')" id="nav-feed" class="flex flex-col items-center space-y-1 text-brand-500 font-bold transition">
+        <i class="fa-solid fa-house text-base"></i>
+        <span class="text-[9px] font-medium">Matches</span>
+      </button>
+
+      <button onclick="goToScreen('map')" id="nav-map" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-white transition">
+        <i class="fa-solid fa-map text-base"></i>
+        <span class="text-[9px] font-medium">Heatmap</span>
+      </button>
+
+      <button onclick="goToScreen('saved')" id="nav-saved" class="flex flex-col items-center space-y-1 text-slate-400 hover:text-white transition relative">
+        <i class="fa-solid fa-heart text-base"></i>
+        <span class="text-[9px] font-medium">Saved</span>
+        <span id="savedCountBadge" class="absolute -top-1 right-2 w-3.5 h-3.5 bg-pink-500 text-white text-[8px] font-bold rounded-full flex items-center justify-center hidden">0</span>
+      </button>
+    </nav>
+
+  </main>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // --- MOCK DATABASE ---
+    const properties = [
+      {
+        id: 1,
+        title: "Sunlit Minimalist Studio",
+        neighborhood: "Kypseli • Fokionos Negri",
+        price: 580,
+        size: 52,
+        beds: 1,
+        floor: "2nd Floor",
+        energy: "Class A+",
+        img: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
+        baseMatch: 94,
+        quietScore: 88,
+        nightlifeScore: 95,
+        transitScore: 92,
+        petFriendly: true,
+        commute: {
+          aueb: "14 mins via Trolley 2/4",
+          syntagma: "18 mins via Metro L2",
+          marousi: "32 mins via Train"
+        },
+        costs: {
+          winter: { power: 45, heating: 35, building: 25 },
+          summer: { power: 55, heating: 20, building: 20 }
+        }
+      },
+      {
+        id: 2,
+        title: "Boho Urban Lofts",
+        neighborhood: "Exarcheia • Kallidromiou",
+        price: 620,
+        size: 58,
+        beds: 1,
+        floor: "4th Floor",
+        energy: "Class B+",
+        img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
+        baseMatch: 91,
+        quietScore: 72,
+        nightlifeScore: 98,
+        transitScore: 90,
+        petFriendly: true,
+        commute: {
+          aueb: "9 mins walk (750m)",
+          syntagma: "12 mins via Bus",
+          marousi: "28 mins via Metro"
+        },
+        costs: {
+          winter: { power: 50, heating: 45, building: 30 },
+          summer: { power: 60, heating: 25, building: 25 }
+        }
+      },
+      {
+        id: 3,
+        title: "Contemporary Green Flat",
+        neighborhood: "Pagkrati • Varnava Sq.",
+        price: 710,
+        size: 65,
+        beds: 2,
+        floor: "3rd Floor",
+        energy: "Class A",
+        img: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
+        baseMatch: 84,
+        quietScore: 92,
+        nightlifeScore: 89,
+        transitScore: 85,
+        petFriendly: false,
+        commute: {
+          aueb: "22 mins via Bus 209",
+          syntagma: "10 mins walk",
+          marousi: "35 mins via Metro"
+        },
+        costs: {
+          winter: { power: 55, heating: 40, building: 35 },
+          summer: { power: 65, heating: 30, building: 30 }
+        }
+      },
+      {
+        id: 4,
+        title: "Metro Hub Smart Residence",
+        neighborhood: "Ampelokipoi • Panormou",
+        price: 650,
+        size: 60,
+        beds: 1,
+        floor: "1st Floor",
+        energy: "Class A+",
+        img: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80",
+        baseMatch: 89,
+        quietScore: 80,
+        nightlifeScore: 85,
+        transitScore: 99,
+        petFriendly: true,
+        commute: {
+          aueb: "16 mins via Metro L3/Bus",
+          syntagma: "8 mins via Metro L3",
+          marousi: "20 mins via Kifisias Bus"
+        },
+        costs: {
+          winter: { power: 40, heating: 30, building: 25 },
+          summer: { power: 50, heating: 20, building: 25 }
+        }
+      }
+    ];
+
+    // STATE MANAGEMENT
+    let userPreferences = {
+      noise: 2,
+      vibe: 4,
+      destination: "AUEB Campus (Patision)",
+      pets: true,
+      budget: 750
+    };
+
+    let savedIds = [];
+    let selectedPropertyId = 1;
+    let currentSeason = 'winter';
+
+    // INITIALIZATION ON LOAD
+    window.onload = function() {
+      updateClock();
+      setInterval(updateClock, 30000);
+      renderFeedCards();
+      renderSavedCards();
+    };
+
+    function updateClock() {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      document.getElementById('currentTime').innerText = `${hours}:${minutes}`;
+    }
+
+    // NAVIGATION CONTROLLER
+    function goToScreen(screenName) {
+      // Hide all screens
+      const screens = ['quiz', 'feed', 'map', 'details', 'saved'];
+      screens.forEach(s => {
+        const el = document.getElementById(`screen-${s}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      // Show targeted screen
+      const target = document.getElementById(`screen-${screenName}`);
+      if (target) target.classList.remove('hidden');
+
+      // Update Bottom Navigation Highlight
+      ['quiz', 'feed', 'map', 'saved'].forEach(nav => {
+        const navBtn = document.getElementById(`nav-${nav}`);
+        if (navBtn) {
+          if (nav === screenName) {
+            navBtn.className = "flex flex-col items-center space-y-1 text-brand-500 font-bold transition";
+          } else {
+            navBtn.className = "flex flex-col items-center space-y-1 text-slate-400 hover:text-white transition";
+          }
+        }
+      });
+
+      // Scroll phone viewport to top
+      document.getElementById('screenViewport').scrollTop = 0;
+    }
+
+    // QUIZ CONTROL LOGIC
+    function updateQuizValues() {
+      const noise = document.getElementById('slider-noise').value;
+      const vibe = document.getElementById('slider-vibe').value;
+      const budget = document.getElementById('slider-budget').value;
+      const dest = document.getElementById('select-destination').value;
+      const pets = document.getElementById('toggle-pets').checked;
+
+      // Update Labels
+      const noiseLabels = ['Ultra Silent', 'Quiet Zen', 'Balanced', 'Lively', 'High Energy'];
+      document.getElementById('label-noise').innerText = noiseLabels[noise - 1];
+
+      const vibeLabels = ['Minimal', 'Moderate', 'Vibrant', 'High Priority', 'Party Central'];
+      document.getElementById('label-vibe').innerText = vibeLabels[vibe - 1];
+
+      document.getElementById('label-budget').innerText = `€${budget} / mo`;
+
+      userPreferences = { noise, vibe, destination: dest, pets, budget };
+    }
+
+    function applyQuizAndGoToFeed() {
+      document.getElementById('active-dest-label').innerText = userPreferences.destination.split('(')[0];
+      showToast("AI Model recalculated match scores!");
+      renderFeedCards();
+      goToScreen('feed');
+    }
+
+    // RECOMMENDER ALGORITHM CALCULATOR
+    function calculateDynamicMatch(prop) {
+      let score = prop.baseMatch;
+
+      // Adjust based on user budget proximity
+      if (prop.price > userPreferences.budget) {
+        score -= 12;
+      } else if (userPreferences.budget - prop.price > 150) {
+        score += 3;
+      }
+
+      // Adjust based on pet preference
+      if (userPreferences.pets && !prop.petFriendly) {
+        score -= 10;
+      }
+
+      // Clamp between 60% and 99%
+      return Math.min(Math.max(score, 62), 98);
+    }
+
+    // RENDER FEED CARDS
+    function renderFeedCards() {
+      const container = document.getElementById('feedCardsList');
+      container.innerHTML = '';
+
+      properties.forEach(prop => {
+        const matchScore = calculateDynamicMatch(prop);
+        const isSaved = savedIds.includes(prop.id);
+
+        const cardHTML = `
+          <div class="glass-card rounded-2xl overflow-hidden space-y-3 transition border border-slate-800 hover:border-brand-500/40">
+            <div class="relative cursor-pointer" onclick="openPropertyDetails(${prop.id})">
+              <img src="${prop.img}" alt="${prop.title}" class="w-full h-44 object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+              
+              <!-- Match Badge -->
+              <div class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur px-2.5 py-1 rounded-xl text-xs font-extrabold text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 shadow-lg">
+                <i class="fa-solid fa-sparkles"></i>
+                <span>${matchScore}% Match</span>
+              </div>
+
+              <!-- Price Badge -->
+              <div class="absolute bottom-3 right-3 bg-slate-900/90 backdrop-blur px-3 py-1 rounded-xl text-sm font-extrabold text-white border border-slate-700">
+                €${prop.price}<span class="text-[10px] text-slate-400 font-normal">/mo</span>
+              </div>
+
+              <div class="absolute bottom-3 left-3">
+                <span class="text-[10px] font-bold text-indigo-300 uppercase bg-indigo-950/70 px-2 py-0.5 rounded border border-indigo-500/20">${prop.neighborhood}</span>
+                <h3 class="text-sm font-bold text-white mt-0.5">${prop.title}</h3>
+              </div>
+            </div>
+
+            <!-- Insights Bar -->
+            <div class="px-3 pb-3 space-y-2">
+              <div class="grid grid-cols-2 gap-2 text-[10px]">
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-700/60 flex items-center space-x-2">
+                  <i class="fa-solid fa-clock-rotate-left text-brand-500"></i>
+                  <span class="text-slate-300 truncate">${prop.commute.aueb}</span>
+                </div>
+                <div class="bg-slate-800/80 p-2 rounded-xl border border-slate-700/60 flex items-center space-x-2">
+                  <i class="fa-solid fa-file-invoice-dollar text-emerald-400"></i>
+                  <span class="text-slate-300">Est. Total: €${prop.price + prop.costs.winter.power + prop.costs.winter.heating + prop.costs.winter.building}</span>
+                </div>
+              </div>
+
+              <!-- Action Bar -->
+              <div class="flex justify-between items-center pt-1">
+                <span class="text-[10px] text-slate-400"><i class="fa-solid fa-shield-cat text-emerald-400 mr-1"></i>${prop.petFriendly ? 'Pet Friendly' : 'No Pets'}</span>
+                
+                <div class="flex space-x-2">
+                  <button onclick="toggleBookmark(${prop.id})" class="p-2 rounded-xl bg-slate-800 border border-slate-700 ${isSaved ? 'text-pink-500' : 'text-slate-400'} hover:text-pink-500 transition">
+                    <i class="${isSaved ? 'fa-solid' : 'fa-regular'} fa-heart text-xs"></i>
+                  </button>
+                  <button onclick="openPropertyDetails(${prop.id})" class="px-3 py-1.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold shadow transition">
+                    Predictive Breakdown
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.innerHTML += cardHTML;
+      });
+    }
+
+    // PROPERTY DETAILS & PREDICTIVE MODEL DISPLAY
+    function openPropertyDetails(id) {
+      selectedPropertyId = id;
+      const prop = properties.find(p => p.id === id);
+      if (!prop) return;
+
+      const matchScore = calculateDynamicMatch(prop);
+
+      // Populate Visuals & Info
+      document.getElementById('detail-img').src = prop.img;
+      document.getElementById('detail-title').innerText = prop.title;
+      document.getElementById('detail-neighborhood').innerText = prop.neighborhood;
+      document.getElementById('detail-price').innerText = `€${prop.price}`;
+      document.getElementById('detail-match-score').innerText = `${matchScore}% Lifestyle Match`;
+
+      document.getElementById('detail-size').innerText = `${prop.size} m²`;
+      document.getElementById('detail-beds').innerText = `${prop.beds} Bed`;
+      document.getElementById('detail-floor').innerText = prop.floor;
+      document.getElementById('detail-energy').innerText = prop.energy;
+
+      // Update Breakdown Bars
+      document.getElementById('vibe-score-quiet').innerText = `${prop.quietScore}/100`;
+      document.getElementById('bar-quiet').style.width = `${prop.quietScore}%`;
+
+      document.getElementById('vibe-score-nightlife').innerText = `${prop.nightlifeScore}/100`;
+      document.getElementById('bar-nightlife').style.width = `${prop.nightlifeScore}%`;
+
+      document.getElementById('vibe-score-transit').innerText = `${prop.transitScore}/100`;
+      document.getElementById('bar-transit').style.width = `${prop.transitScore}%`;
+
+      // Update Bookmark button state
+      const isSaved = savedIds.includes(prop.id);
+      const bBtn = document.getElementById('detailBookmarkBtn');
+      bBtn.className = `p-2 rounded-xl bg-slate-800 border border-slate-700 ${isSaved ? 'text-pink-500' : 'text-slate-300'}`;
+      bBtn.innerHTML = `<i class="${isSaved ? 'fa-solid' : 'fa-regular'} fa-heart"></i>`;
+
+      // Recalculate Models
+      recalculateCommute();
+      recalculateLivingCost();
+
+      goToScreen('details');
+    }
+
+    // PREDICTIVE MODEL 1: COMMUTE CALCULATOR
+    function recalculateCommute() {
+      const prop = properties.find(p => p.id === selectedPropertyId);
+      if (!prop) return;
+
+      const dest = document.getElementById('commute-dest-select').value;
+      const time = document.getElementById('commute-time-select').value;
+
+      let summary = prop.commute.aueb;
+      let duration = "14 min";
+
+      if (dest === 'syntagma') {
+        summary = prop.commute.syntagma;
+        duration = "12 min";
+      } else if (dest === 'marousi') {
+        summary = prop.commute.marousi;
+        duration = "28 min";
+      }
+
+      // Add peak rush hour padding
+      if (time === 'peak_morning' || time === 'evening') {
+        duration = (parseInt(duration) + 4) + " min";
+      }
+
+      document.getElementById('commute-summary').innerText = summary;
+      document.getElementById('commute-duration').innerText = duration;
+    }
+
+    // PREDICTIVE MODEL 2: LIVING COST CALCULATOR
+    function setSeason(season) {
+      currentSeason = season;
+      document.getElementById('season-winter').className = season === 'winter' ? 'px-2 py-0.5 rounded bg-brand-600 text-white font-medium' : 'px-2 py-0.5 rounded text-slate-400 font-medium';
+      document.getElementById('season-summer').className = season === 'summer' ? 'px-2 py-0.5 rounded bg-brand-600 text-white font-medium' : 'px-2 py-0.5 rounded text-slate-400 font-medium';
+      recalculateLivingCost();
+    }
+
+    function recalculateLivingCost() {
+      const prop = properties.find(p => p.id === selectedPropertyId);
+      if (!prop) return;
+
+      const costs = prop.costs[currentSeason];
+      const total = prop.price + costs.power + costs.heating + costs.building;
+
+      document.getElementById('cost-rent').innerText = `€${prop.price}`;
+      document.getElementById('cost-power').innerText = `€${costs.power}`;
+      document.getElementById('cost-heating').innerText = `€${costs.heating}`;
+      document.getElementById('cost-building').innerText = `€${costs.building}`;
+      document.getElementById('cost-total').innerText = `€${total}`;
+    }
+
+    // FAVORITES / BOOKMARK LOGIC
+    function toggleBookmark(id) {
+      if (savedIds.includes(id)) {
+        savedIds = savedIds.filter(i => i !== id);
+        showToast("Removed from Saved Habitats");
+      } else {
+        savedIds.push(id);
+        showToast("Added to Saved Habitats!");
+      }
+      updateSavedBadge();
+      renderFeedCards();
+      renderSavedCards();
+    }
+
+    function toggleBookmarkCurrent() {
+      toggleBookmark(selectedPropertyId);
+      const isSaved = savedIds.includes(selectedPropertyId);
+      const bBtn = document.getElementById('detailBookmarkBtn');
+      bBtn.className = `p-2 rounded-xl bg-slate-800 border border-slate-700 ${isSaved ? 'text-pink-500' : 'text-slate-300'}`;
+      bBtn.innerHTML = `<i class="${isSaved ? 'fa-solid' : 'fa-regular'} fa-heart"></i>`;
+    }
+
+    function updateSavedBadge() {
+      const badge = document.getElementById('savedCountBadge');
+      if (savedIds.length > 0) {
+        badge.innerText = savedIds.length;
+        badge.classList.remove('hidden');
+      } else {
+        badge.classList.add('hidden');
+      }
+    }
+
+    function renderSavedCards() {
+      const container = document.getElementById('savedCardsList');
+      container.innerHTML = '';
+
+      if (savedIds.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 glass-card rounded-2xl p-6">
+            <i class="fa-regular fa-heart text-3xl text-slate-600 mb-2"></i>
+            <p class="text-xs font-bold text-slate-300">No Saved Habitats Yet</p>
+            <p class="text-[10px] text-slate-500 mt-1">Tap the heart icon on any property card to track it here.</p>
+          </div>
+        `;
+        return;
+      }
+
+      savedIds.forEach(id => {
+        const prop = properties.find(p => p.id === id);
+        if (!prop) return;
+
+        const card = `
+          <div class="glass-card p-3 rounded-2xl flex items-center justify-between space-x-3 border border-slate-800">
+            <img src="${prop.img}" class="w-16 h-16 rounded-xl object-cover">
+            <div class="flex-1 min-w-0">
+              <h4 class="text-xs font-bold text-white truncate">${prop.title}</h4>
+              <p class="text-[10px] text-slate-400">${prop.neighborhood}</p>
+              <p class="text-xs font-extrabold text-emerald-400 mt-0.5">€${prop.price}/mo</p>
+            </div>
+            <button onclick="openPropertyDetails(${prop.id})" class="p-2 rounded-xl bg-brand-600/20 text-brand-400 hover:bg-brand-600 hover:text-white transition text-xs">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        `;
+        container.innerHTML += card;
+      });
+    }
+
+    // MAP HEATMAP TOGGLE
+    function toggleMapLayer(layer) {
+      ['quiet', 'transit', 'nightlife'].forEach(l => {
+        const btn = document.getElementById(`layer-${l}`);
+        if (l === layer) {
+          btn.className = "px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 whitespace-nowrap font-medium";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 border border-slate-700 whitespace-nowrap font-medium";
+        }
+      });
+      showToast(`Map heat layer set to ${layer.toUpperCase()}`);
+    }
+
+    // MODAL & BOOKING LOGIC
+    function openBookingModal() {
+      document.getElementById('bookingModal').classList.remove('hidden');
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.add('hidden');
+    }
+
+    function selectTimeSlot(btn) {
+      document.querySelectorAll('.time-slot-btn').forEach(b => {
+        b.className = 'time-slot-btn py-2 rounded-xl bg-slate-800 text-slate-300';
+      });
+      btn.className = 'time-slot-btn py-2 rounded-xl bg-brand-600 text-white font-semibold';
+    }
+
+    function confirmBooking() {
+      closeBookingModal();
+      showToast("Viewing Confirmed! Invite sent to your email.");
+    }
+
+    function shareProperty() {
+      showToast("Property link copied to clipboard!");
+    }
+
+    // TOAST NOTIFIER
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').innerHTML = `<i class="fa-solid fa-circle-check"></i> ${msg}`;
+      toast.classList.remove('-translate-y-20', 'opacity-0', 'pointer-events-none');
+      
+      setTimeout(() => {
+        toast.classList.add('-translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 2600);
+    }
+
+    // VIEWPORT RESPONSIVE TOGGLE (FOR DESKTOP PRESENTATION)
+    function toggleViewport(mode) {
+      const container = document.getElementById('phoneContainer');
+      const mobileBtn = document.getElementById('viewMobileBtn');
+      const expandedBtn = document.getElementById('viewExpandedBtn');
+
+      if (mode === 'expanded') {
+        container.className = "w-full max-w-4xl h-[100vh] md:h-[840px] bg-slate-900 md:rounded-3xl shadow-2xl border-0 md:border-4 border-slate-800 relative flex flex-col overflow-hidden transition-all duration-500";
+        expandedBtn.className = "px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold shadow transition-all";
+        mobileBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all";
+      } else {
+        container.className = "w-full max-w-[420px] h-[100vh] md:h-[840px] bg-slate-900 md:rounded-[48px] shadow-2xl shadow-indigo-950/50 border-0 md:border-[10px] border-slate-800 relative flex flex-col overflow-hidden transition-all duration-500";
+        mobileBtn.className = "px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold shadow transition-all";
+        expandedBtn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition-all";
+      }
+    }
+
+    function resetAppState() {
+      savedIds = [];
+      updateSavedBadge();
+      goToScreen('quiz');
+      showToast("Demo reset to initial state");
+    }
+  </script>
+</body>
+</html>
