@@ -1943,6 +1943,40 @@
       return content;
     }
 
+    function registerMapStyleFallbacks(map) {
+      map.on("styleimagemissing", ({ id }) => {
+        if (map.hasImage(id)) return;
+        const size = 24;
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const context = canvas.getContext("2d");
+        if (!context) {
+          console.error("Could not create the fallback OpenFreeMap sprite image.");
+          return;
+        }
+        context.beginPath();
+        context.arc(size / 2, size / 2, size / 2 - 2, 0, Math.PI * 2);
+        context.fillStyle = "#a1a1aa";
+        context.fill();
+        context.lineWidth = 2;
+        context.strokeStyle = "#18181b";
+        context.stroke();
+        map.addImage(id, context.getImageData(0, 0, size, size), { pixelRatio: 2 });
+      });
+    }
+
+    function fitListingsMapToFeatures(features) {
+      if (!features.length) return;
+      const bounds = new maplibregl.LngLatBounds();
+      features.forEach((feature) => bounds.extend(feature.geometry.coordinates));
+      listingsMap.fitBounds(bounds, {
+        padding: 40,
+        maxZoom: 10,
+        duration: 0
+      });
+    }
+
     function initializeListingsMap() {
       if (!listingsMapElement || !window.maplibregl) {
         listingsMapNote.textContent = t("Interactive map unavailable.");
@@ -1956,13 +1990,15 @@
         cooperativeGestures: true,
         attributionControl: false
       });
+      registerMapStyleFallbacks(listingsMap);
       listingsMap.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
       listingsMap.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
       listingsMap.on("load", () => {
         listingsMapReady = true;
+        const features = listingFeatures();
         listingsMap.addSource("listing-points", {
           type: "geojson",
-          data: { type: "FeatureCollection", features: listingFeatures() },
+          data: { type: "FeatureCollection", features },
           cluster: true,
           clusterRadius: 48,
           clusterMaxZoom: 14,
@@ -1985,7 +2021,7 @@
           type: "symbol",
           source: "listing-points",
           filter: ["has", "point_count"],
-          layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 12 },
+          layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 12, "text-font": ["Noto Sans Regular"] },
           paint: { "text-color": "#ffffff" }
         });
         listingsMap.addLayer({
@@ -2025,6 +2061,7 @@
         listingsMap.on("mouseenter", "listing-unclustered", () => { listingsMap.getCanvas().style.cursor = "pointer"; });
         listingsMap.on("mouseleave", "listing-unclustered", () => { listingsMap.getCanvas().style.cursor = ""; });
         updateListingsMapData();
+        fitListingsMapToFeatures(features);
         if (hoveredListingId) setHoveredListing(hoveredListingId);
       });
       listingsMap.on("error", (event) => {
@@ -2304,7 +2341,7 @@
         type: "symbol",
         source: "neighborhood-places",
         filter: ["has", "point_count"],
-        layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 11 },
+        layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 11, "text-font": ["Noto Sans Regular"] },
         paint: { "text-color": "#ffffff" }
       });
       propertyMap.addLayer({
@@ -2429,6 +2466,7 @@
           cooperativeGestures: true,
           attributionControl: false
         });
+        registerMapStyleFallbacks(propertyMap);
         propertyMap.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
         propertyMap.addControl(new maplibregl.AttributionControl({ compact: true }), "bottom-right");
         propertyMap.on("load", () => {
@@ -2452,6 +2490,7 @@
       const staticFeatures = window.MYHOME_MAP_DATA?.poiCache?.features || [];
       let features = neighborhoodPoiFeatures(staticFeatures, coordinates, radius);
       let status = "";
+      updatePropertyMapSources(property, coordinates, features);
       poiSummary.textContent = t("Loading nearby OpenStreetMap places…");
       poiWalkingEstimate.textContent = "";
       try {
