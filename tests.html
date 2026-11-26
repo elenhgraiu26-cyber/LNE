@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>myHome search parser tests</title>
+  <style>
+    body { font: 16px/1.5 system-ui, sans-serif; margin: 2rem auto; max-width: 70rem; padding: 0 1rem; }
+    .passed { color: #16703b; }
+    .failed { color: #a11; }
+    table { border-collapse: collapse; width: 100%; }
+    td, th { border-bottom: 1px solid #ddd; padding: .5rem; text-align: left; vertical-align: top; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <h1>myHome search parser tests</h1>
+  <p id="summary" role="status">Running…</p>
+  <table>
+    <thead><tr><th>Query</th><th>Result</th><th>Details</th></tr></thead>
+    <tbody id="results"></tbody>
+  </table>
+  <script src="./search-parser.js"></script>
+  <script>
+    const emptyFilters = { area: null, budget: null, bedrooms: null, bathrooms: null, features: [], location: null };
+    const expected = (filters = {}, textTerms = []) => ({
+      filters: { ...emptyFilters, ...filters },
+      textTerms
+    });
+    const testCases = [
+      ["διαμέρισμα μέχρι 40 τ.μ. με μπαλκόνι κάτω από 800€", expected({ area: { min: null, max: 40 }, budget: { min: null, max: 800 / 0.92 }, features: ["Balcony"] })],
+      ["μέχρι 40 τ.μ.", expected({ area: { min: null, max: 40 } })],
+      ["μεχρι 40 τμ", expected({ area: { min: null, max: 40 } })],
+      ["έως 55 τετραγωνικά μέτρα", expected({ area: { min: null, max: 55 } })],
+      ["από 60 έως 90 τ.μ.", expected({ area: { min: 60, max: 90 } })],
+      ["over 80 sqm", expected({ area: { min: 80, max: null } })],
+      ["60-90 m²", expected({ area: { min: 60, max: 90 } })],
+      ["600-900 sqft", expected({ area: { min: 600 / 10.7639, max: 900 / 10.7639 } })],
+      ["up to 40", expected({ area: { min: null, max: 40 } })],
+      ["under $1500", expected({ budget: { min: null, max: 1500 } })],
+      ["under $1,500", expected({ budget: { min: null, max: 1500 } })],
+      ["below €1200", expected({ budget: { min: null, max: 1200 / 0.92 } })],
+      ["at least £900 rent", expected({ budget: { min: 900 / 0.79, max: null }, })],
+      ["2 bedrooms", expected({ bedrooms: { min: 2, max: 2 } })],
+      ["2-bedroom apartment", expected({ bedrooms: { min: 2, max: 2 } })],
+      ["2+ bedrooms", expected({ bedrooms: { min: 2, max: null } })],
+      ["2-3 bedrooms", expected({ bedrooms: { min: 2, max: 3 } })],
+      ["at least 3 bedrooms", expected({ bedrooms: { min: 3, max: null } })],
+      ["2 υπνοδωμάτια", expected({ bedrooms: { min: 2, max: 2 } })],
+      ["2+ υπνοδωμάτια", expected({ bedrooms: { min: 2, max: null } })],
+      ["2 bathrooms", expected({ bathrooms: { min: 2, max: 2 } })],
+      ["at least 2 baths", expected({ bathrooms: { min: 2, max: null } })],
+      ["balcony", expected({ features: ["Balcony"] })],
+      ["με μπαλκόνι", expected({ features: ["Balcony"] })],
+      ["sea view", expected({ features: ["Sea view"] })],
+      ["θέα θάλασσα", expected({ features: ["Sea view"] })],
+      ["penthouse", expected({ features: ["Penthouse"] })],
+      ["κοντά σε μετρό", expected({ features: ["Near metro"] })],
+      ["garden", expected({ features: ["Garden"] })],
+      ["2+ bedrooms in Kolonaki", expected({ bedrooms: { min: 2, max: null }, location: "kolonaki" })],
+      ["near Kolonaki", expected({ location: "kolonaki" })],
+      ["near a park", expected({}, ["park"])],
+      ["apartment in Athens with balcony", expected({ features: ["Balcony"], location: "athens" })],
+      ["διαμέρισμα under 800€ with balcony", expected({ budget: { min: null, max: 800 / 0.92 }, features: ["Balcony"] })],
+      ["up to 40 sqm under $1200 2+ beds 1 bath", expected({ area: { min: null, max: 40 }, budget: { min: null, max: 1200 }, bedrooms: { min: 2, max: null }, bathrooms: { min: 1, max: 1 } })],
+      ["over 80 sq ft and over $2000", expected({ area: { min: 80 / 10.7639, max: null }, budget: { min: 2000, max: null } })],
+      ["€800-€1200", expected({ budget: { min: 800 / 0.92, max: 1200 / 0.92 } })],
+      ["over 80 sqm under $2000", expected({ area: { min: 80, max: null }, budget: { min: null, max: 2000 } })],
+      ["house in central Athens with quiet area", expected({ features: ["Quiet area"], location: "central athens" })],
+      ["σε Γλυφάδα με κήπο", expected({ features: ["Garden"], location: "γλυφαδα" })],
+      ["at Kifisia, new build", expected({ features: ["New build"], location: "kifisia" })],
+      ["over 100 square feet, at least 2 bathrooms", expected({ area: { min: 100 / 10.7639, max: null }, bathrooms: { min: 2, max: null } })],
+      ["between 70 and 90 sqm with sea view and near metro", expected({ area: { min: 70, max: 90 }, features: ["Near metro", "Sea view"] })],
+      ["minimum 2 beds and 3 baths", expected({ bedrooms: { min: 2, max: null }, bathrooms: { min: 3, max: 3 } })]
+    ];
+
+    const results = document.querySelector("#results");
+    let failures = 0;
+    for (const [query, wanted] of testCases) {
+      const actual = parseQuery(query);
+      const passed = JSON.stringify(actual) === JSON.stringify(wanted);
+      if (!passed) failures += 1;
+      const row = document.createElement("tr");
+      const queryCell = document.createElement("td");
+      const resultCell = document.createElement("td");
+      const detailsCell = document.createElement("td");
+      const details = document.createElement("pre");
+      queryCell.textContent = query;
+      resultCell.textContent = passed ? "PASS" : "FAIL";
+      resultCell.className = passed ? "passed" : "failed";
+      details.textContent = passed ? "" : `Expected: ${JSON.stringify(wanted)}\nActual:   ${JSON.stringify(actual)}`;
+      detailsCell.append(details);
+      row.append(queryCell, resultCell, detailsCell);
+      results.append(row);
+    }
+    const summary = document.querySelector("#summary");
+    summary.textContent = `${testCases.length - failures}/${testCases.length} passed`;
+    summary.className = failures ? "failed" : "passed";
+  </script>
+</body>
+</html>
