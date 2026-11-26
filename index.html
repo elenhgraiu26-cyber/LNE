@@ -402,17 +402,8 @@
               <p id="map-heading" class="text-sm font-semibold text-white">Neighborhood map</p>
               <p id="map-location-note" class="mt-1 text-xs text-zinc-500"></p>
             </div>
-            <div class="mb-3 rounded-xl border border-white/[.07] bg-black/20 p-3">
-              <div class="flex items-center justify-between gap-3">
-                <label for="poi-radius" class="text-xs font-medium text-zinc-300">POI search radius</label>
-                <output id="poi-radius-value" for="poi-radius" class="text-xs text-violet-200">1,200 m</output>
-              </div>
-              <input id="poi-radius" type="range" min="300" max="2500" step="100" value="1200" class="mt-2 w-full accent-violet-400">
-              <p id="poi-summary" class="mt-2 text-[11px] leading-5 text-zinc-400" role="status" aria-live="polite"></p>
-              <p id="poi-walking-estimate" class="mt-1 text-[10px] text-zinc-500"></p>
-            </div>
             <div id="property-map" class="overflow-hidden rounded-xl border border-white/10" role="application" aria-label="Interactive neighborhood map"></div>
-            <p class="mt-2 text-[10px] text-zinc-500"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a> · <span>Walking distances and times are estimates.</span></p>
+            <p class="mt-2 text-[10px] text-zinc-500"><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">© OpenStreetMap contributors</a></p>
           </section>
           <form id="viewing-form" class="mt-6 rounded-2xl border border-white/[.08] bg-white/[.025] p-4">
             <h3 class="mb-1 flex items-center gap-2 font-semibold text-white"><i class="fa-regular fa-calendar-check text-violet-300" aria-hidden="true"></i>Schedule a viewing</h3>
@@ -891,12 +882,7 @@
     });
     Object.assign(translations, {
       "Neighborhood map": ["Χάρτης γειτονιάς", "Neighborhood map", "Mappa del quartiere", "Carte du quartier", "Umgebungskarte", "Mapa del barrio"],
-      "Metro": ["Μετρό", "Metro", "Metropolitana", "Métro", "U-Bahn", "Metro"],
-      "Gym": ["Γυμναστήριο", "Gym", "Palestra", "Salle de sport", "Fitnessstudio", "Gimnasio"],
-      "Supermarket": ["Σούπερ μάρκετ", "Supermarket", "Supermercato", "Supermarché", "Supermarkt", "Supermercado"],
       "Interactive neighborhood map": ["Διαδραστικός χάρτης γειτονιάς", "Interactive neighborhood map", "Mappa interattiva del quartiere", "Carte interactive du quartier", "Interaktive Umgebungskarte", "Mapa interactivo del barrio"],
-      "Approximate neighborhood center": ["Ενδεικτικό κέντρο γειτονιάς", "Approximate neighborhood center", "Centro approssimativo del quartiere", "Centre approximatif du quartier", "Ungefähres Viertelzentrum", "Centro aproximado del barrio"],
-      "Map pin uses an approximate area center. Nearby points are illustrative, not verified business listings.": ["Η καρφίτσα δείχνει ενδεικτικό κέντρο περιοχής. Τα κοντινά σημεία είναι ενδεικτικά και δεν αποτελούν επαληθευμένες επιχειρήσεις.", "Map pin uses an approximate area center. Nearby points are illustrative, not verified business listings.", "Il segnaposto indica il centro approssimativo dell'area. I punti vicini sono illustrativi e non verificati.", "L'épingle indique un centre de zone approximatif. Les points proches sont illustratifs et non vérifiés.", "Die Markierung zeigt einen ungefähren Gebiets-Mittelpunkt. Nahe Punkte sind beispielhaft und nicht verifiziert.", "El marcador indica un centro aproximado. Los puntos cercanos son ilustrativos, no negocios verificados."],
       "Schedule a viewing": ["Προγραμματισμός επίσκεψης", "Schedule a viewing", "Prenota una visita", "Planifier une visite", "Besichtigung vereinbaren", "Programar una visita"],
       "Choose a date and time that works for you.": ["Επιλέξτε ημέρα και ώρα που σας εξυπηρετεί.", "Choose a date and time that works for you.", "Scegli una data e un orario comodi.", "Choisissez une date et une heure qui vous conviennent.", "Wählen Sie einen passenden Termin.", "Elige la fecha y hora que te convengan."],
       "Date": ["Ημερομηνία", "Date", "Data", "Date", "Datum", "Fecha"],
@@ -920,7 +906,6 @@
     Object.assign(translations, {
       "Upload one or more photos from your device": ["Ανεβάστε μία ή περισσότερες φωτογραφίες από τη συσκευή σας", "Upload one or more photos from your device", "Carica una o più foto dal dispositivo", "Importez une ou plusieurs photos depuis votre appareil", "Laden Sie ein oder mehrere Fotos von Ihrem Gerät hoch", "Sube una o varias fotos desde tu dispositivo"],
       "Close notification": ["Κλείσιμο ειδοποίησης", "Close notification", "Chiudi notifica", "Fermer la notification", "Benachrichtigung schließen", "Cerrar notificación"],
-      "Map pin marks the supplied coordinates. Nearby points are illustrative, not verified business listings.": ["Η καρφίτσα δείχνει τις καταχωρισμένες συντεταγμένες. Τα κοντινά σημεία είναι ενδεικτικά και δεν αποτελούν επαληθευμένες επιχειρήσεις.", "Map pin marks the supplied coordinates. Nearby points are illustrative, not verified business listings.", "Il segnaposto indica le coordinate inserite. I punti vicini sono illustrativi e non verificati.", "L'épingle indique les coordonnées fournies. Les points proches sont illustratifs et non vérifiés.", "Die Markierung zeigt die angegebenen Koordinaten. Nahe Punkte sind beispielhaft und nicht verifiziert.", "El marcador indica las coordenadas proporcionadas. Los puntos cercanos son ilustrativos, no negocios verificados."],
       "Please wait for photos to finish loading.": ["Περιμένετε να ολοκληρωθεί η φόρτωση των φωτογραφιών.", "Please wait for photos to finish loading.", "Attendi il caricamento delle foto.", "Veuillez attendre la fin du chargement des photos.", "Bitte warten Sie, bis die Fotos geladen sind.", "Espera a que terminen de cargarse las fotos."],
       "Please choose a future date.": ["Επιλέξτε μελλοντική ημερομηνία.", "Please choose a future date.", "Scegli una data futura.", "Veuillez choisir une date future.", "Bitte wählen Sie ein zukünftiges Datum.", "Elige una fecha futura."],
       "Request recorded for ": ["Το αίτημα καταγράφηκε για ", "Request recorded for ", "Richiesta registrata per ", "Demande enregistrée pour ", "Anfrage erfasst für ", "Solicitud registrada para "],
@@ -930,12 +915,6 @@
       " at ": [" στις ", " at ", " alle ", " à ", " um ", " a las "],
       ". The agent will confirm shortly (demo).": [". Ο σύμβουλος θα επιβεβαιώσει σύντομα (δοκιμαστική λειτουργία).", ". The agent will confirm shortly (demo).", ". L'agente confermerà a breve (demo).", ". L'agent confirmera bientôt (démo).", ". Der Makler bestätigt den Termin in Kürze (Demo).", ". El agente confirmará pronto (demo)."],
       "Meeting point: ": ["Σημείο στον χάρτη: ", "Meeting point: ", "Punto sulla mappa: ", "Point sur la carte : ", "Punkt auf der Karte: ", "Punto en el mapa: "],
-      "Metro station": ["Σταθμός μετρό", "Metro station", "Stazione metro", "Station de métro", "U-Bahn-Station", "Estación de metro"],
-      "Local gym": ["Γυμναστήριο περιοχής", "Local gym", "Palestra locale", "Salle de sport locale", "Fitnessstudio vor Ort", "Gimnasio local"],
-      "Supermarket": ["Σούπερ μάρκετ", "Supermarket", "Supermercato", "Supermarché", "Supermarkt", "Supermercado"],
-      "Metro": ["Μετρό", "Metro", "Metro", "Métro", "U-Bahn", "Metro"],
-      "Gym": ["Γυμναστήριο", "Gym", "Palestra", "Salle de sport", "Fitnessstudio", "Gimnasio"],
-      "Map pin uses an approximate area center. Nearby points are illustrative, not verified business listings.": ["Η καρφίτσα δείχνει ενδεικτικό κέντρο περιοχής. Τα κοντινά σημεία είναι ενδεικτικά και δεν αποτελούν επαληθευμένες επιχειρήσεις.", "Map pin uses an approximate area center. Nearby points are illustrative, not verified business listings.", "Il segnaposto indica il centro approssimativo dell'area. I punti vicini sono illustrativi e non verificati.", "L'épingle indique un centre de zone approximatif. Les points proches sont illustratifs et non vérifiés.", "Die Markierung zeigt einen ungefähren Gebiets-Mittelpunkt. Nahe Punkte sind beispielhaft und nicht verifiziert.", "El marcador indica un centro aproximado. Los puntos cercanos son ilustrativos, no negocios verificados."],
       "Viewing request for ": ["Αίτημα επίσκεψης για ", "Viewing request for ", "Richiesta visita per ", "Demande de visite pour ", "Besichtigungsanfrage für ", "Solicitud de visita para "],
       "Interactive map unavailable.": ["Ο διαδραστικός χάρτης δεν είναι διαθέσιμος.", "Interactive map unavailable.", "Mappa interattiva non disponibile.", "Carte interactive indisponible.", "Interaktive Karte nicht verfügbar.", "Mapa interactivo no disponible."],
       "Viewing request sent": ["Το αίτημα επίσκεψης στάλθηκε", "Viewing request sent", "Richiesta di visita inviata", "Demande de visite envoyée", "Besichtigungsanfrage gesendet", "Solicitud de visita enviada"],
@@ -1111,28 +1090,14 @@
     Object.assign(translations, {
       "Homes on the map": ["Κατοικίες στον χάρτη", "Homes on the map", "Case sulla mappa", "Logements sur la carte", "Immobilien auf der Karte", "Viviendas en el mapa"],
       "Map of listed homes": ["Χάρτης καταχωρισμένων κατοικιών", "Map of listed homes", "Mappa degli immobili", "Carte des logements", "Karte der Immobilien", "Mapa de viviendas"],
-      "POI search radius": ["Ακτίνα αναζήτησης σημείων", "POI search radius", "Raggio di ricerca dei luoghi", "Rayon de recherche des lieux", "Suchradius für Orte", "Radio de búsqueda de lugares"],
       "© OpenStreetMap contributors": ["© Συντελεστές του OpenStreetMap", "© OpenStreetMap contributors", "© Collaboratori di OpenStreetMap", "© Contributeurs d’OpenStreetMap", "© OpenStreetMap-Mitwirkende", "© Colaboradores de OpenStreetMap"],
-      "Loading nearby OpenStreetMap places…": ["Φόρτωση κοντινών σημείων OpenStreetMap…", "Loading nearby OpenStreetMap places…", "Caricamento dei luoghi OpenStreetMap vicini…", "Chargement des lieux OpenStreetMap à proximité…", "Nahe OpenStreetMap-Orte werden geladen…", "Cargando lugares cercanos de OpenStreetMap…"],
-      "Showing cached OpenStreetMap places.": ["Εμφανίζονται αποθηκευμένα σημεία OpenStreetMap.", "Showing cached OpenStreetMap places.", "Sono mostrati luoghi OpenStreetMap salvati.", "Affichage des lieux OpenStreetMap en cache.", "Gespeicherte OpenStreetMap-Orte werden gezeigt.", "Se muestran lugares guardados de OpenStreetMap."],
-      "Showing cached OpenStreetMap places. Live refresh is unavailable.": ["Εμφανίζονται αποθηκευμένα σημεία OpenStreetMap. Η ζωντανή ενημέρωση δεν είναι διαθέσιμη.", "Showing cached OpenStreetMap places. Live refresh is unavailable.", "Sono mostrati luoghi OpenStreetMap salvati. Aggiornamento non disponibile.", "Affichage des lieux OpenStreetMap en cache. Actualisation indisponible.", "Gespeicherte OpenStreetMap-Orte werden gezeigt. Live-Aktualisierung nicht verfügbar.", "Se muestran lugares guardados de OpenStreetMap. No se pueden actualizar ahora."],
-      "No OpenStreetMap places found in this radius.": ["Δεν βρέθηκαν σημεία OpenStreetMap σε αυτή την ακτίνα.", "No OpenStreetMap places found in this radius.", "Nessun luogo OpenStreetMap trovato in questo raggio.", "Aucun lieu OpenStreetMap trouvé dans ce rayon.", "Keine OpenStreetMap-Orte in diesem Radius gefunden.", "No se encontraron lugares de OpenStreetMap en este radio."],
-      "Nearby OpenStreetMap data is unavailable. Check your connection and try again.": ["Τα κοντινά δεδομένα OpenStreetMap δεν είναι διαθέσιμα. Ελέγξτε τη σύνδεσή σας και δοκιμάστε ξανά.", "Nearby OpenStreetMap data is unavailable. Check your connection and try again.", "I dati OpenStreetMap vicini non sono disponibili. Controlla la connessione e riprova.", "Les données OpenStreetMap à proximité sont indisponibles. Vérifiez votre connexion et réessayez.", "Nahe OpenStreetMap-Daten sind nicht verfügbar. Prüfen Sie die Verbindung und versuchen Sie es erneut.", "Los datos cercanos de OpenStreetMap no están disponibles. Comprueba la conexión e inténtalo de nuevo."],
       "No verified coordinates are available for this location.": ["Δεν υπάρχουν επαληθευμένες συντεταγμένες για αυτή την τοποθεσία.", "No verified coordinates are available for this location.", "Non sono disponibili coordinate verificate per questa posizione.", "Aucune coordonnée vérifiée n'est disponible pour cet emplacement.", "Für diesen Standort sind keine verifizierten Koordinaten verfügbar.", "No hay coordenadas verificadas para esta ubicación."],
       "Coordinates must be on land in Greece.": ["Οι συντεταγμένες πρέπει να βρίσκονται σε ξηρά στην Ελλάδα.", "Coordinates must be on land in Greece.", "Le coordinate devono trovarsi sulla terraferma in Grecia.", "Les coordonnées doivent se trouver sur la terre ferme en Grèce.", "Koordinaten müssen auf griechischem Festland liegen.", "Las coordenadas deben estar en tierra firme de Grecia."],
       "The map pin marks supplied coordinates.": ["Η καρφίτσα δείχνει τις παρεχόμενες συντεταγμένες.", "The map pin marks supplied coordinates.", "Il segnaposto indica le coordinate fornite.", "L'épingle indique les coordonnées fournies.", "Die Markierung zeigt die angegebenen Koordinaten.", "El marcador indica las coordenadas proporcionadas."],
       "The map pin marks a verified neighborhood centre.": ["Η καρφίτσα δείχνει επαληθευμένο κέντρο γειτονιάς.", "The map pin marks a verified neighborhood centre.", "Il segnaposto indica il centro verificato del quartiere.", "L'épingle indique un centre de quartier vérifié.", "Die Markierung zeigt ein verifiziertes Viertelzentrum.", "El marcador indica un centro de barrio verificado."],
       "No listing coordinates are available for this home.": ["Δεν υπάρχουν συντεταγμένες καταχώρισης για αυτή την κατοικία.", "No listing coordinates are available for this home.", "Non sono disponibili coordinate per questo immobile.", "Aucune coordonnée n'est disponible pour ce logement.", "Für diese Immobilie sind keine Koordinaten verfügbar.", "No hay coordenadas disponibles para esta vivienda."],
       "Map markers are land-validated; select a pin for listing details.": ["Οι δείκτες έχουν ελεγχθεί ότι βρίσκονται σε ξηρά· επιλέξτε έναν για λεπτομέρειες.", "Map markers are land-validated; select a pin for listing details.", "I segnaposto sono verificati sulla terraferma; selezionane uno per i dettagli.", "Les marqueurs sont vérifiés sur la terre ferme ; sélectionnez-en un pour les détails.", "Die Markierungen wurden auf Land geprüft; wählen Sie eine für Details aus.", "Los marcadores se validan en tierra; selecciona uno para ver los detalles."],
-      "Walking distances and times are estimates.": ["Οι αποστάσεις και οι χρόνοι πεζοπορίας είναι εκτιμήσεις.", "Walking distances and times are estimates.", "Distanze e tempi a piedi sono stime.", "Les distances et durées à pied sont des estimations.", "Fußwege und Gehzeiten sind Schätzungen.", "Las distancias y tiempos a pie son estimaciones."],
       "Map tiles could not be loaded. Check your connection.": ["Δεν ήταν δυνατή η φόρτωση των χαρτών. Ελέγξτε τη σύνδεσή σας.", "Map tiles could not be loaded. Check your connection.", "Impossibile caricare le mappe. Controlla la connessione.", "Impossible de charger le fond de carte. Vérifiez votre connexion.", "Kartenkacheln konnten nicht geladen werden. Prüfen Sie die Verbindung.", "No se pudieron cargar los mapas. Comprueba tu conexión."],
-      "Metro & transit": ["Μετρό και συγκοινωνίες", "Metro & transit", "Metro e trasporti", "Métro et transports", "U-Bahn und Nahverkehr", "Metro y transporte"],
-      "School": ["Σχολείο", "School", "Scuola", "École", "Schule", "Escuela"],
-      "Pharmacy": ["Φαρμακείο", "Pharmacy", "Farmacia", "Pharmacie", "Apotheke", "Farmacia"],
-      "Nearby places": ["Κοντινά σημεία", "Nearby places", "Luoghi vicini", "Lieux à proximité", "Orte in der Nähe", "Lugares cercanos"],
-      "Estimated walk": ["Εκτιμώμενη διαδρομή με τα πόδια", "Estimated walk", "Percorso a piedi stimato", "Marche estimée", "Geschätzter Fußweg", "Trayecto a pie estimado"],
-      "min walk": ["λεπτά με τα πόδια", "min walk", "min a piedi", "min à pied", "Minuten zu Fuß", "min a pie"],
-      "approx.": ["περίπου", "approx.", "circa", "env.", "ca.", "aprox."]
     });
     Object.assign(translations, {
       "Κοντά σε Μετρό": ["Κοντά σε Μετρό", "Near metro", "Vicino alla metro", "Près du métro", "U-Bahn-Nähe", "Cerca del metro"],
@@ -1218,7 +1183,6 @@
       "Δεν έχει προστεθεί χαρακτηριστικό αναζήτησης για αξιολόγηση.": ["Δεν έχει προστεθεί χαρακτηριστικό αναζήτησης για αξιολόγηση.", "No search preference was provided to assess.", "Non è stata indicata una preferenza di ricerca da valutare.", "Aucun critère de recherche n'a été fourni pour l'évaluation.", "Es wurde keine Suchpräferenz zur Bewertung angegeben.", "No se indicó una preferencia de búsqueda para evaluar."],
       "Λείπει από τα στοιχεία αγγελίας: ": ["Λείπει από τα στοιχεία αγγελίας: ", "Not listed: ", "Non indicato nell'annuncio: ", "Non indiqué dans l'annonce : ", "Nicht im Inserat angegeben: ", "No indicado en el anuncio: "],
       "Premium listings": ["Καταχωρίσεις myHome", "myHome listings", "Annunci myHome", "Annonces myHome", "myHome-Inserate", "Anuncios de myHome"],
-      "No coordinates supplied; showing a sample Greek map. Enter coordinates for an accurate pin. Nearby points are illustrative.": ["Δεν έχουν δοθεί συντεταγμένες· εμφανίζεται ενδεικτικός χάρτης Ελλάδας. Προσθέστε συντεταγμένες για ακριβή θέση. Τα κοντινά σημεία είναι ενδεικτικά.", "No coordinates supplied; showing a sample Greek map. Enter coordinates for an accurate pin. Nearby points are illustrative.", "Coordinate non fornite: viene mostrata una mappa indicativa della Grecia. Inserisci le coordinate per una posizione precisa.", "Aucune coordonnée fournie : carte indicative de la Grèce. Saisissez des coordonnées pour une position précise.", "Keine Koordinaten angegeben: Beispielkarte Griechenlands. Geben Sie Koordinaten für einen genauen Standort ein.", "Sin coordenadas: se muestra un mapa orientativo de Grecia. Introduce coordenadas para una ubicación precisa."]
     });
     const languages = ["el", "en", "it", "fr", "de", "es"];
     const textNodes = [];
@@ -1301,10 +1265,6 @@
     const mapLocationNote = document.querySelector("#map-location-note");
     const listingsMapElement = document.querySelector("#listings-map");
     const listingsMapNote = document.querySelector("#listings-map-note");
-    const poiRadiusInput = document.querySelector("#poi-radius");
-    const poiRadiusValue = document.querySelector("#poi-radius-value");
-    const poiSummary = document.querySelector("#poi-summary");
-    const poiWalkingEstimate = document.querySelector("#poi-walking-estimate");
     const viewingForm = document.querySelector("#viewing-form");
     const viewingDate = document.querySelector("#viewing-date");
     const viewingTime = document.querySelector("#viewing-time");
@@ -1385,17 +1345,8 @@
     let propertyMapReady = false;
     let listingsMapReady = false;
     let activeMapPropertyId = null;
-    let activeMapCoordinates = null;
     let hoveredListingId = null;
-    let poiRequestId = 0;
-    let lastOverpassRequestAt = 0;
-    let overpassCooldownUntil = 0;
     const mapLandGeometry = window.MYHOME_MAP_DATA?.land?.geometry;
-    const poiCacheStorageKey = "myHome.osmPoiCache.v1";
-    const overpassEndpoints = [
-      "https://overpass-api.de/api/interpreter",
-      "https://overpass.private.coffee/api/interpreter"
-    ];
     let bookingToastTimer;
     let favoritesDrawerTimer;
     let previousFavoritesBodyOverflow = "";
@@ -1887,7 +1838,6 @@
     }
 
     const mapStyleUrl = "https://tiles.openfreemap.org/styles/dark";
-    const walkingDetourFactor = 1.3;
 
     function pointFeature(id, longitude, latitude, properties) {
       return { type: "Feature", id: String(id), properties, geometry: { type: "Point", coordinates: [longitude, latitude] } };
@@ -2098,184 +2048,7 @@
       return 6371000 * 2 * Math.atan2(Math.sqrt(haversine), Math.sqrt(1 - haversine));
     }
 
-    function walkEstimate(distanceMeters) {
-      const distance = Math.round(distanceMeters * walkingDetourFactor / 25) * 25;
-      return { distance, minutes: Math.max(1, Math.ceil(distance / 75)) };
-    }
-
-    function circleCoordinates(longitude, latitude, radiusMeters, steps = 64) {
-      const points = [];
-      const latitudeRadians = latitude * Math.PI / 180;
-      for (let index = 0; index <= steps; index += 1) {
-        const bearing = 2 * Math.PI * index / steps;
-        const latitudeOffset = radiusMeters / 111320 * Math.cos(bearing);
-        const longitudeOffset = radiusMeters / (111320 * Math.cos(latitudeRadians)) * Math.sin(bearing);
-        points.push([longitude + longitudeOffset, latitude + latitudeOffset]);
-      }
-      return points;
-    }
-
-    function featureWithinRadius(feature, coordinates, radius) {
-      const point = feature.geometry?.coordinates;
-      if (feature.geometry?.type !== "Point" || !Array.isArray(point) || point.length < 2) return false;
-      const longitude = Number(point[0]);
-      const latitude = Number(point[1]);
-      return isGreekLandPoint(latitude, longitude)
-        && distanceBetweenMeters(coordinates.lat, coordinates.lng, latitude, longitude) <= radius;
-    }
-
-    function neighborhoodPoiFeatures(features, coordinates, radius) {
-      return features.filter((feature) => featureWithinRadius(feature, coordinates, radius)).map((feature, index) => {
-        const [longitude, latitude] = feature.geometry.coordinates.map(Number);
-        return {
-          ...feature,
-          id: String(feature.id ?? feature.properties?.id ?? `${feature.properties?.category || "poi"}-${index}`),
-          properties: { ...feature.properties, kind: "poi" },
-          geometry: { type: "Point", coordinates: [longitude, latitude] }
-        };
-      });
-    }
-
-    function readStoredPoiCache() {
-      try {
-        const stored = JSON.parse(localStorage.getItem(poiCacheStorageKey) || "{}");
-        return stored && typeof stored === "object" && !Array.isArray(stored) ? stored : {};
-      } catch (error) {
-        console.warn("Stored OpenStreetMap cache could not be read.", error);
-        return {};
-      }
-    }
-
-    function storePoiCache(cache) {
-      const entries = Object.entries(cache)
-        .sort((left, right) => Number(right[1]?.fetchedAt || 0) - Number(left[1]?.fetchedAt || 0))
-        .slice(0, 12);
-      try {
-        localStorage.setItem(poiCacheStorageKey, JSON.stringify(Object.fromEntries(entries)));
-      } catch (error) {
-        console.warn("OpenStreetMap places could not be cached on this device.", error);
-      }
-    }
-
-    function poiCacheKey(coordinates) {
-      return `${coordinates.lat.toFixed(3)},${coordinates.lng.toFixed(3)}`;
-    }
-
-    function cachedNearbyPois(coordinates, radius, cache, allowExpired = false) {
-      const key = poiCacheKey(coordinates);
-      const cached = cache[key];
-      const cachedRadius = Number(cached?.radius);
-      const fetchedAt = Number(cached?.fetchedAt);
-      if (!cached || !Array.isArray(cached.features) || !Number.isFinite(cachedRadius) || cachedRadius < radius
-        || !Number.isFinite(fetchedAt) || fetchedAt <= 0) return null;
-      if (!allowExpired && Date.now() - fetchedAt > 7 * 24 * 60 * 60 * 1000) return null;
-      return neighborhoodPoiFeatures(cached.features, coordinates, radius);
-    }
-
-    function overpassQuery(latitude, longitude, radius) {
-      const around = `around:${radius},${latitude},${longitude}`;
-      return `[out:json][timeout:25];(nwr(${around})["station"~"subway|light_rail|tram"];nwr(${around})["railway"="tram_stop"];nwr(${around})["railway"="station"]["metro"="yes"];nwr(${around})["railway"="station"]["network"~"metro|subway" i];nwr(${around})["amenity"="gym"];nwr(${around})["leisure"="fitness_centre"];nwr(${around})["shop"="supermarket"];nwr(${around})["amenity"="school"];nwr(${around})["amenity"="pharmacy"];);out center tags;`;
-    }
-
-    function categorizeOsmPoi(tags) {
-      if (tags.amenity === "gym" || tags.leisure === "fitness_centre") return "Gym";
-      if (tags.shop === "supermarket") return "Supermarket";
-      if (tags.amenity === "school") return "School";
-      if (tags.amenity === "pharmacy") return "Pharmacy";
-      if (tags.station || tags.railway || tags.public_transport) return "Metro & transit";
-      return null;
-    }
-
-    function parseOverpassPois(payload, coordinates, radius) {
-      if (!Array.isArray(payload.elements)) throw new TypeError("Overpass response did not contain an elements array.");
-      return payload.elements.flatMap((element) => {
-        const tags = element.tags || {};
-        const category = categorizeOsmPoi(tags);
-        const latitude = Number(element.lat ?? element.center?.lat);
-        const longitude = Number(element.lon ?? element.center?.lon);
-        if (!category || !Number.isFinite(latitude) || !Number.isFinite(longitude)) return [];
-        if (!isGreekLandPoint(latitude, longitude)) {
-          console.warn("Discarding an OpenStreetMap POI outside the Greece land boundary.", element.type, element.id, latitude, longitude);
-          return [];
-        }
-        const feature = pointFeature(`${element.type}-${element.id}`, longitude, latitude, {
-          id: `${element.type}-${element.id}`,
-          category,
-          name: tags.name || tags["name:en"] || tags.int_name || "",
-          tags
-        });
-        return featureWithinRadius(feature, coordinates, radius) ? [feature] : [];
-      });
-    }
-
-    async function requestOverpass(endpoint, query) {
-      const delay = Math.max(0, 5000 - (Date.now() - lastOverpassRequestAt));
-      if (delay) await new Promise((resolve) => window.setTimeout(resolve, delay));
-      lastOverpassRequestAt = Date.now();
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 30000);
-      try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8", "Accept": "application/json" },
-          body: new URLSearchParams({ data: query }),
-          signal: controller.signal
-        });
-        if (response.status === 429) {
-          const retryAfter = response.headers.get("Retry-After");
-          const retryAfterSeconds = Number(retryAfter);
-          const retryAfterDate = Date.parse(retryAfter);
-          const cooldown = Number.isFinite(retryAfterSeconds) && retryAfterSeconds > 0
-            ? retryAfterSeconds * 1000
-            : Number.isFinite(retryAfterDate) && retryAfterDate > Date.now()
-              ? retryAfterDate - Date.now()
-              : 60000;
-          overpassCooldownUntil = Date.now() + cooldown;
-          throw new Error("Overpass rate limit reached.");
-        }
-        if (!response.ok) throw new Error(`Overpass returned HTTP ${response.status}.`);
-        return await response.json();
-      } finally {
-        window.clearTimeout(timeout);
-      }
-    }
-
-    async function fetchNearbyOsmPois(coordinates, radius) {
-      const cache = readStoredPoiCache();
-      const key = poiCacheKey(coordinates);
-      const fresh = cachedNearbyPois(coordinates, radius, cache);
-      if (fresh) return { features: fresh, cached: true, stale: false };
-      if (Date.now() < overpassCooldownUntil) {
-        const stale = cachedNearbyPois(coordinates, radius, cache, true);
-        if (stale) return { features: stale, cached: true, stale: true };
-        throw new Error("OpenStreetMap request is temporarily rate-limited.");
-      }
-      let lastError = null;
-      for (const endpoint of overpassEndpoints) {
-        try {
-          const response = await requestOverpass(endpoint, overpassQuery(coordinates.lat, coordinates.lng, radius));
-          const features = parseOverpassPois(response, coordinates, radius);
-          cache[key] = { fetchedAt: Date.now(), radius, features };
-          storePoiCache(cache);
-          return { features, cached: false, stale: false };
-        } catch (error) {
-          lastError = error;
-          if (/rate limit/.test(error.message)) break;
-          console.warn(`OpenStreetMap Overpass request failed at ${endpoint}.`, error);
-        }
-      }
-      const stale = cachedNearbyPois(coordinates, radius, cache, true);
-      if (stale) return { features: stale, cached: true, stale: true };
-      throw lastError || new Error("No OpenStreetMap Overpass endpoint is available.");
-    }
-
-    function poiName(feature) {
-      const tags = feature.properties?.tags || {};
-      return tags[`name:${activeLanguage}`] || tags[`name:${activeLanguage.split("-")[0]}`]
-        || tags.int_name || feature.properties?.name || t(feature.properties?.category || "Nearby places");
-    }
-
-    function propertyMapFeatures(property, coordinates, poiFeatures) {
+    function propertyMapFeatures(property, coordinates) {
       const homeFeature = pointFeature(property.id, coordinates.lng, coordinates.lat, {
         id: property.id,
         kind: "listing",
@@ -2284,95 +2057,27 @@
         price: formatCurrency(property.price),
         image: property.images[0] || ""
       });
-      return { type: "FeatureCollection", features: [homeFeature, ...poiFeatures] };
+      return { type: "FeatureCollection", features: [homeFeature] };
     }
 
-    function updatePropertyMapSources(property, coordinates, poiFeatures) {
+    function updatePropertyMapSources(property, coordinates) {
       if (!propertyMapReady) return;
-      const source = propertyMap.getSource("neighborhood-places");
-      if (source) source.setData(propertyMapFeatures(property, coordinates, poiFeatures));
-      const radiusSource = propertyMap.getSource("poi-radius");
-      if (radiusSource) {
-        radiusSource.setData({
-          type: "FeatureCollection",
-          features: [{
-            type: "Feature",
-            geometry: { type: "Polygon", coordinates: [circleCoordinates(coordinates.lng, coordinates.lat, Number(poiRadiusInput.value))] },
-            properties: {}
-          }]
-        });
-      }
+      const source = propertyMap.getSource("property-location");
+      if (source) source.setData(propertyMapFeatures(property, coordinates));
     }
 
     function setupPropertyMapLayers() {
-      propertyMap.addSource("neighborhood-places", {
+      propertyMap.addSource("property-location", {
         type: "geojson",
         data: { type: "FeatureCollection", features: [] },
-        cluster: true,
-        clusterRadius: 42,
-        clusterMaxZoom: 16,
         promoteId: "id"
-      });
-      propertyMap.addSource("poi-radius", {
-        type: "geojson",
-        data: { type: "FeatureCollection", features: [] }
-      });
-      propertyMap.addLayer({
-        id: "poi-radius-fill",
-        type: "fill",
-        source: "poi-radius",
-        paint: { "fill-color": "#8b5cf6", "fill-opacity": 0.08 }
-      });
-      propertyMap.addLayer({
-        id: "poi-radius-line",
-        type: "line",
-        source: "poi-radius",
-        paint: { "line-color": "#a78bfa", "line-width": 1.5, "line-dasharray": [2, 2] }
-      });
-      propertyMap.addLayer({
-        id: "poi-clusters",
-        type: "circle",
-        source: "neighborhood-places",
-        filter: ["has", "point_count"],
-        paint: { "circle-color": "#10b981", "circle-radius": ["step", ["get", "point_count"], 16, 5, 21, 10, 26], "circle-stroke-color": "#d1fae5", "circle-stroke-width": 2 }
-      });
-      propertyMap.addLayer({
-        id: "poi-cluster-count",
-        type: "symbol",
-        source: "neighborhood-places",
-        filter: ["has", "point_count"],
-        layout: { "text-field": ["get", "point_count_abbreviated"], "text-size": 11, "text-font": ["Noto Sans Regular"] },
-        paint: { "text-color": "#ffffff" }
-      });
-      propertyMap.addLayer({
-        id: "poi-points",
-        type: "circle",
-        source: "neighborhood-places",
-        filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "kind"], "poi"]],
-        paint: {
-          "circle-color": ["match", ["get", "category"], "School", "#38bdf8", "Pharmacy", "#f472b6", "Gym", "#fbbf24", "Supermarket", "#34d399", "#22d3ee"],
-          "circle-radius": 7,
-          "circle-stroke-color": "#18181b",
-          "circle-stroke-width": 2
-        }
       });
       propertyMap.addLayer({
         id: "property-point",
         type: "circle",
-        source: "neighborhood-places",
-        filter: ["all", ["!", ["has", "point_count"]], ["==", ["get", "kind"], "listing"]],
+        source: "property-location",
+        filter: ["==", ["get", "kind"], "listing"],
         paint: { "circle-color": "#8b5cf6", "circle-radius": 11, "circle-stroke-color": "#ffffff", "circle-stroke-width": 3 }
-      });
-      propertyMap.on("click", "poi-clusters", (event) => {
-        const cluster = propertyMap.queryRenderedFeatures(event.point, { layers: ["poi-clusters"] })[0];
-        if (!cluster) return;
-        propertyMap.getSource("neighborhood-places").getClusterExpansionZoom(cluster.properties.cluster_id, (error, zoom) => {
-          if (error) {
-            console.error("Could not expand the neighborhood marker cluster.", error);
-            return;
-          }
-          propertyMap.easeTo({ center: cluster.geometry.coordinates, zoom });
-        });
       });
       propertyMap.on("click", "property-point", (event) => {
         const feature = event.features?.[0];
@@ -2383,76 +2088,23 @@
           .setDOMContent(createListingPopup(property))
           .addTo(propertyMap);
       });
-      propertyMap.on("click", "poi-points", (event) => {
-        const feature = event.features?.[0];
-        if (!feature || !activeMapCoordinates) return;
-        const distance = walkEstimate(distanceBetweenMeters(
-          activeMapCoordinates.lat,
-          activeMapCoordinates.lng,
-          feature.geometry.coordinates[1],
-          feature.geometry.coordinates[0]
-        ));
-        const content = document.createElement("div");
-        const name = document.createElement("p");
-        name.className = "text-sm font-semibold";
-        name.textContent = poiName(feature);
-        const category = document.createElement("p");
-        category.className = "mt-1 text-xs text-zinc-400";
-        category.textContent = t(feature.properties.category);
-        const walking = document.createElement("p");
-        walking.className = "mt-1 text-xs text-violet-200";
-        walking.textContent = `${distance.distance.toLocaleString(activeLanguage)} m · ${distance.minutes} ${t("min walk")}`;
-        content.append(name, category, walking);
-        new maplibregl.Popup({ offset: 10, maxWidth: "230px" }).setLngLat(feature.geometry.coordinates).setDOMContent(content).addTo(propertyMap);
-      });
-      ["poi-clusters", "poi-points", "property-point"].forEach((layer) => {
-        propertyMap.on("mouseenter", layer, () => { propertyMap.getCanvas().style.cursor = "pointer"; });
-        propertyMap.on("mouseleave", layer, () => { propertyMap.getCanvas().style.cursor = ""; });
-      });
+      propertyMap.on("mouseenter", "property-point", () => { propertyMap.getCanvas().style.cursor = "pointer"; });
+      propertyMap.on("mouseleave", "property-point", () => { propertyMap.getCanvas().style.cursor = ""; });
       propertyMapReady = true;
     }
 
-    function renderPoiSummary(features, coordinates) {
-      if (!features.length) {
-        poiSummary.textContent = t("No OpenStreetMap places found in this radius.");
-        poiWalkingEstimate.textContent = t("Walking distances and times are estimates.");
-        return;
-      }
-      poiSummary.textContent = `${t("Nearby places")}: ${features.length.toLocaleString(activeLanguage)} · ${Number(poiRadiusInput.value).toLocaleString(activeLanguage)} m`;
-      const nearestByCategory = new Map();
-      features.forEach((feature) => {
-        const [longitude, latitude] = feature.geometry.coordinates;
-        const straightDistance = distanceBetweenMeters(coordinates.lat, coordinates.lng, latitude, longitude);
-        const previous = nearestByCategory.get(feature.properties.category);
-        if (!previous || straightDistance < previous.straightDistance) {
-          nearestByCategory.set(feature.properties.category, { feature, straightDistance });
-        }
-      });
-      const estimates = [...nearestByCategory.values()].map(({ feature, straightDistance }) => {
-        const estimate = walkEstimate(straightDistance);
-        return `${t(feature.properties.category)}: ${estimate.distance.toLocaleString(activeLanguage)} m · ${estimate.minutes} ${t("min walk")}`;
-      });
-      poiWalkingEstimate.textContent = `${t("Estimated walk")}: ${estimates.join(" · ")}`;
-    }
-
-    async function renderPropertyMap(property) {
+    function renderPropertyMap(property) {
       if (!propertyMapElement || !mapLocationNote) return;
       const coordinates = propertyCoordinates(property);
       if (!coordinates) {
         mapLocationNote.textContent = t("No verified coordinates are available for this location.");
-        poiSummary.textContent = "";
-        poiWalkingEstimate.textContent = "";
-        if (propertyMapReady) {
-          propertyMap.getSource("neighborhood-places")?.setData({ type: "FeatureCollection", features: [] });
-          propertyMap.getSource("poi-radius")?.setData({ type: "FeatureCollection", features: [] });
-        }
+        propertyMap?.getSource("property-location")?.setData({ type: "FeatureCollection", features: [] });
         return;
       }
       activeMapPropertyId = property.id;
       mapLocationNote.textContent = t(coordinates.exact
         ? "The map pin marks supplied coordinates."
         : "The map pin marks a verified neighborhood centre.");
-      poiRadiusValue.textContent = `${Number(poiRadiusInput.value).toLocaleString(activeLanguage)} m`;
       if (!window.maplibregl) {
         mapLocationNote.textContent += ` ${t("Interactive map unavailable.")}`;
         return;
@@ -2481,38 +2133,10 @@
             }
         });
       }
-      activeMapCoordinates = coordinates;
       requestAnimationFrame(() => propertyMap?.resize());
       if (!propertyMapReady) return;
       propertyMap.flyTo({ center: [coordinates.lng, coordinates.lat], zoom: 14.5, duration: 500 });
-      const requestId = ++poiRequestId;
-      const radius = Number(poiRadiusInput.value);
-      const staticFeatures = window.MYHOME_MAP_DATA?.poiCache?.features || [];
-      let features = neighborhoodPoiFeatures(staticFeatures, coordinates, radius);
-      let status = "";
-      updatePropertyMapSources(property, coordinates, features);
-      poiSummary.textContent = t("Loading nearby OpenStreetMap places…");
-      poiWalkingEstimate.textContent = "";
-      try {
-        const result = await fetchNearbyOsmPois(coordinates, radius);
-        features = result.features;
-        if (result.cached) status = result.stale
-          ? t("Showing cached OpenStreetMap places. Live refresh is unavailable.")
-          : t("Showing cached OpenStreetMap places.");
-      } catch (error) {
-        console.warn("Nearby OpenStreetMap places could not be refreshed.", error);
-        if (!features.length) {
-          poiSummary.textContent = t("Nearby OpenStreetMap data is unavailable. Check your connection and try again.");
-          poiWalkingEstimate.textContent = "";
-          updatePropertyMapSources(property, coordinates, []);
-          return;
-        }
-        status = t("Showing cached OpenStreetMap places. Live refresh is unavailable.");
-      }
-      if (requestId !== poiRequestId || activeMapPropertyId !== property.id || propertyModal.hidden) return;
-      updatePropertyMapSources(property, coordinates, features);
-      renderPoiSummary(features, coordinates);
-      if (status) poiWalkingEstimate.textContent = `${status} ${poiWalkingEstimate.textContent}`;
+      updatePropertyMapSources(property, coordinates);
     }
 
     function initializeProperties() {
@@ -4140,11 +3764,6 @@
     }
 
     modalClose.addEventListener("click", closePropertyModal);
-    poiRadiusInput.addEventListener("input", () => {
-      poiRadiusValue.textContent = `${Number(poiRadiusInput.value).toLocaleString(activeLanguage)} m`;
-      const property = properties.find((item) => item.id === activeMapPropertyId);
-      if (property && !propertyModal.hidden) renderPropertyMap(property);
-    });
     [financialTab, analyticsTab].forEach((tab) => {
       tab.addEventListener("click", () => setPropertyTool(tab === analyticsTab ? "analytics" : "financial"));
       tab.addEventListener("keydown", (event) => {

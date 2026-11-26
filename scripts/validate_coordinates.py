@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
-"""Validate bundled listing, neighborhood, and cached OSM POI coordinates."""
+"""Validate bundled listing and neighborhood coordinates against Greek land."""
 
-import argparse
 import json
 import re
 import sys
@@ -59,35 +58,7 @@ def point_on_greek_land(geometry, latitude, longitude):
     return any(point_in_polygon(longitude, latitude, polygon) for polygon in polygons)
 
 
-def read_poi_file(path):
-    data = json.loads(path.read_text(encoding="utf-8"))
-    if data.get("type") == "FeatureCollection":
-        features = data.get("features", [])
-    elif data.get("type") == "Feature":
-        features = [data]
-    else:
-        raise ValueError(f"{path}: expected a GeoJSON Feature or FeatureCollection.")
-    points = []
-    for feature in features:
-        geometry = feature.get("geometry") or {}
-        if geometry.get("type") != "Point":
-            raise ValueError(f"{path}: all cached POIs must be Point features.")
-        longitude, latitude = geometry.get("coordinates", [None, None])[:2]
-        points.append((str(feature.get("properties", {}).get("name", "unnamed POI")), latitude, longitude))
-    return points
-
-
 def main():
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--poi-file",
-        action="append",
-        default=[],
-        metavar="GEOJSON",
-        help="additional cached OSM POI GeoJSON to validate (may be repeated)",
-    )
-    args = parser.parse_args()
-
     map_data = load_map_data()
     land = map_data["land"]["geometry"]
     index_html = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -106,9 +77,6 @@ def main():
         (f"neighborhood {item['name']}", item["lat"], item["lng"])
         for item in map_data.get("neighborhoods", [])
     )
-    points.extend(read_poi_file_from_feature(feature) for feature in map_data.get("poiCache", {}).get("features", []))
-    for poi_path in args.poi_file:
-        points.extend(read_poi_file(Path(poi_path)))
 
     invalid = []
     for name, latitude, longitude in points:
@@ -118,16 +86,8 @@ def main():
         for name, latitude, longitude in invalid:
             print(f"FAIL {name}: ({latitude}, {longitude}) is not on Greek land", file=sys.stderr)
         return 1
-    print(f"Validated {len(points)} listing, neighborhood, and cached POI coordinates against the Greece land polygon.")
+    print(f"Validated {len(points)} listing and neighborhood coordinates against the Greece land polygon.")
     return 0
-
-
-def read_poi_file_from_feature(feature):
-    geometry = feature.get("geometry") or {}
-    if geometry.get("type") != "Point":
-        raise ValueError("Bundled cached POIs must all be GeoJSON Point features.")
-    longitude, latitude = geometry.get("coordinates", [None, None])[:2]
-    return (str(feature.get("properties", {}).get("name", "unnamed POI")), latitude, longitude)
 
 
 if __name__ == "__main__":

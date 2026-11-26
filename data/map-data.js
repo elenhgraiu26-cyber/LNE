@@ -12,9 +12,5 @@ window.MYHOME_MAP_DATA = {
     { "name": "Thessaloniki centre", "aliases": ["thessaloniki centre", "thessaloniki center", "θεσσαλονίκη", "κέντρο θεσσαλονίκης"], "lat": 40.6403167, "lng": 22.9352716 },
     { "name": "Naousa, Paros", "aliases": ["naousa paros", "naousa", "νάουσα πάρος", "νάουσα"], "lat": 37.1235202, "lng": 25.238741 },
     { "name": "Mykonos Town", "aliases": ["mykonos town", "chora mykonos", "mykonos chora", "χώρα μυκόνου", "μύκονος"], "lat": 37.4450377, "lng": 25.3259658 }
-  ],
-  "poiCache": {
-    "type": "FeatureCollection",
-    "features": []
-  }
+  ]
 };
