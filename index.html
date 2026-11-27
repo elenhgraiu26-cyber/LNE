@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#09090b">
   <meta name="description" content="Find a home that fits the way you live. Search homes by lifestyle with myHome.">
   <title>myHome — Find your kind of home</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -124,6 +123,7 @@
           <button id="open-broker-modal" type="button" class="whitespace-nowrap rounded-full border border-violet-400/25 bg-violet-500/10 px-3 py-2 text-xs font-semibold text-violet-200 transition hover:border-violet-300/50 hover:bg-violet-500/20 sm:px-4 sm:text-sm">Προσθήκη Ακινήτου</button>
         <span id="auth-account" class="hidden max-w-36 truncate text-xs text-zinc-400" aria-live="polite"></span>
         <button id="auth-signout" type="button" class="hidden rounded-full px-3 py-2 text-sm font-medium text-zinc-300 transition hover:text-white sm:px-4">Sign out</button>
+        <button id="delete-account" type="button" class="hidden rounded-full px-3 py-2 text-xs font-medium text-rose-300 transition hover:text-rose-200">Delete my account</button>
         <a id="open-login" href="#login" class="rounded-full px-3 py-2 text-sm font-medium text-zinc-300 transition hover:text-white sm:px-4">Log in</a>
         <a id="open-register" href="#register" class="rounded-full border border-white/10 bg-white/[.06] px-4 py-2 text-sm font-semibold text-white transition hover:border-violet-400/40 hover:bg-violet-500/10 sm:px-5">Register</a>
       </div>
@@ -252,6 +252,7 @@
         <a href="#how-it-works" class="transition hover:text-white">How it works</a>
         <a href="mailto:brokers@myhome.example" class="transition hover:text-white">For Brokers</a>
         <a href="mailto:hello@myhome.example" class="transition hover:text-white">Contact</a>
+        <a href="./privacy.html" class="transition hover:text-white">Privacy policy</a>
       </div>
       <p class="text-xs text-zinc-600">© 2026 myHome. All rights reserved.</p>
     </div>
@@ -418,7 +419,7 @@
           </section>
           <form id="viewing-form" class="mt-6 rounded-2xl border border-white/[.08] bg-white/[.025] p-4">
             <h3 class="mb-1 flex items-center gap-2 font-semibold text-white"><i class="fa-regular fa-calendar-check text-violet-300" aria-hidden="true"></i>Schedule a viewing</h3>
-            <p class="mb-4 text-xs leading-5 text-zinc-500">Τα αιτήματα επίσκεψης αποθηκεύονται σε αυτή τη συσκευή και αποστέλλονται μέσω EmailJS στην ομάδα myHome.</p>
+            <p class="mb-4 text-xs leading-5 text-zinc-500">Viewing requests are sent securely to the myHome team.</p>
             <p id="booking-form-status" class="mb-3 text-xs text-zinc-400" role="status" aria-live="polite"></p>
             <div class="grid gap-3 sm:grid-cols-2">
               <div>
@@ -498,10 +499,10 @@
         </div>
         <label class="flex items-start gap-3 rounded-xl border border-white/[.07] bg-white/[.025] p-3 text-xs leading-5 text-zinc-300">
           <input id="saved-search-alerts" type="checkbox" checked class="mt-1 accent-violet-400">
-          <span>Αποστολή ειδοποίησης μέσω EmailJS στην ομάδα myHome.</span>
+          <span>Send an email alert to the myHome team.</span>
         </label>
         <p id="save-search-status" class="text-xs leading-5 text-zinc-400" role="status" aria-live="polite"></p>
-        <p id="save-search-simulations" class="text-[10px] leading-5 text-zinc-500">Saved searches are private to your account. Email alerts are sent only when EmailJS is configured.</p>
+        <p id="save-search-simulations" class="text-[10px] leading-5 text-zinc-500">Saved searches are private to your account. Email alerts are sent securely by myHome.</p>
         <div class="flex justify-end">
           <button type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Αποθήκευση Αναζήτησης</button>
         </div>
@@ -532,6 +533,10 @@
           <label for="auth-password" class="mb-1.5 block text-xs font-medium text-zinc-300">Password</label>
           <input id="auth-password" name="password" type="password" required minlength="8" maxlength="128" autocomplete="current-password" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
         </div>
+        <label id="auth-privacy-consent-wrap" class="hidden flex items-start gap-3 text-xs leading-5 text-zinc-300" hidden>
+          <input id="auth-privacy-consent" type="checkbox" class="mt-1 accent-violet-400">
+          <span>I have read and agree to the <a href="./privacy.html" target="_blank" rel="noopener noreferrer" class="text-violet-200 underline">Privacy Policy</a> and consent to processing my account data.</span>
+        </label>
         <p id="auth-status" class="text-xs leading-5 text-zinc-400" role="status" aria-live="polite"></p>
         <div class="flex flex-col gap-3">
           <button id="auth-submit" type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-3 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Sign in</button>
@@ -549,49 +554,19 @@
       <div class="mb-6 pr-12">
         <p class="mb-2 text-[11px] font-semibold uppercase tracking-[.2em] text-violet-300">Optional integration</p>
         <h2 id="ai-config-title" class="text-2xl font-semibold tracking-tight text-white">AI API settings</h2>
-        <p id="ai-config-description" class="mt-2 text-sm leading-6 text-zinc-400">Connect a compatible provider for live natural-language search and concierge answers. Without a key, myHome uses local matching.</p>
+        <p id="ai-config-description" class="mt-2 text-sm leading-6 text-zinc-400">Choose the AI provider configured by myHome. Provider keys are stored securely on the server and never in your browser.</p>
       </div>
       <form id="ai-config-form" class="space-y-4">
         <div>
           <label for="ai-provider" class="mb-1.5 block text-xs font-medium text-zinc-300">AI provider</label>
           <select id="ai-provider" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
-            <option value="openrouter">OpenRouter</option>
             <option value="openai">OpenAI</option>
             <option value="gemini">Google Gemini</option>
           </select>
         </div>
-        <div>
-          <label for="ai-api-key" class="mb-1.5 block text-xs font-medium text-zinc-300">API key (optional)</label>
-          <input id="ai-api-key" type="password" autocomplete="off" spellcheck="false" maxlength="500" placeholder="Paste your provider API key" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none placeholder:text-zinc-600 focus:border-violet-400/50">
-          <p class="mt-2 text-[11px] leading-5 text-zinc-500">The key stays in memory for this page session; prompts and relevant listing data are sent directly to the selected provider. Browser-side keys can be inspected, so use a secured backend proxy in production.</p>
-        </div>
         <p id="ai-config-status" class="text-xs text-zinc-400" role="status" aria-live="polite"></p>
-        <div class="flex flex-col-reverse gap-2 pt-1 sm:flex-row sm:justify-end">
-          <button id="clear-ai-config" type="button" class="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-zinc-300 transition hover:bg-white/[.06]">Clear key</button>
-          <button type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Save settings</button>
-        </div>
-      </form>
-      <form id="emailjs-config-form" class="mt-6 space-y-4 border-t border-white/[.08] pt-5">
-        <div>
-          <h3 class="text-sm font-semibold text-white">EmailJS notifications</h3>
-          <p class="mt-1 text-[11px] leading-5 text-zinc-500">Ρυθμίστε τα δημόσια στοιχεία EmailJS. Ορίστε τον παραλήπτη του template στη διεύθυνση elenhgraiu26@gmail.com και περιορίστε τα επιτρεπόμενα domains. Τα στοιχεία είναι ορατά στον browser.</p>
-        </div>
-        <div>
-          <label for="emailjs-public-key" class="mb-1.5 block text-xs font-medium text-zinc-300">EmailJS public key</label>
-          <input id="emailjs-public-key" type="text" autocomplete="off" spellcheck="false" maxlength="300" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
-        </div>
-        <div>
-          <label for="emailjs-service-id" class="mb-1.5 block text-xs font-medium text-zinc-300">EmailJS service ID</label>
-          <input id="emailjs-service-id" type="text" autocomplete="off" spellcheck="false" maxlength="200" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
-        </div>
-        <div>
-          <label for="emailjs-template-id" class="mb-1.5 block text-xs font-medium text-zinc-300">EmailJS template ID</label>
-          <input id="emailjs-template-id" type="text" autocomplete="off" spellcheck="false" maxlength="200" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
-        </div>
-        <p id="emailjs-config-status" class="text-xs text-zinc-400" role="status" aria-live="polite"></p>
-        <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-          <button id="clear-emailjs-config" type="button" class="rounded-xl border border-white/10 px-4 py-2.5 text-sm font-semibold text-zinc-300 transition hover:bg-white/[.06]">Clear EmailJS settings</button>
-          <button type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Save EmailJS settings</button>
+        <div class="flex justify-end pt-1">
+          <button type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Use this provider</button>
         </div>
       </form>
     </div>
@@ -667,6 +642,10 @@
           </div>
         </div>
         <p id="listing-form-status" class="text-xs text-zinc-400" role="status" aria-live="polite"></p>
+        <label class="flex items-start gap-3 text-xs leading-5 text-zinc-300">
+          <input id="listing-privacy-consent" type="checkbox" required class="mt-1 accent-violet-400">
+          <span>I consent to processing the listing details and photos I submit, as described in the <a href="./privacy.html" target="_blank" rel="noopener noreferrer" class="text-violet-200 underline">Privacy Policy</a>.</span>
+        </label>
         <div class="flex justify-end border-t border-white/[.07] pt-4">
           <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-violet-950/30 transition hover:from-violet-400 hover:to-indigo-400 focus:outline-none focus:ring-2 focus:ring-violet-300 focus:ring-offset-2 focus:ring-offset-[#111113]">
             <i class="fa-solid fa-plus text-xs" aria-hidden="true"></i>
@@ -754,10 +733,8 @@
     const aiConfigModal = document.querySelector("#ai-config-modal");
     const aiConfigForm = document.querySelector("#ai-config-form");
     const aiProviderSelect = document.querySelector("#ai-provider");
-    const aiApiKeyInput = document.querySelector("#ai-api-key");
     const aiConfigStatus = document.querySelector("#ai-config-status");
     const closeAiConfigButton = document.querySelector("#close-ai-config");
-    const clearAiConfigButton = document.querySelector("#clear-ai-config");
     const searchApiStatus = document.querySelector("#search-api-status");
     const weatherLocation = document.querySelector("#weather-location");
     const weatherTemperature = document.querySelector("#weather-temperature");
@@ -1107,24 +1084,13 @@
       "Configure AI API": ["Ρύθμιση API AI", "Configure AI API", "Configura API IA", "Configurer l’API IA", "KI-API konfigurieren", "Configurar API de IA"],
       "Optional integration": ["Προαιρετική σύνδεση", "Optional integration", "Integrazione opzionale", "Intégration facultative", "Optionale Integration", "Integración opcional"],
       "AI API settings": ["Ρυθμίσεις API AI", "AI API settings", "Impostazioni API IA", "Paramètres de l’API IA", "KI-API-Einstellungen", "Ajustes de API de IA"],
-      "Connect a compatible provider for live natural-language search and concierge answers. Without a key, myHome uses local matching.": ["Συνδέστε έναν συμβατό πάροχο για ζωντανή αναζήτηση φυσικής γλώσσας και απαντήσεις concierge. Χωρίς κλειδί, το myHome χρησιμοποιεί τοπική αντιστοίχιση.", "Connect a compatible provider for live natural-language search and concierge answers. Without a key, myHome uses local matching.", "Collega un provider compatibile per la ricerca in linguaggio naturale e le risposte del concierge. Senza chiave, myHome usa la ricerca locale.", "Connectez un fournisseur compatible pour la recherche en langage naturel et les réponses du concierge. Sans clé, myHome utilise la recherche locale.", "Verbinden Sie einen kompatiblen Anbieter für natürliche Suche und Concierge-Antworten. Ohne Schlüssel verwendet myHome die lokale Suche.", "Conecta un proveedor compatible para búsquedas en lenguaje natural y respuestas del asistente. Sin clave, myHome usa la búsqueda local."],
       "AI provider": ["Πάροχος AI", "AI provider", "Provider IA", "Fournisseur IA", "KI-Anbieter", "Proveedor de IA"],
-      "API key (optional)": ["Κλειδί API (προαιρετικό)", "API key (optional)", "Chiave API (facoltativa)", "Clé API (facultative)", "API-Schlüssel (optional)", "Clave API (opcional)"],
-      "Paste your provider API key": ["Επικολλήστε το κλειδί API του παρόχου", "Paste your provider API key", "Incolla la chiave API del provider", "Collez la clé API du fournisseur", "API-Schlüssel des Anbieters einfügen", "Pega la clave API del proveedor"],
-      "The key stays in memory for this page session and is sent directly to your selected provider. Do not enter a key on a shared device.": ["Το κλειδί παραμένει στη μνήμη μόνο για αυτή τη συνεδρία της σελίδας και αποστέλλεται απευθείας στον επιλεγμένο πάροχο. Μην εισάγετε κλειδί σε κοινόχρηστη συσκευή.", "The key stays in memory for this page session and is sent directly to your selected provider. Do not enter a key on a shared device.", "La chiave resta in memoria solo per questa sessione e viene inviata direttamente al provider selezionato. Non inserirla su un dispositivo condiviso.", "La clé reste en mémoire pour cette session et est envoyée directement au fournisseur choisi. Ne la saisissez pas sur un appareil partagé.", "Der Schlüssel bleibt nur für diese Sitzung im Arbeitsspeicher und wird direkt an den gewählten Anbieter gesendet. Nicht auf gemeinsam genutzten Geräten eingeben.", "La clave permanece en memoria durante esta sesión y se envía directamente al proveedor elegido. No la introduzcas en un dispositivo compartido."],
-      "The key stays in memory for this page session; prompts and relevant listing data are sent directly to the selected provider. Browser-side keys can be inspected, so use a secured backend proxy in production.": ["Το κλειδί παραμένει στη μνήμη μόνο για αυτή τη συνεδρία· τα ερωτήματα και σχετικά στοιχεία αγγελιών αποστέλλονται απευθείας στον πάροχο. Τα κλειδιά στον browser μπορούν να επιθεωρηθούν· για παραγωγή χρησιμοποιήστε ασφαλή διακομιστή μεσολάβησης.", "The key stays in memory for this page session; prompts and relevant listing data are sent directly to the selected provider. Browser-side keys can be inspected, so use a secured backend proxy in production.", "La chiave resta in memoria per questa sessione; richieste e dati pertinenti degli annunci vengono inviati direttamente al provider. Le chiavi nel browser sono ispezionabili: in produzione usa un proxy backend sicuro.", "La clé reste en mémoire pour cette session ; les requêtes et les données pertinentes des annonces sont envoyées au fournisseur. Les clés côté navigateur sont visibles : utilisez un proxy backend sécurisé en production.", "Der Schlüssel bleibt nur für diese Sitzung im Arbeitsspeicher; Anfragen und relevante Angebotsdaten werden direkt an den Anbieter gesendet. Browser-Schlüssel sind einsehbar; nutzen Sie in Produktion einen sicheren Backend-Proxy.", "La clave permanece en memoria durante esta sesión; las consultas y los datos relevantes de los anuncios se envían directamente al proveedor. Las claves del navegador son inspeccionables; usa un proxy backend seguro en producción."],
-      "Clear key": ["Αφαίρεση κλειδιού", "Clear key", "Cancella chiave", "Effacer la clé", "Schlüssel löschen", "Borrar clave"],
-      "Save settings": ["Αποθήκευση ρυθμίσεων", "Save settings", "Salva impostazioni", "Enregistrer les paramètres", "Einstellungen speichern", "Guardar ajustes"],
       "Close AI API settings": ["Κλείσιμο ρυθμίσεων API AI", "Close AI API settings", "Chiudi impostazioni API IA", "Fermer les paramètres de l’API IA", "KI-API-Einstellungen schließen", "Cerrar ajustes de API de IA"],
-      "AI API is ready for this page session.": ["Το API AI είναι έτοιμο για αυτή τη συνεδρία.", "AI API is ready for this page session.", "L’API IA è pronta per questa sessione.", "L’API IA est prête pour cette session.", "Die KI-API ist für diese Sitzung bereit.", "La API de IA está lista para esta sesión."],
-      "AI API key cleared. Local matching remains active.": ["Το κλειδί API AI αφαιρέθηκε. Η τοπική αντιστοίχιση παραμένει ενεργή.", "AI API key cleared. Local matching remains active.", "Chiave API IA rimossa. La ricerca locale resta attiva.", "Clé API IA effacée. La recherche locale reste active.", "KI-API-Schlüssel gelöscht. Die lokale Suche bleibt aktiv.", "Clave de API de IA borrada. La búsqueda local sigue activa."],
-      "Choose a provider and add a key, or continue with local search.": ["Επιλέξτε πάροχο και προσθέστε κλειδί ή συνεχίστε με την τοπική αναζήτηση.", "Choose a provider and add a key, or continue with local search.", "Scegli un provider e aggiungi una chiave, oppure continua con la ricerca locale.", "Choisissez un fournisseur et ajoutez une clé, ou continuez avec la recherche locale.", "Wählen Sie einen Anbieter und fügen Sie einen Schlüssel hinzu oder nutzen Sie die lokale Suche.", "Elige un proveedor y añade una clave, o continúa con la búsqueda local."],
       "Using local smart search.": ["Χρησιμοποιείται η έξυπνη τοπική αναζήτηση.", "Using local smart search.", "Ricerca intelligente locale attiva.", "Recherche intelligente locale activée.", "Intelligente lokale Suche aktiv.", "Búsqueda inteligente local activa."],
       "Searching with live AI…": ["Αναζήτηση με ζωντανό AI…", "Searching with live AI…", "Ricerca IA in corso…", "Recherche IA en cours…", "KI-Suche läuft…", "Buscando con IA…"],
       "AI-ranked results are ready.": ["Τα αποτελέσματα AI είναι έτοιμα.", "AI-ranked results are ready.", "Risultati classificati dall’IA pronti.", "Résultats classés par l’IA prêts.", "KI-sortierte Ergebnisse sind bereit.", "Resultados clasificados por IA listos."],
       "Live AI request failed; local matches are shown instead.": ["Η ζωντανή αναζήτηση AI απέτυχε· εμφανίζονται τα τοπικά αποτελέσματα.", "Live AI request failed; local matches are shown instead.", "Ricerca IA non riuscita; vengono mostrati i risultati locali.", "Échec de la recherche IA ; les résultats locaux sont affichés.", "KI-Suche fehlgeschlagen; lokale Treffer werden angezeigt.", "Falló la búsqueda con IA; se muestran resultados locales."],
       "AI response could not be interpreted; local matches are shown instead.": ["Δεν ήταν δυνατή η ανάγνωση της απάντησης AI· εμφανίζονται τα τοπικά αποτελέσματα.", "AI response could not be interpreted; local matches are shown instead.", "Impossibile interpretare la risposta IA; vengono mostrati i risultati locali.", "La réponse IA n’a pas pu être interprétée ; résultats locaux affichés.", "KI-Antwort konnte nicht gelesen werden; lokale Treffer werden angezeigt.", "No se pudo interpretar la respuesta de IA; se muestran resultados locales."],
-      "AI request failed. Check your provider, API key, and connection.": ["Το αίτημα AI απέτυχε. Ελέγξτε τον πάροχο, το κλειδί API και τη σύνδεσή σας.", "AI request failed. Check your provider, API key, and connection.", "Richiesta IA non riuscita. Controlla provider, chiave API e connessione.", "Échec de la requête IA. Vérifiez le fournisseur, la clé API et la connexion.", "KI-Anfrage fehlgeschlagen. Prüfen Sie Anbieter, API-Schlüssel und Verbindung.", "Falló la solicitud de IA. Comprueba el proveedor, la clave API y la conexión."],
       "Thinking…": ["Σκέφτομαι…", "Thinking…", "Sto pensando…", "Réflexion…", "Einen Moment…", "Pensando…"],
       "Live AI is unavailable; this is a local demo response.": ["Το ζωντανό AI δεν είναι διαθέσιμο· αυτή είναι τοπική δοκιμαστική απάντηση.", "Live AI is unavailable; this is a local demo response.", "L’IA non è disponibile; questa è una risposta locale dimostrativa.", "L’IA en direct est indisponible ; voici une réponse locale de démonstration.", "Live-KI nicht verfügbar; dies ist eine lokale Demo-Antwort.", "La IA no está disponible; esta es una respuesta local de demostración."],
       "Neighborhood Climate & Live Weather": ["Κλίμα γειτονιάς & ζωντανός καιρός", "Neighborhood Climate & Live Weather", "Clima del quartiere e meteo in tempo reale", "Climat du quartier et météo en direct", "Nachbarschaftsklima & Live-Wetter", "Clima del barrio y tiempo en directo"],
@@ -1294,8 +1260,11 @@
     const authStatus = document.querySelector("#auth-status");
     const authSubmit = document.querySelector("#auth-submit");
     const authModeToggle = document.querySelector("#auth-mode-toggle");
+    const authPrivacyConsent = document.querySelector("#auth-privacy-consent");
+    const authPrivacyConsentWrap = document.querySelector("#auth-privacy-consent-wrap");
     const authAccount = document.querySelector("#auth-account");
     const authSignOut = document.querySelector("#auth-signout");
+    const deleteAccountButton = document.querySelector("#delete-account");
     const supabaseMessage = document.querySelector("#supabase-message");
     const propertyModal = document.querySelector("#property-modal");
     const comparisonBar = document.querySelector("#comparison-bar");
@@ -1314,17 +1283,6 @@
     const savedSearchEmail = document.querySelector("#saved-search-email");
     const savedSearchAlerts = document.querySelector("#saved-search-alerts");
     const saveSearchStatus = document.querySelector("#save-search-status");
-    const emailJsConfigForm = document.querySelector("#emailjs-config-form");
-    const emailJsPublicKeyInput = document.querySelector("#emailjs-public-key");
-    const emailJsServiceIdInput = document.querySelector("#emailjs-service-id");
-    const emailJsTemplateIdInput = document.querySelector("#emailjs-template-id");
-    const emailJsConfigStatus = document.querySelector("#emailjs-config-status");
-    const clearEmailJsConfigButton = document.querySelector("#clear-emailjs-config");
-    const alertsStorageKey = "myhome-alerts-v1";
-    const emailJsStorageKey = "myhome-emailjs-config-v1";
-    const notificationRecipient = "elenhgraiu26@gmail.com";
-    let emailJsConfig = { publicKey: "", serviceId: "", templateId: "" };
-    let emailJsStatusKey = "";
     const selectedForComparison = new Set();
     const savedSearches = [];
     let dbClient = null;
@@ -1414,6 +1372,7 @@
     const listingTagsInput = document.querySelector("#listing-tags");
     const generatedTagsContainer = document.querySelector("#generated-tags");
     const listingFormStatus = document.querySelector("#listing-form-status");
+    const listingPrivacyConsent = document.querySelector("#listing-privacy-consent");
     const listingFiles = document.querySelector("#listing-image-files");
     const myListingsPanel = document.querySelector("#my-listings-panel");
     const myListingsHeading = document.querySelector("#my-listings-heading");
@@ -1430,8 +1389,7 @@
     let activeLanguage = "el";
     let activeCurrency = "EUR";
     let activeAreaUnit = "sqm";
-    let aiApiKey = "";
-    let aiProvider = "openrouter";
+    let aiProvider = "openai";
     let searchRequestId = 0;
     let weatherRequestId = 0;
     let previousAiConfigBodyOverflow = "";
@@ -1493,7 +1451,19 @@
       "The listing was approved.": ["Η αγγελία εγκρίθηκε.", "The listing was approved.", "L'annuncio è stato approvato.", "L'annonce a été approuvée.", "Das Angebot wurde genehmigt.", "El anuncio fue aprobado."],
       "The listing was rejected.": ["Η αγγελία απορρίφθηκε.", "The listing was rejected.", "L'annuncio è stato rifiutato.", "L'annonce a été refusée.", "Das Angebot wurde abgelehnt.", "El anuncio fue rechazado."],
       "Rejection reason: ": ["Αιτιολογία απόρριψης: ", "Rejection reason: ", "Motivo del rifiuto: ", "Motif du refus : ", "Ablehnungsgrund: ", "Motivo del rechazo: "],
-      "Only approved listings appear publicly.": ["Μόνο οι εγκεκριμένες αγγελίες εμφανίζονται δημόσια.", "Only approved listings appear publicly.", "Solo gli annunci approvati sono visibili pubblicamente.", "Seules les annonces approuvées sont visibles publiquement.", "Nur genehmigte Angebote sind öffentlich sichtbar.", "Solo los anuncios aprobados son públicos."]
+      "Only approved listings appear publicly.": ["Μόνο οι εγκεκριμένες αγγελίες εμφανίζονται δημόσια.", "Only approved listings appear publicly.", "Solo gli annunci approvati sono visibili pubblicamente.", "Seules les annonces approuvées sont visibles publiquement.", "Nur genehmigte Angebote sind öffentlich sichtbar.", "Solo los anuncios aprobados son públicos."],
+      "Delete my account": ["Διαγραφή λογαριασμού", "Delete my account", "Elimina il mio account", "Supprimer mon compte", "Mein Konto löschen", "Eliminar mi cuenta"],
+      "Privacy policy": ["Πολιτική απορρήτου", "Privacy policy", "Informativa sulla privacy", "Politique de confidentialité", "Datenschutzerklärung", "Política de privacidad"],
+      "I have read and agree to the Privacy Policy and consent to processing my account data.": ["Διάβασα και συμφωνώ με την Πολιτική Απορρήτου και συναινώ στην επεξεργασία των δεδομένων του λογαριασμού μου.", "I have read and agree to the Privacy Policy and consent to processing my account data.", "Ho letto e accetto l'Informativa sulla privacy e acconsento al trattamento dei dati del mio account.", "J'ai lu et j'accepte la Politique de confidentialité et je consens au traitement des données de mon compte.", "Ich habe die Datenschutzerklärung gelesen und stimme der Verarbeitung meiner Kontodaten zu.", "He leído y acepto la Política de privacidad y doy mi consentimiento para tratar los datos de mi cuenta."],
+      "I consent to processing the listing details and photos I submit, as described in the Privacy Policy.": ["Συναινώ στην επεξεργασία των στοιχείων και των φωτογραφιών της αγγελίας που υποβάλλω, όπως περιγράφεται στην Πολιτική Απορρήτου.", "I consent to processing the listing details and photos I submit, as described in the Privacy Policy.", "Acconsento al trattamento dei dettagli e delle foto dell'annuncio che invio, come descritto nell'Informativa sulla privacy.", "Je consens au traitement des détails et des photos de l'annonce que je soumets, comme décrit dans la Politique de confidentialité.", "Ich stimme der Verarbeitung der Angebotsdetails und Fotos zu, die ich gemäß der Datenschutzerklärung einreiche.", "Doy mi consentimiento para tratar los detalles y las fotos del anuncio que envío, según se describe en la Política de privacidad."],
+      "AI keys are managed securely by myHome.": ["Τα κλειδιά AI διαχειρίζονται με ασφάλεια από το myHome.", "AI keys are managed securely by myHome.", "Le chiavi IA sono gestite in modo sicuro da myHome.", "Les clés IA sont gérées en toute sécurité par myHome.", "KI-Schlüssel werden sicher von myHome verwaltet.", "myHome gestiona las claves de IA de forma segura."],
+      "Using secure AI through myHome.": ["Χρήση ασφαλούς AI μέσω του myHome.", "Using secure AI through myHome.", "Uso dell'IA sicura tramite myHome.", "Utilisation de l'IA sécurisée via myHome.", "Sichere KI wird über myHome verwendet.", "Usando IA segura a través de myHome."],
+      "Choose OpenAI or Google Gemini.": ["Επιλέξτε OpenAI ή Google Gemini.", "Choose OpenAI or Google Gemini.", "Scegli OpenAI o Google Gemini.", "Choisissez OpenAI ou Google Gemini.", "Wählen Sie OpenAI oder Google Gemini.", "Elige OpenAI o Google Gemini."],
+      "The AI service returned an empty response.": ["Η υπηρεσία AI επέστρεψε κενή απάντηση.", "The AI service returned an empty response.", "Il servizio IA ha restituito una risposta vuota.", "Le service IA a renvoyé une réponse vide.", "Der KI-Dienst hat eine leere Antwort zurückgegeben.", "El servicio de IA devolvió una respuesta vacía."],
+      "Delete your account and all your listings, saved searches, and favorites? This cannot be undone.": ["Να διαγραφεί ο λογαριασμός, οι αγγελίες, οι αποθηκευμένες αναζητήσεις και τα αγαπημένα σας; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.", "Delete your account and all your listings, saved searches, and favorites? This cannot be undone.", "Eliminare il tuo account, gli annunci, le ricerche salvate e i preferiti? Questa azione non può essere annullata.", "Supprimer votre compte, vos annonces, recherches enregistrées et favoris ? Cette action est irréversible.", "Möchten Sie Ihr Konto, alle Angebote, gespeicherten Suchen und Favoriten löschen? Dies kann nicht rückgängig gemacht werden.", "¿Eliminar tu cuenta, anuncios, búsquedas guardadas y favoritos? Esta acción no se puede deshacer."],
+      "Unable to delete your account.": ["Δεν ήταν δυνατή η διαγραφή του λογαριασμού σας.", "Unable to delete your account.", "Impossibile eliminare il tuo account.", "Impossible de supprimer votre compte.", "Ihr Konto konnte nicht gelöscht werden.", "No se pudo eliminar tu cuenta."],
+      "The email could not be sent.": ["Δεν ήταν δυνατή η αποστολή του email.", "The email could not be sent.", "Impossibile inviare l'e-mail.", "L'e-mail n'a pas pu être envoyée.", "Die E-Mail konnte nicht gesendet werden.", "No se pudo enviar el correo."],
+      "The email service is not configured.": ["Η υπηρεσία email δεν έχει ρυθμιστεί.", "The email service is not configured.", "Il servizio e-mail non è configurato.", "Le service e-mail n'est pas configuré.", "Der E-Mail-Dienst ist nicht eingerichtet.", "El servicio de correo no está configurado."]
     });
 
     function t(source) {
@@ -1517,6 +1487,10 @@
       const creatingAccount = authMode === "signup";
       authNameField.hidden = !creatingAccount;
       authName.required = creatingAccount;
+      authPrivacyConsentWrap.hidden = !creatingAccount;
+      authPrivacyConsentWrap.classList.toggle("hidden", !creatingAccount);
+      authPrivacyConsent.required = creatingAccount;
+      authPrivacyConsent.checked = false;
       authName.autocomplete = creatingAccount ? "name" : "off";
       authPassword.autocomplete = creatingAccount ? "new-password" : "current-password";
       authTitle.textContent = t(creatingAccount ? "Sign up" : "Sign in");
@@ -1551,6 +1525,7 @@
       authAccount.textContent = signedIn ? currentUser.email || "" : "";
       authAccount.classList.toggle("hidden", !signedIn);
       authSignOut.classList.toggle("hidden", !signedIn);
+      deleteAccountButton.classList.toggle("hidden", !signedIn);
       document.querySelector("#open-login").classList.toggle("hidden", signedIn);
       document.querySelector("#open-register").classList.toggle("hidden", signedIn);
     }
@@ -1582,7 +1557,9 @@
         localeContent: row.locale_content || {},
         status: row.status,
         ownerId: row.owner_id,
-        rejectionReason: row.rejection_reason
+        rejectionReason: row.rejection_reason,
+        privacyConsentAt: row.privacy_consent_at,
+        privacyPolicyVersion: row.privacy_policy_version
       };
     }
 
@@ -1613,7 +1590,9 @@
         locale_content: property.localeContent || {},
         status,
         owner_id: property.ownerId || currentUser?.id || null,
-        rejection_reason: property.rejectionReason || null
+        rejection_reason: property.rejectionReason || null,
+        privacy_consent_at: property.privacyConsentAt || new Date().toISOString(),
+        privacy_policy_version: property.privacyPolicyVersion || "2026-11-27"
       };
     }
 
@@ -1719,8 +1698,13 @@
         showSupabaseMessage(t("Listing review failed."), error || new Error("The listing is no longer pending."));
         return;
       }
+      const notificationError = await sendListingEmail(property.id, status);
       await loadSupabaseListings();
-      showSupabaseMessage(t(status === "approved" ? "The listing was approved." : "The listing was rejected."));
+      if (notificationError) {
+        showSupabaseMessage(t("Listing status changed, but the client email could not be sent."), notificationError);
+      } else {
+        showSupabaseMessage(t(status === "approved" ? "The listing was approved." : "The listing was rejected."));
+      }
     }
 
     async function uploadListingImages(propertyId, uploadedPaths) {
@@ -1877,13 +1861,24 @@
         authStatus.textContent = t("Supabase is not configured. Demo mode is active.");
         return;
       }
+      if (authMode === "signup" && !authPrivacyConsent.checked) {
+        authPrivacyConsent.reportValidity();
+        return;
+      }
       authSubmit.disabled = true;
       authStatus.textContent = "";
       const result = authMode === "signup"
         ? await dbClient.auth.signUp({
           email: authEmail.value.trim(),
           password: authPassword.value,
-          options: { data: { name: authName.value.trim() } }
+          options: {
+            data: {
+              name: authName.value.trim(),
+              privacy_consent: authPrivacyConsent.checked,
+              privacy_consent_at: new Date().toISOString(),
+              privacy_policy_version: "2026-11-27"
+            }
+          }
         })
         : await dbClient.auth.signInWithPassword({
           email: authEmail.value.trim(),
@@ -1916,152 +1911,93 @@
       await loadSupabaseFavorites();
     }
 
-    function loadEmailJsConfig() {
-      try {
-        const storedConfig = localStorage.getItem(emailJsStorageKey);
-        if (!storedConfig) return;
-        const parsed = JSON.parse(storedConfig);
-        if (!parsed || typeof parsed !== "object"
-          || typeof parsed.publicKey !== "string"
-          || typeof parsed.serviceId !== "string"
-          || typeof parsed.templateId !== "string") {
-          throw new TypeError("Stored EmailJS configuration is invalid.");
+    async function sendListingEmail(listingId, event) {
+      if (!dbClient) return null;
+      const { error } = await dbClient.functions.invoke("send-email", {
+        body: { event, listing_id: listingId }
+      });
+      return error || null;
+    }
+
+    async function sendContactEmail(alert) {
+      if (!dbClient) throw new Error(t("The email service is not configured."));
+      const { error } = await dbClient.functions.invoke("send-email", {
+        body: {
+          event: "contact-request",
+          notification_type: alert.notificationType,
+          requester_email: alert.email || currentUser?.email || "",
+          subject: alert.subject,
+          search_criteria: alert.criteria || "",
+          property_title: alert.propertyTitle || "",
+          property_location: alert.propertyLocation || "",
+          viewing_date: alert.viewingDate || "",
+          viewing_time: alert.viewingTime || "",
+          message: alert.message
         }
-        emailJsConfig = parsed;
-      } catch (error) {
-        console.error("EmailJS configuration could not be loaded from local storage.", error);
-        emailJsStatusKey = "EmailJS settings could not be loaded from this device.";
-      }
-    }
-
-    function storeAlertLocally(alert) {
-      const savedAlerts = JSON.parse(localStorage.getItem(alertsStorageKey) || "[]");
-      if (!Array.isArray(savedAlerts)) throw new TypeError("Stored myHome alerts are not a list.");
-      savedAlerts.push({ ...alert, createdAt: new Date().toISOString() });
-      localStorage.setItem(alertsStorageKey, JSON.stringify(savedAlerts));
-    }
-
-    async function sendEmailJsNotification(alert) {
-      if (!emailJsConfig.publicKey || !emailJsConfig.serviceId || !emailJsConfig.templateId) return false;
-      if (!window.emailjs || typeof window.emailjs.send !== "function") {
-        throw new Error(t("Λείπει η βιβλιοθήκη EmailJS. Ελέγξτε τη σύνδεσή σας."));
-      }
-      const params = {
-        to_email: notificationRecipient,
-        recipient_email: notificationRecipient,
-        notification_type: alert.notificationType,
-        subject: alert.subject,
-        requester_email: alert.email || "",
-        search_criteria: alert.criteria || "",
-        property_title: alert.propertyTitle || "",
-        property_location: alert.propertyLocation || "",
-        viewing_date: alert.viewingDate || "",
-        viewing_time: alert.viewingTime || "",
-        message: alert.message
-      };
-      await window.emailjs.send(emailJsConfig.serviceId, emailJsConfig.templateId, params, emailJsConfig.publicKey);
+      });
+      if (error) throw error;
       return true;
     }
 
-    function renderNotificationStatus(statusElement, state) {
-      const parts = [
-        state.savedLocally ? t("Αποθήκευση σε αυτή τη συσκευή.") : t("Δεν ήταν δυνατή η αποθήκευση στη συσκευή."),
-        !state.shouldSendEmail ? "" : state.emailSent
-          ? t("Η ειδοποίηση email στάλθηκε στη myHome.")
-          : state.emailFailed
-            ? t("Το EmailJS δεν μπόρεσε να στείλει την ειδοποίηση.")
-            : t("Το EmailJS δεν έχει ρυθμιστεί· δεν στάλθηκε email.")
-      ].filter(Boolean);
-      statusElement.textContent = parts.join(" ");
-      statusElement.classList.toggle("text-rose-300", !state.savedLocally || state.emailFailed);
-      statusElement.classList.toggle("text-emerald-300", state.savedLocally && (!state.shouldSendEmail || state.emailSent));
-      statusElement.classList.toggle("text-zinc-400", state.savedLocally && state.shouldSendEmail && !state.emailSent && !state.emailFailed);
-    }
-
     async function persistAndNotify(alert, statusElement, shouldSendEmail = true) {
-      let savedLocally = true;
+      if (!shouldSendEmail) {
+        statusElement.textContent = t("Request saved.");
+        return { emailSent: false };
+      }
       try {
-        storeAlertLocally(alert);
+        await sendContactEmail(alert);
+        statusElement.textContent = t("The request was emailed securely to myHome.");
+        statusElement.classList.remove("text-rose-300");
+        statusElement.classList.add("text-emerald-300");
+        return { emailSent: true };
       } catch (error) {
-        savedLocally = false;
-        console.error("myHome alert could not be stored in local storage.", error);
+        console.error("Secure email request failed.", error);
+        statusElement.textContent = `${t("The email could not be sent.")} ${error.message || ""}`;
+        statusElement.classList.remove("text-emerald-300");
+        statusElement.classList.add("text-rose-300");
+        return { emailSent: false };
       }
-
-      let emailSent = false;
-      let emailFailed = false;
-      if (shouldSendEmail) {
-        try {
-          emailSent = await sendEmailJsNotification(alert);
-        } catch (error) {
-          emailFailed = true;
-          console.error("EmailJS notification failed.", error);
-        }
-      }
-
-      const state = { savedLocally, emailSent, emailFailed, shouldSendEmail };
-      statusElement.dataset.notificationStatus = JSON.stringify(state);
-      renderNotificationStatus(statusElement, state);
-      return { savedLocally, emailSent, emailFailed };
     }
 
     async function requestLiveAi(messages) {
-      if (!aiApiKey) throw new Error("An API key is required.");
-      const controller = new AbortController();
-      const timeout = window.setTimeout(() => controller.abort(), 25000);
-      let endpoint;
-      let headers;
-      let body;
-
-      if (aiProvider === "gemini") {
-        endpoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
-        headers = { "Content-Type": "application/json", "x-goog-api-key": aiApiKey };
-        const systemInstruction = messages.filter((message) => message.role === "system").map((message) => message.content).join("\n");
-        const contents = messages.filter((message) => message.role !== "system").map((message) => ({
-          role: message.role === "assistant" ? "model" : "user",
-          parts: [{ text: message.content }]
-        }));
-        if (systemInstruction && contents[0]) {
-          contents[0].parts[0].text = `${systemInstruction}\n\n${contents[0].parts[0].text}`;
-        }
-        body = JSON.stringify({ contents, generationConfig: { temperature: 0.2 } });
-      } else {
-        endpoint = aiProvider === "openai"
-          ? "https://api.openai.com/v1/chat/completions"
-          : "https://openrouter.ai/api/v1/chat/completions";
-        headers = {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${aiApiKey}`
-        };
-        if (aiProvider === "openrouter") {
-          if (window.location.origin !== "null") headers["HTTP-Referer"] = window.location.origin;
-          headers["X-Title"] = "myHome";
-        }
-        body = JSON.stringify({
-          model: aiProvider === "openai" ? "gpt-4o-mini" : "openai/gpt-4o-mini",
-          messages,
-          temperature: 0.2
-        });
+      if (!dbClient) throw new Error(t("Live AI is not configured."));
+      const { data, error } = await dbClient.functions.invoke("ai", {
+        body: { provider: aiProvider, messages }
+      });
+      if (error) throw error;
+      if (typeof data?.text !== "string" || !data.text.trim()) {
+        throw new Error(data?.error || t("The AI service returned an empty response."));
       }
+      return data.text.trim();
+    }
 
+    async function deleteCurrentAccount() {
+      if (!dbClient || !currentUser) return;
+      if (!window.confirm(t("Delete your account and all your listings, saved searches, and favorites? This cannot be undone."))) return;
+      deleteAccountButton.disabled = true;
+      const { error } = await dbClient.functions.invoke("delete-account", { body: {} });
+      deleteAccountButton.disabled = false;
+      if (error) {
+        showSupabaseMessage(t("Unable to delete your account."), error);
+        return;
+      }
       try {
-        const response = await fetch(endpoint, {
-          method: "POST",
-          headers,
-          body,
-          signal: controller.signal
-        });
-        if (!response.ok) throw new Error(`Provider returned HTTP ${response.status}.`);
-        const payload = await response.json();
-        const answer = aiProvider === "gemini"
-          ? payload.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("").trim()
-          : payload.choices?.[0]?.message?.content;
-        const text = Array.isArray(answer)
-          ? answer.map((part) => part.text || "").join("").trim()
-          : answer;
-        if (typeof text !== "string" || !text.trim()) throw new Error("Provider returned an empty response.");
-        return text.trim();
-      } finally {
-        clearTimeout(timeout);
+        localStorage.removeItem("myhome-alerts-v1");
+        localStorage.removeItem("myhome-emailjs-config-v1");
+      } catch (error) {
+        console.warn("Local browser data could not be cleared after account deletion.", error);
+      }
+      const deletedUserId = currentUser.id;
+      const { error: signOutError } = await dbClient.auth.signOut();
+      currentUser = null;
+      currentProfileRole = null;
+      properties = properties.filter((property) => property.ownerId !== deletedUserId);
+      updateAuthControls();
+      renderPropertyGrid();
+      if (signOutError) {
+        showSupabaseMessage(t("Your account and associated data were deleted, but this device could not sign out."), signOutError);
+      } else {
+        showSupabaseMessage(t("Your account and associated data were deleted."));
       }
     }
 
@@ -2169,17 +2105,11 @@
       }
       if (searchApiStatusKey) searchApiStatus.textContent = t(searchApiStatusKey);
       if (aiConfigStatusKey) aiConfigStatus.textContent = t(aiConfigStatusKey);
-      if (emailJsStatusKey && !aiConfigModal.hidden) emailJsConfigStatus.textContent = t(emailJsStatusKey);
       if (!authModal.hidden) {
         const status = authStatus.textContent;
         setAuthMode(authMode);
         authStatus.textContent = status;
       }
-      [saveSearchStatus, bookingFormStatus].forEach((statusElement) => {
-        if (!statusElement.dataset.notificationStatus) return;
-        const state = JSON.parse(statusElement.dataset.notificationStatus);
-        renderNotificationStatus(statusElement, state);
-      });
       updateResultCount();
       updateComparisonControls();
       if (!comparisonModal.hidden) renderComparisonTable();
@@ -3199,20 +3129,12 @@
       lastAiConfigFocus = document.activeElement;
       previousAiConfigBodyOverflow = document.body.style.overflow;
       aiProviderSelect.value = aiProvider;
-      aiApiKeyInput.value = aiApiKey;
-      emailJsPublicKeyInput.value = emailJsConfig.publicKey;
-      emailJsServiceIdInput.value = emailJsConfig.serviceId;
-      emailJsTemplateIdInput.value = emailJsConfig.templateId;
-      aiConfigStatusKey = aiApiKey ? "AI API is ready for this page session." : "Choose a provider and add a key, or continue with local search.";
+      aiConfigStatusKey = "AI keys are managed securely by myHome.";
       aiConfigStatus.textContent = t(aiConfigStatusKey);
-      emailJsStatusKey = emailJsStatusKey || (emailJsConfig.publicKey && emailJsConfig.serviceId && emailJsConfig.templateId
-        ? "EmailJS is ready to send notifications."
-        : "Add EmailJS settings to enable email notifications.");
-      emailJsConfigStatus.textContent = t(emailJsStatusKey);
       aiConfigModal.hidden = false;
       document.body.style.overflow = "hidden";
       requestAnimationFrame(() => aiConfigModal.classList.add("is-open"));
-      aiApiKeyInput.focus();
+      aiProviderSelect.focus();
     }
 
     function closeAiConfigModal() {
@@ -3690,7 +3612,7 @@
       addConciergeMessage(text, "user");
       conciergeInput.value = "";
       conciergeInput.focus();
-      if (!aiApiKey) {
+      if (!dbClient) {
         addConciergeMessage(conciergeReply(text), "assistant");
         return;
       }
@@ -4274,7 +4196,7 @@
     async function runAiSearch(query) {
       const requestId = ++searchRequestId;
       let interpretedQuery = query;
-      let useLiveAi = Boolean(aiApiKey && query.trim());
+      let useLiveAi = Boolean(dbClient && query.trim());
       let translationFailed = false;
       if (useLiveAi && !["el", "en"].includes(activeLanguage)) {
         searchApiStatusKey = "Searching with live AI…";
@@ -4365,73 +4287,18 @@
     aiConfigForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const selectedProvider = aiProviderSelect.value;
-      if (!["openrouter", "openai", "gemini"].includes(selectedProvider)) {
-        aiConfigStatus.textContent = t("Choose a provider and add a key, or continue with local search.");
+      if (!["openai", "gemini"].includes(selectedProvider)) {
+        aiConfigStatus.textContent = t("Choose OpenAI or Google Gemini.");
         return;
       }
       aiProvider = selectedProvider;
-      aiApiKey = aiApiKeyInput.value.trim();
-      aiConfigStatusKey = aiApiKey
-        ? "AI API is ready for this page session."
-        : "Choose a provider and add a key, or continue with local search.";
+      aiConfigStatusKey = "AI keys are managed securely by myHome.";
       aiConfigStatus.textContent = t(aiConfigStatusKey);
       searchRequestId += 1;
       searchHomes(promptInput.value);
-      searchApiStatusKey = aiApiKey ? "AI API is ready for this page session." : "Using local smart search.";
+      searchApiStatusKey = "Using secure AI through myHome.";
       searchApiStatus.textContent = t(searchApiStatusKey);
       closeAiConfigModal();
-    });
-    emailJsConfigForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const config = {
-        publicKey: emailJsPublicKeyInput.value.trim(),
-        serviceId: emailJsServiceIdInput.value.trim(),
-        templateId: emailJsTemplateIdInput.value.trim()
-      };
-      const configuredCount = Object.values(config).filter(Boolean).length;
-      if (configuredCount !== 0 && configuredCount !== 3) {
-        emailJsStatusKey = "Συμπληρώστε και τα τρία στοιχεία EmailJS ή καθαρίστε όλα τα πεδία για απενεργοποίηση.";
-        emailJsConfigStatus.textContent = t(emailJsStatusKey);
-        return;
-      }
-      try {
-        if (configuredCount === 0) localStorage.removeItem(emailJsStorageKey);
-        else localStorage.setItem(emailJsStorageKey, JSON.stringify(config));
-        emailJsConfig = config;
-        emailJsStatusKey = configuredCount === 3
-          ? "EmailJS is ready to send notifications."
-          : "EmailJS settings cleared.";
-        emailJsConfigStatus.textContent = t(emailJsStatusKey);
-      } catch (error) {
-        console.error("EmailJS configuration could not be saved to local storage.", error);
-        emailJsStatusKey = "EmailJS settings could not be saved on this device.";
-        emailJsConfigStatus.textContent = t(emailJsStatusKey);
-      }
-    });
-    clearEmailJsConfigButton.addEventListener("click", () => {
-      emailJsPublicKeyInput.value = "";
-      emailJsServiceIdInput.value = "";
-      emailJsTemplateIdInput.value = "";
-      try {
-        localStorage.removeItem(emailJsStorageKey);
-        emailJsConfig = { publicKey: "", serviceId: "", templateId: "" };
-        emailJsStatusKey = "Οι ρυθμίσεις EmailJS διαγράφηκαν.";
-        emailJsConfigStatus.textContent = t(emailJsStatusKey);
-      } catch (error) {
-        console.error("EmailJS configuration could not be cleared from local storage.", error);
-        emailJsStatusKey = "EmailJS settings could not be saved on this device.";
-        emailJsConfigStatus.textContent = t(emailJsStatusKey);
-      }
-    });
-    clearAiConfigButton.addEventListener("click", () => {
-      aiApiKey = "";
-      aiApiKeyInput.value = "";
-      searchRequestId += 1;
-      searchHomes(promptInput.value);
-      aiConfigStatusKey = "AI API key cleared. Local matching remains active.";
-      aiConfigStatus.textContent = t(aiConfigStatusKey);
-      searchApiStatusKey = "Using local smart search.";
-      searchApiStatus.textContent = t(searchApiStatusKey);
     });
     favoritesButton.addEventListener("click", openFavoritesDrawer);
     document.querySelector("#close-favorites").addEventListener("click", () => closeFavoritesDrawer());
@@ -4448,6 +4315,7 @@
     authModeToggle.addEventListener("click", () => setAuthMode(authMode === "login" ? "signup" : "login"));
     authForm.addEventListener("submit", submitAuthForm);
     authSignOut.addEventListener("click", signOut);
+    deleteAccountButton.addEventListener("click", deleteCurrentAccount);
     document.querySelector("#toggle-concierge").addEventListener("click", () => {
       if (conciergeOpen) closeConcierge();
       else openConcierge();
@@ -4579,6 +4447,10 @@
     });
     listingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+      if (!listingPrivacyConsent.checked) {
+        listingPrivacyConsent.reportValidity();
+        return;
+      }
       if (pendingFileReads > 0) {
         listingFormStatus.textContent = t("Please wait for photos to finish loading.");
         return;
@@ -4650,6 +4522,8 @@
       property.status = listingStatus;
       property.ownerId = originalProperty?.ownerId || currentUser?.id || null;
       if (dbClient) {
+        property.privacyConsentAt ||= new Date().toISOString();
+        property.privacyPolicyVersion ||= "2026-11-27";
         const row = mapListingToRow(property, listingStatus);
         const response = originalProperty
           ? await dbClient.from("listings").update(row).eq("id", property.id).select("*").single()
@@ -4687,7 +4561,12 @@
       closeBrokerModal(null, false);
       editingPropertyId = null;
       if (dbClient && listingStatus === "pending") {
-        showSupabaseMessage(t("Listing submitted for review."));
+        const notificationError = await sendListingEmail(property.id, "submitted");
+        if (notificationError) {
+          showSupabaseMessage(t("Listing submitted, but the agency email could not be sent."), notificationError);
+        } else {
+          showSupabaseMessage(t("Listing submitted for review."));
+        }
       } else {
         clearSupabaseMessage();
       }
@@ -4769,12 +4648,18 @@
         let notificationStatus = "";
         if (savedSearchAlerts.checked) {
           try {
-            notificationStatus = await sendEmailJsNotification(savedSearch)
-              ? t("Η ειδοποίηση email στάλθηκε στη myHome.")
-              : t("Το EmailJS δεν έχει ρυθμιστεί· δεν στάλθηκε email.");
+            notificationStatus = await sendContactEmail({
+              notificationType: t("Saved search"),
+              subject: `${t("Saved search")}: ${criteria.slice(0, 100)}`,
+              email,
+              criteria,
+              message: `${t("Search criteria")}: ${criteria}\n${t("Email")}: ${email}`
+            })
+              ? t("The request was emailed securely to myHome.")
+              : "";
           } catch (error) {
-            console.error("EmailJS notification failed.", error);
-            notificationStatus = t("Το EmailJS δεν μπόρεσε να στείλει την ειδοποίηση.");
+            console.error("Secure saved-search email failed.", error);
+            notificationStatus = t("The email could not be sent.");
           }
         }
         saveSearchStatus.textContent = [t("Search saved to your account."), notificationStatus].filter(Boolean).join(" ");
@@ -4878,7 +4763,11 @@
       });
     });
 
-    loadEmailJsConfig();
+    try {
+      localStorage.removeItem("myhome-emailjs-config-v1");
+    } catch (error) {
+      console.warn("Legacy browser email settings could not be cleared.", error);
+    }
     captureLocalizableContent();
     initializeProperties();
     applyLanguage("el");
