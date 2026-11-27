@@ -200,6 +200,14 @@
       </div>
 
       <div id="property-grid" class="grid gap-5 md:grid-cols-2 lg:grid-cols-3"></div>
+      <section id="my-listings-panel" class="mt-10 hidden rounded-2xl border border-white/[.08] bg-zinc-900/50 p-5 sm:p-6" aria-labelledby="my-listings-heading" hidden>
+        <h2 id="my-listings-heading" class="text-xl font-semibold text-white"></h2>
+        <div id="my-listings-list" class="mt-4 space-y-3" aria-live="polite"></div>
+      </section>
+      <section id="admin-approval-panel" class="mt-6 hidden rounded-2xl border border-violet-300/20 bg-violet-300/[.04] p-5 sm:p-6" aria-labelledby="admin-approval-heading" hidden>
+        <h2 id="admin-approval-heading" class="text-xl font-semibold text-white"></h2>
+        <div id="admin-approval-list" class="mt-4 space-y-3" aria-live="polite"></div>
+      </section>
       <div id="empty-state" class="mt-8 hidden rounded-2xl border border-white/[.08] bg-zinc-900/50 px-6 py-10 text-center text-sm text-zinc-400" role="status">
         <p id="empty-state-heading">No homes match every interpreted filter.</p>
         <p id="near-miss-heading" class="mt-4 hidden font-medium text-zinc-300">Closest alternatives if you relax one filter</p>
@@ -615,7 +623,8 @@
           </div>
           <div class="sm:col-span-2">
             <label for="listing-image-files" class="mb-1.5 mt-3 block text-xs font-medium text-zinc-300">Upload one or more photos from your device</label>
-            <input id="listing-image-files" type="file" accept="image/*" multiple class="block w-full cursor-pointer rounded-xl border border-white/10 bg-black/20 text-xs text-zinc-400 file:mr-3 file:border-0 file:bg-white/[.06] file:px-4 file:py-3 file:text-xs file:font-semibold file:text-zinc-200 hover:file:bg-white/10">
+            <input id="listing-image-files" type="file" accept="image/jpeg,image/png,image/webp" multiple class="block w-full cursor-pointer rounded-xl border border-white/10 bg-black/20 text-xs text-zinc-400 file:mr-3 file:border-0 file:bg-white/[.06] file:px-4 file:py-3 file:text-xs file:font-semibold file:text-zinc-200 hover:file:bg-white/10">
+            <p class="mt-1 text-[11px] text-zinc-500">JPG, PNG or WebP · max 10 MB per image</p>
             <div id="listing-image-thumbnails" class="mt-3 grid grid-cols-3 gap-3 sm:grid-cols-4" aria-live="polite"></div>
           </div>
           <div>
@@ -1394,7 +1403,6 @@
     const listingLocation = document.querySelector("#listing-location");
     const listingPrice = document.querySelector("#listing-price");
     const listingPriceLabel = document.querySelector("#listing-price-label");
-    const listingImageFiles = document.querySelector("#listing-image-files");
     const listingImageThumbnails = document.querySelector("#listing-image-thumbnails");
     const listingBedrooms = document.querySelector("#listing-bedrooms");
     const listingBathrooms = document.querySelector("#listing-bathrooms");
@@ -1406,6 +1414,13 @@
     const listingTagsInput = document.querySelector("#listing-tags");
     const generatedTagsContainer = document.querySelector("#generated-tags");
     const listingFormStatus = document.querySelector("#listing-form-status");
+    const listingFiles = document.querySelector("#listing-image-files");
+    const myListingsPanel = document.querySelector("#my-listings-panel");
+    const myListingsHeading = document.querySelector("#my-listings-heading");
+    const myListingsList = document.querySelector("#my-listings-list");
+    const adminApprovalPanel = document.querySelector("#admin-approval-panel");
+    const adminApprovalHeading = document.querySelector("#admin-approval-heading");
+    const adminApprovalList = document.querySelector("#admin-approval-list");
     const listingSubmitLabel = document.querySelector("#listing-submit-label");
     const generateListingCopyButton = document.querySelector("#generate-listing-copy");
     const deleteModal = document.querySelector("#delete-modal");
@@ -1429,6 +1444,7 @@
     let editingPropertyId = null;
     let galleryIndex = 0;
     let formImages = [];
+    let formImageFiles = [];
     let pendingDeleteId = null;
     let pendingFileReads = 0;
     let listingFormVersion = 0;
@@ -1454,6 +1470,31 @@
     let lastBrokerFocusedElement;
     let previousBodyOverflow = "";
     let previousBrokerBodyOverflow = "";
+
+    Object.assign(translations, {
+      "My listings": ["Οι αγγελίες μου", "My listings", "I miei annunci", "Mes annonces", "Meine Angebote", "Mis anuncios"],
+      "Admin approval": ["Έγκριση διαχειριστή", "Admin approval", "Approvazione amministratore", "Approbation administrateur", "Admin-Freigabe", "Aprobación del administrador"],
+      "No listings yet.": ["Δεν υπάρχουν ακόμη αγγελίες.", "No listings yet.", "Nessun annuncio.", "Aucune annonce pour le moment.", "Noch keine Angebote.", "Aún no hay anuncios."],
+      "No pending listings.": ["Δεν υπάρχουν αγγελίες σε αναμονή.", "No pending listings.", "Nessun annuncio in attesa.", "Aucune annonce en attente.", "Keine ausstehenden Angebote.", "No hay anuncios pendientes."],
+      "Pending": ["Σε αναμονή", "Pending", "In attesa", "En attente", "Ausstehend", "Pendiente"],
+      "Approved": ["Εγκρίθηκε", "Approved", "Approvato", "Approuvé", "Genehmigt", "Aprobado"],
+      "Rejected": ["Απορρίφθηκε", "Rejected", "Rifiutato", "Refusé", "Abgelehnt", "Rechazado"],
+      "Approve": ["Έγκριση", "Approve", "Approva", "Approuver", "Genehmigen", "Aprobar"],
+      "Reject": ["Απόρριψη", "Reject", "Rifiuta", "Refuser", "Ablehnen", "Rechazar"],
+      "Reason for rejection": ["Αιτιολογία απόρριψης", "Reason for rejection", "Motivo del rifiuto", "Motif du refus", "Ablehnungsgrund", "Motivo del rechazo"],
+      "A reason is required to reject a listing.": ["Απαιτείται αιτιολογία για την απόρριψη.", "A reason is required to reject a listing.", "È necessario un motivo per rifiutare un annuncio.", "Un motif est requis pour refuser une annonce.", "Für die Ablehnung ist eine Begründung erforderlich.", "Se requiere un motivo para rechazar un anuncio."],
+      "Listing review failed.": ["Η αξιολόγηση της αγγελίας απέτυχε.", "Listing review failed.", "Revisione dell'annuncio non riuscita.", "L'examen de l'annonce a échoué.", "Prüfung des Angebots fehlgeschlagen.", "No se pudo revisar el anuncio."],
+      "Please choose a JPG, PNG, or WebP image.": ["Επιλέξτε εικόνα JPG, PNG ή WebP.", "Please choose a JPG, PNG, or WebP image.", "Scegli un'immagine JPG, PNG o WebP.", "Choisissez une image JPG, PNG ou WebP.", "Wählen Sie ein JPG-, PNG- oder WebP-Bild.", "Elige una imagen JPG, PNG o WebP."],
+      "Each image must be 10 MB or smaller.": ["Κάθε εικόνα πρέπει να είναι έως 10 MB.", "Each image must be 10 MB or smaller.", "Ogni immagine deve essere di 10 MB o meno.", "Chaque image doit faire 10 Mo ou moins.", "Jedes Bild darf höchstens 10 MB groß sein.", "Cada imagen debe tener un máximo de 10 MB."],
+      "Image upload failed.": ["Η μεταφόρτωση της εικόνας απέτυχε.", "Image upload failed.", "Caricamento immagine non riuscito.", "Échec du téléversement de l'image.", "Bild-Upload fehlgeschlagen.", "Error al subir la imagen."],
+      "JPG, PNG or WebP · max 10 MB per image": ["JPG, PNG ή WebP · έως 10 MB ανά εικόνα", "JPG, PNG or WebP · max 10 MB per image", "JPG, PNG o WebP · max 10 MB per immagine", "JPG, PNG ou WebP · 10 Mo max par image", "JPG, PNG oder WebP · max. 10 MB pro Bild", "JPG, PNG o WebP · máximo 10 MB por imagen"],
+      "Realtime listing updates are unavailable.": ["Οι ζωντανές ενημερώσεις αγγελιών δεν είναι διαθέσιμες.", "Realtime listing updates are unavailable.", "Gli aggiornamenti in tempo reale degli annunci non sono disponibili.", "Les mises à jour en temps réel des annonces sont indisponibles.", "Echtzeit-Updates für Angebote sind nicht verfügbar.", "Las actualizaciones en tiempo real no están disponibles."],
+      "Listing submitted for review.": ["Η αγγελία υποβλήθηκε για έλεγχο.", "Listing submitted for review.", "Annuncio inviato per la revisione.", "Annonce envoyée pour examen.", "Angebot zur Prüfung eingereicht.", "Anuncio enviado para revisión."],
+      "The listing was approved.": ["Η αγγελία εγκρίθηκε.", "The listing was approved.", "L'annuncio è stato approvato.", "L'annonce a été approuvée.", "Das Angebot wurde genehmigt.", "El anuncio fue aprobado."],
+      "The listing was rejected.": ["Η αγγελία απορρίφθηκε.", "The listing was rejected.", "L'annuncio è stato rifiutato.", "L'annonce a été refusée.", "Das Angebot wurde abgelehnt.", "El anuncio fue rechazado."],
+      "Rejection reason: ": ["Αιτιολογία απόρριψης: ", "Rejection reason: ", "Motivo del rifiuto: ", "Motif du refus : ", "Ablehnungsgrund: ", "Motivo del rechazo: "],
+      "Only approved listings appear publicly.": ["Μόνο οι εγκεκριμένες αγγελίες εμφανίζονται δημόσια.", "Only approved listings appear publicly.", "Solo gli annunci approvati sono visibili pubblicamente.", "Seules les annonces approuvées sont visibles publiquement.", "Nur genehmigte Angebote sind öffentlich sichtbar.", "Solo los anuncios aprobados son públicos."]
+    });
 
     function t(source) {
       const localized = translations[source];
@@ -1576,6 +1617,143 @@
       };
     }
 
+    function publicListings() {
+      return dbClient ? properties.filter((property) => property.status === "approved") : properties;
+    }
+
+    function renderListingWorkflowPanels() {
+      const signedIn = Boolean(dbClient && currentUser);
+      myListingsPanel.hidden = !signedIn;
+      myListingsPanel.classList.toggle("hidden", !signedIn);
+      const showAdminApprovals = signedIn && currentProfileRole === "admin";
+      adminApprovalPanel.hidden = !showAdminApprovals;
+      adminApprovalPanel.classList.toggle("hidden", !showAdminApprovals);
+      if (!signedIn) return;
+
+      myListingsHeading.textContent = t("My listings");
+      const ownedListings = properties.filter((property) => property.ownerId === currentUser.id);
+      myListingsList.replaceChildren();
+      if (!ownedListings.length) {
+        myListingsList.textContent = t("No listings yet.");
+      } else {
+        ownedListings.forEach((property) => {
+          const row = document.createElement("article");
+          row.className = "rounded-xl border border-white/[.07] bg-black/20 p-4";
+          const title = document.createElement("p");
+          title.className = "font-medium text-white";
+          title.textContent = localizedPropertyField(property, "title");
+          const status = document.createElement("p");
+          status.className = "mt-1 text-xs text-zinc-400";
+          status.textContent = t(property.status === "approved" ? "Approved" : property.status === "rejected" ? "Rejected" : "Pending");
+          row.append(title, status);
+          if (property.status === "rejected" && property.rejectionReason) {
+            const reason = document.createElement("p");
+            reason.className = "mt-2 text-sm text-rose-300";
+            reason.textContent = `${t("Rejection reason: ")}${property.rejectionReason}`;
+            row.append(reason);
+          }
+          myListingsList.append(row);
+        });
+      }
+
+      if (currentProfileRole !== "admin") return;
+      adminApprovalHeading.textContent = t("Admin approval");
+      const pendingListings = properties.filter((property) => property.status === "pending");
+      adminApprovalList.replaceChildren();
+      if (!pendingListings.length) {
+        adminApprovalList.textContent = t("No pending listings.");
+        return;
+      }
+      pendingListings.forEach((property) => {
+        const row = document.createElement("article");
+        row.className = "rounded-xl border border-white/[.07] bg-black/20 p-4";
+        const title = document.createElement("p");
+        title.className = "font-medium text-white";
+        title.textContent = localizedPropertyField(property, "title");
+        const location = document.createElement("p");
+        location.className = "mt-1 text-xs text-zinc-400";
+        location.textContent = localizedPropertyField(property, "location");
+        const reason = document.createElement("input");
+        reason.type = "text";
+        reason.maxLength = 500;
+        reason.placeholder = t("Reason for rejection");
+        reason.setAttribute("aria-label", `${t("Reason for rejection")}: ${localizedPropertyField(property, "title")}`);
+        reason.className = "mt-3 w-full rounded-lg border border-white/10 bg-black/30 px-3 py-2 text-sm text-white outline-none focus:border-violet-400/50";
+        const actions = document.createElement("div");
+        actions.className = "mt-3 flex flex-wrap gap-2";
+        const approve = document.createElement("button");
+        approve.type = "button";
+        approve.className = "rounded-lg bg-emerald-500/90 px-3 py-2 text-xs font-semibold text-white hover:bg-emerald-400";
+        approve.textContent = t("Approve");
+        approve.addEventListener("click", () => { void moderateListing(property, "approved", ""); });
+        const reject = document.createElement("button");
+        reject.type = "button";
+        reject.className = "rounded-lg bg-rose-500/90 px-3 py-2 text-xs font-semibold text-white hover:bg-rose-400";
+        reject.textContent = t("Reject");
+        reject.addEventListener("click", () => {
+          const rejectionReason = reason.value.trim();
+          if (!rejectionReason) {
+            reason.setCustomValidity(t("A reason is required to reject a listing."));
+            reason.reportValidity();
+            return;
+          }
+          reason.setCustomValidity("");
+          void moderateListing(property, "rejected", rejectionReason);
+        });
+        reason.addEventListener("input", () => reason.setCustomValidity(""));
+        actions.append(approve, reject);
+        row.append(title, location, reason, actions);
+        adminApprovalList.append(row);
+      });
+    }
+
+    async function moderateListing(property, status, rejectionReason) {
+      if (!dbClient || currentProfileRole !== "admin") return;
+      const { data, error } = await dbClient.from("listings")
+        .update({ status, rejection_reason: status === "rejected" ? rejectionReason : null })
+        .eq("id", property.id)
+        .eq("status", "pending")
+        .select("id")
+        .maybeSingle();
+      if (error || !data) {
+        showSupabaseMessage(t("Listing review failed."), error || new Error("The listing is no longer pending."));
+        return;
+      }
+      await loadSupabaseListings();
+      showSupabaseMessage(t(status === "approved" ? "The listing was approved." : "The listing was rejected."));
+    }
+
+    async function uploadListingImages(propertyId, uploadedPaths) {
+      if (!dbClient || !currentUser) return [...formImages];
+      const imageUrls = [];
+      try {
+        for (let index = 0; index < formImages.length; index += 1) {
+          const file = formImageFiles[index];
+          if (!file) {
+            imageUrls.push(formImages[index]);
+            continue;
+          }
+          const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[file.type];
+          const path = `${currentUser.id}/${propertyId}/${crypto.randomUUID()}.${extension}`;
+          const { error } = await dbClient.storage.from("listing-images").upload(path, file, {
+            contentType: file.type,
+            upsert: false
+          });
+          if (error) throw error;
+          uploadedPaths.push(path);
+          imageUrls.push(dbClient.storage.from("listing-images").getPublicUrl(path).data.publicUrl);
+        }
+      } catch (error) {
+        if (uploadedPaths.length) {
+          const cleanup = await dbClient.storage.from("listing-images").remove(uploadedPaths);
+          if (cleanup.error) throw new Error(`${error.message} ${cleanup.error.message}`);
+          uploadedPaths.splice(0, uploadedPaths.length);
+        }
+        throw error;
+      }
+      return imageUrls;
+    }
+
     async function loadSupabaseListings() {
       if (!dbClient) return;
       const { data, error } = await dbClient.from("listings").select("*").order("created_at", { ascending: false });
@@ -1586,7 +1764,11 @@
       if (data.length) {
         properties = data.map(mapListingRow);
         renderPropertyGrid();
+      } else {
+        properties = [];
+        renderPropertyGrid();
       }
+      renderListingWorkflowPanels();
     }
 
     async function loadSupabaseFavorites() {
@@ -1612,6 +1794,7 @@
       currentUser = session?.user || null;
       currentProfileRole = null;
       updateAuthControls();
+      renderListingWorkflowPanels();
       if (currentUser) {
         const { data, error } = await dbClient
           .from("profiles")
@@ -1638,6 +1821,15 @@
         return;
       }
       dbClient = window.supabase.createClient(config.url.replace(/\/rest\/v1\/?$/, ""), config.publishableKey);
+      dbClient.channel("public-listing-updates")
+        .on("postgres_changes", { event: "*", schema: "public", table: "listings" }, () => {
+          void loadSupabaseListings();
+        })
+        .subscribe((status) => {
+          if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+            showSupabaseMessage(t("Realtime listing updates are unavailable."));
+          }
+        });
       dbClient.auth.onAuthStateChange((event, session) => {
         if (event === "INITIAL_SESSION" || event === "TOKEN_REFRESHED") return;
         window.setTimeout(() => { refreshSupabaseSession(session); }, 0);
@@ -3057,6 +3249,7 @@
       listingForm.reset();
       activeAreaUnit = unitSelect.value;
       formImages = property ? [...property.images] : [];
+      formImageFiles = formImages.map(() => null);
       generatedDescriptionVariants = property?.descriptionTranslations ? { ...property.descriptionTranslations } : null;
       listingTitle.value = property ? localizedPropertyField(property, "title") : "";
       listingLocation.value = property ? localizedPropertyField(property, "location") : "";
@@ -3174,6 +3367,7 @@
         remove.innerHTML = '<i class="fa-solid fa-xmark" aria-hidden="true"></i>';
         remove.addEventListener("click", () => {
           formImages.splice(index, 1);
+          formImageFiles.splice(index, 1);
           renderImageThumbnails();
         });
         wrapper.append(image, remove);
@@ -3181,8 +3375,10 @@
       });
     }
 
-    function addPhoto(source) {
-      if (!formImages.includes(source)) formImages.push(source);
+    function addPhoto(source, file = null) {
+      if (formImages.includes(source)) return;
+      formImages.push(source);
+      formImageFiles.push(file);
       renderImageThumbnails();
     }
 
@@ -3836,7 +4032,7 @@
     }
 
     function renderPropertyGrid() {
-      cards = properties.map((property) => createPropertyCard(property));
+      cards = publicListings().map((property) => createPropertyCard(property));
       propertyGrid.replaceChildren(...cards);
       updateListingsMapData();
       searchHomes(promptInput.value);
@@ -3844,6 +4040,7 @@
       if (!comparisonModal.hidden) renderComparisonTable();
       renderSavedProperties();
       renderRecommendations();
+      renderListingWorkflowPanels();
       const activeProperty = properties.find((property) => property.id === currentPropertyId);
       if (!propertyModal.hidden && activeProperty) updatePropertyAnalytics(activeProperty);
     }
@@ -4104,7 +4301,7 @@
 
       searchApiStatusKey = "Searching with live AI…";
       searchApiStatus.textContent = t(searchApiStatusKey);
-      const eligibleProperties = properties.filter((property) => matchesHardFilters(property, interpretation.filters));
+      const eligibleProperties = publicListings().filter((property) => matchesHardFilters(property, interpretation.filters));
       if (eligibleProperties.length === 0) {
         searchApiStatusKey = "Using local smart search.";
         searchApiStatus.textContent = t(searchApiStatusKey);
@@ -4297,14 +4494,14 @@
       if (event.target === brokerModal) closeBrokerModal();
     });
     generateListingCopyButton.addEventListener("click", generateListingCopy);
-    listingImageFiles.addEventListener("change", () => {
-      [...listingImageFiles.files].forEach((file) => {
-        if (!file.type.startsWith("image/")) {
-          listingFormStatus.textContent = t("Please choose an image file.");
+    listingFiles.addEventListener("change", () => {
+      [...listingFiles.files].forEach((file) => {
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+          listingFormStatus.textContent = t("Please choose a JPG, PNG, or WebP image.");
           return;
         }
-        if (file.size > 12 * 1024 * 1024) {
-          listingFormStatus.textContent = t("Each image must be smaller than 12 MB.");
+        if (file.size > 10 * 1024 * 1024) {
+          listingFormStatus.textContent = t("Each image must be 10 MB or smaller.");
           return;
         }
         const reader = new FileReader();
@@ -4319,7 +4516,7 @@
           const preview = new Image();
           preview.addEventListener("load", () => {
             pendingFileReads -= 1;
-            if (version === listingFormVersion) addPhoto(reader.result);
+            if (version === listingFormVersion) addPhoto(reader.result, file);
           }, { once: true });
           preview.addEventListener("error", () => {
             pendingFileReads -= 1;
@@ -4333,7 +4530,7 @@
         });
         reader.readAsDataURL(file);
       });
-      listingImageFiles.value = "";
+      listingFiles.value = "";
     });
     listingTagsInput.addEventListener("input", localizeGeneratedTags);
     [listingTitle, listingLocation, listingBedrooms, listingBathrooms, listingSqm, listingTagsInput].forEach((input) => {
@@ -4437,6 +4634,14 @@
       };
       if (!property.tags.length) property.tags = inferLifestyleTags(`${property.title} ${property.location} ${property.description}`, property.sqm, property.bedrooms, property.bathrooms);
       property.baseScore = Math.min(98, 80 + property.tags.length * 3);
+      const uploadedStoragePaths = [];
+      try {
+        property.images = await uploadListingImages(property.id, uploadedStoragePaths);
+      } catch (error) {
+        showSupabaseMessage(t("Image upload failed."), error);
+        listingFormStatus.textContent = t("Image upload failed.");
+        return;
+      }
       const listingStatus = !dbClient
         ? originalProperty?.status || "approved"
         : currentProfileRole === "admin"
@@ -4450,6 +4655,14 @@
           ? await dbClient.from("listings").update(row).eq("id", property.id).select("*").single()
           : await dbClient.from("listings").insert(row).select("*").single();
         if (response.error) {
+          if (uploadedStoragePaths.length) {
+            const cleanup = await dbClient.storage.from("listing-images").remove(uploadedStoragePaths);
+            if (cleanup.error) {
+              showSupabaseMessage(t(originalProperty ? "Unable to save the listing." : "Unable to submit the listing."), new Error(`${response.error.message} ${cleanup.error.message}`));
+              listingFormStatus.textContent = t("Image upload failed.");
+              return;
+            }
+          }
           showSupabaseMessage(t(originalProperty ? "Unable to save the listing." : "Unable to submit the listing."), response.error);
           listingFormStatus.textContent = t(originalProperty ? "Unable to save the listing." : "Unable to submit the listing.");
           return;
@@ -4465,6 +4678,7 @@
       renderPropertyGrid();
       listingForm.reset();
       formImages = [];
+      formImageFiles = [];
       generatedDescriptionVariants = null;
       renderImageThumbnails();
       generatedTagsContainer.replaceChildren(Object.assign(document.createElement("span"), { className: "text-xs text-zinc-600", textContent: t("Generate a description to see suggested tags.") }));
