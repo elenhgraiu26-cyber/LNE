@@ -122,11 +122,14 @@
             <span id="favorites-count" class="inline-flex min-w-5 items-center justify-center rounded-full bg-violet-400/15 px-1.5 py-0.5 text-[10px] text-violet-200" aria-live="polite">0</span>
           </button>
           <button id="open-broker-modal" type="button" class="whitespace-nowrap rounded-full border border-violet-400/25 bg-violet-500/10 px-3 py-2 text-xs font-semibold text-violet-200 transition hover:border-violet-300/50 hover:bg-violet-500/20 sm:px-4 sm:text-sm">Προσθήκη Ακινήτου</button>
-        <a href="#login" class="rounded-full px-3 py-2 text-sm font-medium text-zinc-300 transition hover:text-white sm:px-4">Log in</a>
-        <a href="#register" class="rounded-full border border-white/10 bg-white/[.06] px-4 py-2 text-sm font-semibold text-white transition hover:border-violet-400/40 hover:bg-violet-500/10 sm:px-5">Register</a>
+        <span id="auth-account" class="hidden max-w-36 truncate text-xs text-zinc-400" aria-live="polite"></span>
+        <button id="auth-signout" type="button" class="hidden rounded-full px-3 py-2 text-sm font-medium text-zinc-300 transition hover:text-white sm:px-4">Sign out</button>
+        <a id="open-login" href="#login" class="rounded-full px-3 py-2 text-sm font-medium text-zinc-300 transition hover:text-white sm:px-4">Log in</a>
+        <a id="open-register" href="#register" class="rounded-full border border-white/10 bg-white/[.06] px-4 py-2 text-sm font-semibold text-white transition hover:border-violet-400/40 hover:bg-violet-500/10 sm:px-5">Register</a>
       </div>
     </nav>
   </header>
+  <p id="supabase-message" class="mx-auto hidden max-w-7xl px-5 pt-4 text-sm text-rose-300 sm:px-8" role="status" aria-live="polite"></p>
 
   <main>
     <section class="relative overflow-hidden px-5 pb-20 pt-20 sm:px-8 sm:pb-24 sm:pt-28">
@@ -474,7 +477,7 @@
       <div class="mb-6 pr-12">
         <p class="mb-2 text-[11px] font-semibold uppercase tracking-[.2em] text-violet-300">Saved searches</p>
         <h2 id="save-search-title" class="text-2xl font-semibold tracking-tight text-white">Αποθήκευση Αναζήτησης</h2>
-        <p id="save-search-description" class="mt-2 text-sm leading-6 text-zinc-400">Αποθηκεύστε τα κριτήριά σας τοπικά και λάβετε email όταν είναι ρυθμισμένο το EmailJS.</p>
+        <p id="save-search-description" class="mt-2 text-sm leading-6 text-zinc-400">Save searches to your account when connected; demo mode keeps the search for this session.</p>
       </div>
       <form id="save-search-form" class="space-y-4">
         <div>
@@ -490,9 +493,41 @@
           <span>Αποστολή ειδοποίησης μέσω EmailJS στην ομάδα myHome.</span>
         </label>
         <p id="save-search-status" class="text-xs leading-5 text-zinc-400" role="status" aria-live="polite"></p>
-        <p id="save-search-simulations" class="text-[10px] leading-5 text-zinc-500">Τα στοιχεία αποθηκεύονται σε αυτή τη συσκευή. Με ρύθμιση EmailJS, τα στοιχεία αναζήτησης αποστέλλονται στην Ελένη Γκραικιώτη.</p>
+        <p id="save-search-simulations" class="text-[10px] leading-5 text-zinc-500">Saved searches are private to your account. Email alerts are sent only when EmailJS is configured.</p>
         <div class="flex justify-end">
           <button type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Αποθήκευση Αναζήτησης</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="auth-modal" class="property-modal fixed inset-0 z-[70] flex items-center justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="auth-title" hidden>
+    <div class="property-modal-panel relative my-auto w-full max-w-md rounded-3xl border border-white/10 bg-[#111113] p-5 shadow-2xl shadow-black/60 sm:p-7">
+      <button id="close-auth" type="button" class="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[.04] text-zinc-300 transition hover:bg-white/10 hover:text-white" aria-label="Close sign in">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+      <div class="mb-6 pr-12">
+        <p class="mb-2 text-[11px] font-semibold uppercase tracking-[.2em] text-violet-300">myHome account</p>
+        <h2 id="auth-title" class="text-2xl font-semibold tracking-tight text-white">Sign in</h2>
+        <p id="auth-description" class="mt-2 text-sm leading-6 text-zinc-400">Sign in or create a free account to save homes and submit listings.</p>
+      </div>
+      <form id="auth-form" class="space-y-4">
+        <div id="auth-name-field" hidden>
+          <label for="auth-name" class="mb-1.5 block text-xs font-medium text-zinc-300">Full name</label>
+          <input id="auth-name" name="name" type="text" maxlength="100" autocomplete="name" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
+        </div>
+        <div>
+          <label for="auth-email" class="mb-1.5 block text-xs font-medium text-zinc-300">Email</label>
+          <input id="auth-email" name="email" type="email" required maxlength="254" autocomplete="email" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
+        </div>
+        <div>
+          <label for="auth-password" class="mb-1.5 block text-xs font-medium text-zinc-300">Password</label>
+          <input id="auth-password" name="password" type="password" required minlength="8" maxlength="128" autocomplete="current-password" class="w-full rounded-xl border border-white/10 bg-black/30 px-3.5 py-3 text-sm text-white outline-none focus:border-violet-400/50">
+        </div>
+        <p id="auth-status" class="text-xs leading-5 text-zinc-400" role="status" aria-live="polite"></p>
+        <div class="flex flex-col gap-3">
+          <button id="auth-submit" type="submit" class="rounded-xl bg-gradient-to-r from-violet-500 to-indigo-500 px-5 py-3 text-sm font-semibold text-white transition hover:from-violet-400 hover:to-indigo-400">Sign in</button>
+          <button id="auth-mode-toggle" type="button" class="text-sm text-violet-200 hover:text-white">Create an account</button>
         </div>
       </form>
     </div>
@@ -699,6 +734,8 @@
 
   <script src="https://unpkg.com/maplibre-gl@5.6.2/dist/maplibre-gl.js"></script>
   <script src="./data/map-data.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./data/supabase-config.js"></script>
   <script src="./search-parser.js"></script>
   <script>
     const languageSelect = document.querySelector("#language-select");
@@ -1025,6 +1062,39 @@
       "Rent per sqft vs. area average": ["Ενοίκιο ανά τ.π. σε σχέση με τον μέσο όρο περιοχής", "Rent per sq.ft. vs. area average", "Canone per piede² rispetto alla media della zona", "Loyer par pi² vs moyenne du secteur", "Miete pro ft² im Vergleich zum Gebietsdurchschnitt", "Alquiler por pie² frente a la media de la zona"]
     });
     Object.assign(translations, {
+      "Sign in": ["Σύνδεση", "Sign in", "Accedi", "Se connecter", "Anmelden", "Iniciar sesión"],
+      "Sign out": ["Αποσύνδεση", "Sign out", "Esci", "Se déconnecter", "Abmelden", "Cerrar sesión"],
+      "Create an account": ["Δημιουργία λογαριασμού", "Create an account", "Crea un account", "Créer un compte", "Konto erstellen", "Crear una cuenta"],
+      "Full name": ["Ονοματεπώνυμο", "Full name", "Nome completo", "Nom complet", "Vollständiger Name", "Nombre completo"],
+      "Email": ["Email", "Email", "Email", "E-mail", "E-Mail", "Correo electrónico"],
+      "Password": ["Κωδικός πρόσβασης", "Password", "Password", "Mot de passe", "Passwort", "Contraseña"],
+      "myHome account": ["Λογαριασμός myHome", "myHome account", "Account myHome", "Compte myHome", "myHome-Konto", "Cuenta myHome"],
+      "Sign in or create a free account to save homes and submit listings.": ["Συνδεθείτε ή δημιουργήστε δωρεάν λογαριασμό για να αποθηκεύετε κατοικίες και να υποβάλλετε αγγελίες.", "Sign in or create a free account to save homes and submit listings.", "Accedi o crea un account gratuito per salvare case e inviare annunci.", "Connectez-vous ou créez un compte gratuit pour enregistrer des logements et publier des annonces.", "Melden Sie sich an oder erstellen Sie ein kostenloses Konto, um Wohnungen zu speichern und Inserate einzureichen.", "Inicia sesión o crea una cuenta gratuita para guardar viviendas y enviar anuncios."],
+      "Supabase is not configured. Demo mode is active.": ["Το Supabase δεν έχει ρυθμιστεί. Η δοκιμαστική λειτουργία είναι ενεργή.", "Supabase is not configured. Demo mode is active.", "Supabase non è configurato. La modalità demo è attiva.", "Supabase n'est pas configuré. Le mode démo est actif.", "Supabase ist nicht konfiguriert. Der Demomodus ist aktiv.", "Supabase no está configurado. El modo de demostración está activo."],
+      "Supabase client library is unavailable.": ["Η βιβλιοθήκη Supabase δεν είναι διαθέσιμη.", "Supabase client library is unavailable.", "La libreria client di Supabase non è disponibile.", "La bibliothèque cliente Supabase est indisponible.", "Die Supabase-Clientbibliothek ist nicht verfügbar.", "La biblioteca cliente de Supabase no está disponible."],
+      "Use an existing account to continue.": ["Συνδεθείτε με υπάρχοντα λογαριασμό για να συνεχίσετε.", "Use an existing account to continue.", "Accedi con un account esistente per continuare.", "Connectez-vous avec un compte existant pour continuer.", "Melden Sie sich mit einem bestehenden Konto an.", "Inicia sesión con una cuenta existente para continuar."],
+      "Check your email to confirm your new account.": ["Ελέγξτε το email σας για να επιβεβαιώσετε τον νέο λογαριασμό.", "Check your email to confirm your new account.", "Controlla la tua email per confermare il nuovo account.", "Consultez votre e-mail pour confirmer votre nouveau compte.", "Bestätigen Sie Ihr neues Konto über Ihre E-Mail.", "Revisa tu correo para confirmar la nueva cuenta."],
+      "Signed in successfully.": ["Συνδεθήκατε με επιτυχία.", "Signed in successfully.", "Accesso effettuato.", "Connexion réussie.", "Erfolgreich angemeldet.", "Has iniciado sesión."],
+      "Unable to complete sign in.": ["Δεν ήταν δυνατή η σύνδεση.", "Unable to complete sign in.", "Impossibile accedere.", "Connexion impossible.", "Anmeldung nicht möglich.", "No se pudo iniciar sesión."],
+      "Unable to create your account.": ["Δεν ήταν δυνατή η δημιουργία λογαριασμού.", "Unable to create your account.", "Impossibile creare l'account.", "Impossible de créer votre compte.", "Konto konnte nicht erstellt werden.", "No se pudo crear la cuenta."],
+      "Unable to load your profile.": ["Δεν ήταν δυνατή η φόρτωση του προφίλ σας.", "Unable to load your profile.", "Impossibile caricare il profilo.", "Impossible de charger votre profil.", "Profil konnte nicht geladen werden.", "No se pudo cargar tu perfil."],
+      "Unable to load listings.": ["Δεν ήταν δυνατή η φόρτωση των αγγελιών.", "Unable to load listings.", "Impossibile caricare gli annunci.", "Impossible de charger les annonces.", "Inserate konnten nicht geladen werden.", "No se pudieron cargar los anuncios."],
+      "Unable to load saved homes.": ["Δεν ήταν δυνατή η φόρτωση των αποθηκευμένων κατοικιών.", "Unable to load saved homes.", "Impossibile caricare le case salvate.", "Impossible de charger les logements enregistrés.", "Gespeicherte Wohnungen konnten nicht geladen werden.", "No se pudieron cargar las viviendas guardadas."],
+      "Unable to save this home.": ["Δεν ήταν δυνατή η αποθήκευση της κατοικίας.", "Unable to save this home.", "Impossibile salvare questa casa.", "Impossible d'enregistrer ce logement.", "Diese Wohnung konnte nicht gespeichert werden.", "No se pudo guardar esta vivienda."],
+      "Unable to save the listing.": ["Δεν ήταν δυνατή η αποθήκευση της αγγελίας.", "Unable to save the listing.", "Impossibile salvare l'annuncio.", "Impossible d'enregistrer l'annonce.", "Inserat konnte nicht gespeichert werden.", "No se pudo guardar el anuncio."],
+      "Unable to submit the listing.": ["Δεν ήταν δυνατή η υποβολή της αγγελίας.", "Unable to submit the listing.", "Impossibile inviare l'annuncio.", "Impossible de soumettre l'annonce.", "Inserat konnte nicht eingereicht werden.", "No se pudo enviar el anuncio."],
+      "Unable to delete the listing.": ["Δεν ήταν δυνατή η διαγραφή της αγγελίας.", "Unable to delete the listing.", "Impossibile eliminare l'annuncio.", "Impossible de supprimer l'annonce.", "Inserat konnte nicht gelöscht werden.", "No se pudo eliminar el anuncio."],
+      "Listing submitted for review.": ["Η αγγελία υποβλήθηκε για έλεγχο.", "Listing submitted for review.", "Annuncio inviato per la revisione.", "Annonce envoyée pour examen.", "Inserat zur Prüfung eingereicht.", "Anuncio enviado para revisión."],
+      "Only signed-in clients can submit listings.": ["Μόνο συνδεδεμένοι πελάτες μπορούν να υποβάλλουν αγγελίες.", "Only signed-in clients can submit listings.", "Solo gli utenti connessi possono inviare annunci.", "Seuls les clients connectés peuvent soumettre des annonces.", "Nur angemeldete Kunden können Inserate einreichen.", "Solo los clientes conectados pueden enviar anuncios."],
+      "Please sign in to save homes and searches.": ["Συνδεθείτε για να αποθηκεύσετε κατοικίες και αναζητήσεις.", "Please sign in to save homes and searches.", "Accedi per salvare case e ricerche.", "Connectez-vous pour enregistrer des logements et des recherches.", "Melden Sie sich an, um Wohnungen und Suchen zu speichern.", "Inicia sesión para guardar viviendas y búsquedas."],
+      "Unable to save the search.": ["Δεν ήταν δυνατή η αποθήκευση της αναζήτησης.", "Unable to save the search.", "Impossibile salvare la ricerca.", "Impossible d'enregistrer la recherche.", "Suche konnte nicht gespeichert werden.", "No se pudo guardar la búsqueda."],
+      "Search saved to your account.": ["Η αναζήτηση αποθηκεύτηκε στον λογαριασμό σας.", "Search saved to your account.", "Ricerca salvata nel tuo account.", "Recherche enregistrée dans votre compte.", "Suche in Ihrem Konto gespeichert.", "Búsqueda guardada en tu cuenta."],
+      "Search saved.": ["Η αναζήτηση αποθηκεύτηκε.", "Search saved.", "Ricerca salvata.", "Recherche enregistrée.", "Suche gespeichert.", "Búsqueda guardada."],
+      "Sign in to save favorites, searches, and submit listings.": ["Συνδεθείτε για να αποθηκεύετε αγαπημένα, αναζητήσεις και να υποβάλλετε αγγελίες.", "Sign in to save favorites, searches, and submit listings.", "Accedi per salvare preferiti e ricerche e inviare annunci.", "Connectez-vous pour enregistrer vos favoris, recherches et annonces.", "Melden Sie sich an, um Favoriten, Suchen und Inserate zu speichern.", "Inicia sesión para guardar favoritos, búsquedas y enviar anuncios."],
+      "Sign up": ["Εγγραφή", "Sign up", "Registrati", "S'inscrire", "Registrieren", "Registrarse"],
+      "Listing status: pending review": ["Κατάσταση αγγελίας: σε αναμονή ελέγχου", "Listing status: pending review", "Stato annuncio: in attesa di revisione", "Statut de l'annonce : en attente d'examen", "Status des Inserats: Prüfung ausstehend", "Estado del anuncio: pendiente de revisión"]
+    });
+    Object.assign(translations, {
       "Configure AI API": ["Ρύθμιση API AI", "Configure AI API", "Configura API IA", "Configurer l’API IA", "KI-API konfigurieren", "Configurar API de IA"],
       "Optional integration": ["Προαιρετική σύνδεση", "Optional integration", "Integrazione opzionale", "Intégration facultative", "Optionale Integration", "Integración opcional"],
       "AI API settings": ["Ρυθμίσεις API AI", "AI API settings", "Impostazioni API IA", "Paramètres de l’API IA", "KI-API-Einstellungen", "Ajustes de API de IA"],
@@ -1136,7 +1206,10 @@
       "Λείπει η βιβλιοθήκη EmailJS. Ελέγξτε τη σύνδεσή σας.": ["Λείπει η βιβλιοθήκη EmailJS. Ελέγξτε τη σύνδεσή σας.", "EmailJS SDK is unavailable. Check your connection.", "SDK EmailJS non disponibile. Controlla la connessione.", "SDK EmailJS indisponible. Vérifiez votre connexion.", "EmailJS-SDK nicht verfügbar. Prüfen Sie Ihre Verbindung.", "El SDK de EmailJS no está disponible. Comprueba tu conexión."],
       "Αποστολή ειδοποίησης στην Ελένη Γκραικιώτη": ["Αποστολή ειδοποίησης στην Ελένη Γκραικιώτη", "Send notification to Eleni Graikioti", "Invia notifica a Eleni Graikioti", "Envoyer une notification à Eleni Graikioti", "Benachrichtigung an Eleni Graikioti senden", "Enviar notificación a Eleni Graikioti"],
       "Τα αιτήματα επίσκεψης αποθηκεύονται σε αυτή τη συσκευή και αποστέλλονται μέσω EmailJS στην ομάδα myHome.": ["Τα αιτήματα επίσκεψης αποθηκεύονται σε αυτή τη συσκευή και αποστέλλονται μέσω EmailJS στην ομάδα myHome.", "Viewing requests are stored on this device and sent via EmailJS to myHome.", "Le richieste di visita vengono salvate su questo dispositivo e inviate a myHome tramite EmailJS.", "Les demandes de visite sont enregistrées sur cet appareil et envoyées à myHome via EmailJS.", "Besichtigungsanfragen werden auf diesem Gerät gespeichert und per EmailJS an myHome gesendet.", "Las solicitudes de visita se guardan en este dispositivo y se envían a myHome mediante EmailJS."],
-      "Αποθηκεύστε τα κριτήριά σας τοπικά και λάβετε email όταν είναι ρυθμισμένο το EmailJS.": ["Αποθηκεύστε τα κριτήριά σας τοπικά και λάβετε email όταν είναι ρυθμισμένο το EmailJS.", "Save your criteria locally and receive an email when EmailJS is configured.", "Salva i criteri localmente e ricevi un'email quando EmailJS è configurato.", "Enregistrez vos critères localement et recevez un e-mail une fois EmailJS configuré.", "Speichern Sie Kriterien lokal und erhalten Sie bei eingerichteter EmailJS-Konfiguration eine E-Mail.", "Guarda tus criterios localmente y recibe un correo cuando EmailJS esté configurado."],
+      "Save searches to your account when connected; demo mode keeps the search for this session.": ["Αποθηκεύστε αναζητήσεις στον λογαριασμό σας όταν υπάρχει σύνδεση· στη δοκιμαστική λειτουργία διατηρούνται μόνο για αυτή τη συνεδρία.", "Save searches to your account when connected; demo mode keeps the search for this session.", "Salva le ricerche nel tuo account quando connesso; in modalità demo restano solo per questa sessione.", "Enregistrez vos recherches dans votre compte lorsque vous êtes connecté ; en mode démo, elles sont conservées pour cette session.", "Speichern Sie Suchen in Ihrem Konto; im Demomodus bleiben sie nur während dieser Sitzung erhalten.", "Guarda búsquedas en tu cuenta cuando estés conectado; en el modo de demostración se conservan solo durante esta sesión."],
+      "Saved searches are private to your account. Email alerts are sent only when EmailJS is configured.": ["Οι αποθηκευμένες αναζητήσεις είναι ιδιωτικές στον λογαριασμό σας. Οι ειδοποιήσεις email αποστέλλονται μόνο όταν έχει ρυθμιστεί το EmailJS.", "Saved searches are private to your account. Email alerts are sent only when EmailJS is configured.", "Le ricerche salvate sono private nel tuo account. Gli avvisi email vengono inviati solo se EmailJS è configurato.", "Les recherches enregistrées sont privées dans votre compte. Les alertes e-mail sont envoyées uniquement si EmailJS est configuré.", "Gespeicherte Suchen sind in Ihrem Konto privat. E-Mail-Hinweise werden nur bei eingerichteter EmailJS-Konfiguration gesendet.", "Las búsquedas guardadas son privadas en tu cuenta. Las alertas por correo solo se envían si EmailJS está configurado."],
+      "Close sign in": ["Κλείσιμο σύνδεσης", "Close sign in", "Chiudi accesso", "Fermer la connexion", "Anmeldung schließen", "Cerrar inicio de sesión"],
+      "Unable to sign out.": ["Δεν ήταν δυνατή η αποσύνδεση.", "Unable to sign out.", "Impossibile uscire.", "Impossible de se déconnecter.", "Abmeldung nicht möglich.", "No se pudo cerrar sesión."],
       "Αποστολή ειδοποίησης μέσω EmailJS στην ομάδα myHome.": ["Αποστολή ειδοποίησης μέσω EmailJS στην ομάδα myHome.", "Send an EmailJS notification to myHome.", "Invia una notifica EmailJS a myHome.", "Envoyer une notification EmailJS à myHome.", "EmailJS-Benachrichtigung an myHome senden.", "Enviar una notificación de EmailJS a myHome."],
       "Τα στοιχεία αποθηκεύονται σε αυτή τη συσκευή. Με ρύθμιση EmailJS, τα στοιχεία αναζήτησης αποστέλλονται στην Ελένη Γκραικιώτη.": ["Τα στοιχεία αποθηκεύονται σε αυτή τη συσκευή. Με ρύθμιση EmailJS, τα στοιχεία αναζήτησης αποστέλλονται στην Ελένη Γκραικιώτη.", "Details are stored on this device. When EmailJS is configured, search details are sent to Eleni Graikioti.", "I dati sono salvati su questo dispositivo. Con EmailJS configurato, i dettagli della ricerca vengono inviati a Eleni Graikioti.", "Les données sont enregistrées sur cet appareil. Avec EmailJS configuré, les détails de recherche sont envoyés à Eleni Graikioti.", "Daten werden auf diesem Gerät gespeichert. Mit EmailJS-Konfiguration werden Suchdetails an Eleni Graikioti gesendet.", "Los datos se guardan en este dispositivo. Con EmailJS configurado, los detalles de búsqueda se envían a Eleni Graikioti."],
       "EmailJS notifications": ["Ειδοποιήσεις EmailJS", "EmailJS notifications", "Notifiche EmailJS", "Notifications EmailJS", "EmailJS-Benachrichtigungen", "Notificaciones de EmailJS"],
@@ -1201,6 +1274,20 @@
     const nearMissHeading = document.querySelector("#near-miss-heading");
     const nearMissList = document.querySelector("#near-miss-list");
     const propertyGrid = document.querySelector("#property-grid");
+    const authModal = document.querySelector("#auth-modal");
+    const authForm = document.querySelector("#auth-form");
+    const authName = document.querySelector("#auth-name");
+    const authNameField = document.querySelector("#auth-name-field");
+    const authEmail = document.querySelector("#auth-email");
+    const authPassword = document.querySelector("#auth-password");
+    const authTitle = document.querySelector("#auth-title");
+    const authDescription = document.querySelector("#auth-description");
+    const authStatus = document.querySelector("#auth-status");
+    const authSubmit = document.querySelector("#auth-submit");
+    const authModeToggle = document.querySelector("#auth-mode-toggle");
+    const authAccount = document.querySelector("#auth-account");
+    const authSignOut = document.querySelector("#auth-signout");
+    const supabaseMessage = document.querySelector("#supabase-message");
     const propertyModal = document.querySelector("#property-modal");
     const comparisonBar = document.querySelector("#comparison-bar");
     const comparisonBarLabel = document.querySelector("#comparison-bar-label");
@@ -1231,6 +1318,12 @@
     let emailJsStatusKey = "";
     const selectedForComparison = new Set();
     const savedSearches = [];
+    let dbClient = null;
+    let currentUser = null;
+    let currentProfileRole = null;
+    let authMode = "login";
+    let authCloseTimer = null;
+    let previousAuthBodyOverflow = "";
     let comparisonReturnFocus = null;
     let saveSearchReturnFocus = null;
     let comparisonPreviousBodyOverflow = "";
@@ -1365,6 +1458,270 @@
     function t(source) {
       const localized = translations[source];
       return localized ? localized[localeIndex[activeLanguage]] : source;
+    }
+
+    function showSupabaseMessage(message, error = null) {
+      if (error) console.error(message, error);
+      supabaseMessage.textContent = error?.message ? `${message} ${error.message}` : message;
+      supabaseMessage.classList.remove("hidden");
+    }
+
+    function clearSupabaseMessage() {
+      supabaseMessage.textContent = "";
+      supabaseMessage.classList.add("hidden");
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode === "signup" ? "signup" : "login";
+      const creatingAccount = authMode === "signup";
+      authNameField.hidden = !creatingAccount;
+      authName.required = creatingAccount;
+      authName.autocomplete = creatingAccount ? "name" : "off";
+      authPassword.autocomplete = creatingAccount ? "new-password" : "current-password";
+      authTitle.textContent = t(creatingAccount ? "Sign up" : "Sign in");
+      authSubmit.textContent = t(creatingAccount ? "Sign up" : "Sign in");
+      authModeToggle.textContent = t(creatingAccount ? "Sign in" : "Create an account");
+      authDescription.textContent = t("Sign in or create a free account to save homes and submit listings.");
+      authStatus.textContent = "";
+    }
+
+    function openAuthModal(mode = "login") {
+      clearTimeout(authCloseTimer);
+      setAuthMode(mode);
+      previousAuthBodyOverflow = document.body.style.overflow;
+      authModal.hidden = false;
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => authModal.classList.add("is-open"));
+      (mode === "signup" ? authName : authEmail).focus();
+    }
+
+    function closeAuthModal() {
+      if (authModal.hidden) return;
+      clearTimeout(authCloseTimer);
+      authModal.classList.remove("is-open");
+      document.body.style.overflow = previousAuthBodyOverflow;
+      authCloseTimer = window.setTimeout(() => {
+        authModal.hidden = true;
+      }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 220);
+    }
+
+    function updateAuthControls() {
+      const signedIn = Boolean(currentUser);
+      authAccount.textContent = signedIn ? currentUser.email || "" : "";
+      authAccount.classList.toggle("hidden", !signedIn);
+      authSignOut.classList.toggle("hidden", !signedIn);
+      document.querySelector("#open-login").classList.toggle("hidden", signedIn);
+      document.querySelector("#open-register").classList.toggle("hidden", signedIn);
+    }
+
+    function mapListingRow(row) {
+      return {
+        id: row.id,
+        title: row.title,
+        location: row.location,
+        coordinates: row.coordinates || {},
+        price: Number(row.price),
+        bedrooms: Number(row.bedrooms),
+        bathrooms: Number(row.bathrooms),
+        sqm: Number(row.sqm),
+        images: Array.isArray(row.images) ? row.images : [],
+        description: row.description || "",
+        descriptionTranslations: row.description_translations || {},
+        keywords: row.keywords || "",
+        tags: Array.isArray(row.tags) ? row.tags : [],
+        vibe: row.vibe || "",
+        safety: row.safety || "",
+        walkability: row.walkability || "",
+        transit: row.transit || "",
+        baseScore: Number(row.base_score) || 85,
+        views: Number(row.views) || 0,
+        saved: false,
+        custom: Boolean(row.custom),
+        seedListing: Boolean(row.seed_listing),
+        localeContent: row.locale_content || {},
+        status: row.status,
+        ownerId: row.owner_id,
+        rejectionReason: row.rejection_reason
+      };
+    }
+
+    function mapListingToRow(property, status) {
+      return {
+        id: property.id,
+        title: property.title,
+        location: property.location,
+        coordinates: property.coordinates || {},
+        price: Number(property.price),
+        bedrooms: Number(property.bedrooms),
+        bathrooms: Number(property.bathrooms),
+        sqm: Number(property.sqm),
+        images: property.images || [],
+        description: property.description || "",
+        description_translations: property.descriptionTranslations || {},
+        keywords: property.keywords || "",
+        tags: property.tags || [],
+        vibe: property.vibe || "",
+        safety: property.safety || "",
+        walkability: property.walkability || "",
+        transit: property.transit || "",
+        base_score: Number(property.baseScore) || 85,
+        views: Number(property.views) || 0,
+        saved: false,
+        custom: Boolean(property.custom),
+        seed_listing: Boolean(property.seedListing),
+        locale_content: property.localeContent || {},
+        status,
+        owner_id: property.ownerId || currentUser?.id || null,
+        rejection_reason: property.rejectionReason || null
+      };
+    }
+
+    async function loadSupabaseListings() {
+      if (!dbClient) return;
+      const { data, error } = await dbClient.from("listings").select("*").order("created_at", { ascending: false });
+      if (error) {
+        showSupabaseMessage(t("Unable to load listings."), error);
+        return;
+      }
+      if (data.length) {
+        properties = data.map(mapListingRow);
+        renderPropertyGrid();
+      }
+    }
+
+    async function loadSupabaseFavorites() {
+      if (!dbClient) return;
+      properties.forEach((property) => { property.saved = false; });
+      if (currentUser) {
+        const { data, error } = await dbClient
+          .from("favorites")
+          .select("listing_id")
+          .eq("owner_id", currentUser.id);
+        if (error) {
+          showSupabaseMessage(t("Unable to load saved homes."), error);
+          renderPropertyGrid();
+          return;
+        }
+        const savedIds = new Set(data.map((favorite) => favorite.listing_id));
+        properties.forEach((property) => { property.saved = savedIds.has(property.id); });
+      }
+      renderPropertyGrid();
+    }
+
+    async function refreshSupabaseSession(session) {
+      currentUser = session?.user || null;
+      currentProfileRole = null;
+      updateAuthControls();
+      if (currentUser) {
+        const { data, error } = await dbClient
+          .from("profiles")
+          .select("role,name")
+          .eq("id", currentUser.id)
+          .maybeSingle();
+        if (error) {
+          showSupabaseMessage(t("Unable to load your profile."), error);
+        } else if (!data) {
+          showSupabaseMessage(t("Unable to load your profile."), new Error("The profile row was not created."));
+        } else {
+          currentProfileRole = data?.role || null;
+        }
+      }
+      await loadSupabaseListings();
+      await loadSupabaseFavorites();
+    }
+
+    async function initializeSupabase() {
+      const config = window.MYHOME_SUPABASE_CONFIG;
+      if (!config?.url || !config?.publishableKey) return;
+      if (!window.supabase?.createClient) {
+        showSupabaseMessage(t("Supabase client library is unavailable."));
+        return;
+      }
+      dbClient = window.supabase.createClient(config.url.replace(/\/rest\/v1\/?$/, ""), config.publishableKey);
+      dbClient.auth.onAuthStateChange((event, session) => {
+        if (event === "INITIAL_SESSION" || event === "TOKEN_REFRESHED") return;
+        window.setTimeout(() => { refreshSupabaseSession(session); }, 0);
+      });
+      const { data, error } = await dbClient.auth.getSession();
+      if (error) {
+        showSupabaseMessage(t("Unable to complete sign in."), error);
+        return;
+      }
+      await refreshSupabaseSession(data.session);
+    }
+
+    async function saveFavorite(property, saved) {
+      if (!dbClient) {
+        property.saved = saved;
+        renderPropertyGrid();
+        return;
+      }
+      if (!currentUser) {
+        openAuthModal("login");
+        authStatus.textContent = t("Please sign in to save homes and searches.");
+        return;
+      }
+      const result = saved
+        ? await dbClient.from("favorites").upsert(
+          { owner_id: currentUser.id, listing_id: property.id },
+          { onConflict: "owner_id,listing_id", ignoreDuplicates: true }
+        )
+        : await dbClient.from("favorites")
+          .delete()
+          .eq("owner_id", currentUser.id)
+          .eq("listing_id", property.id);
+      if (result.error) {
+        showSupabaseMessage(t("Unable to save this home."), result.error);
+        return;
+      }
+      property.saved = saved;
+      clearSupabaseMessage();
+      renderPropertyGrid();
+    }
+
+    async function submitAuthForm(event) {
+      event.preventDefault();
+      if (!dbClient) {
+        authStatus.textContent = t("Supabase is not configured. Demo mode is active.");
+        return;
+      }
+      authSubmit.disabled = true;
+      authStatus.textContent = "";
+      const result = authMode === "signup"
+        ? await dbClient.auth.signUp({
+          email: authEmail.value.trim(),
+          password: authPassword.value,
+          options: { data: { name: authName.value.trim() } }
+        })
+        : await dbClient.auth.signInWithPassword({
+          email: authEmail.value.trim(),
+          password: authPassword.value
+        });
+      authSubmit.disabled = false;
+      if (result.error) {
+        authStatus.textContent = `${t(authMode === "signup" ? "Unable to create your account." : "Unable to complete sign in.")} ${result.error.message}`;
+        return;
+      }
+      if (authMode === "signup" && !result.data.session) {
+        authStatus.textContent = t("Check your email to confirm your new account.");
+        return;
+      }
+      authStatus.textContent = t("Signed in successfully.");
+      await refreshSupabaseSession(result.data.session);
+      closeAuthModal();
+      clearSupabaseMessage();
+    }
+
+    async function signOut() {
+      const { error } = await dbClient.auth.signOut();
+      if (error) {
+        showSupabaseMessage(t("Unable to sign out."), error);
+        return;
+      }
+      currentUser = null;
+      currentProfileRole = null;
+      updateAuthControls();
+      await loadSupabaseFavorites();
     }
 
     function loadEmailJsConfig() {
@@ -1621,6 +1978,11 @@
       if (searchApiStatusKey) searchApiStatus.textContent = t(searchApiStatusKey);
       if (aiConfigStatusKey) aiConfigStatus.textContent = t(aiConfigStatusKey);
       if (emailJsStatusKey && !aiConfigModal.hidden) emailJsConfigStatus.textContent = t(emailJsStatusKey);
+      if (!authModal.hidden) {
+        const status = authStatus.textContent;
+        setAuthMode(authMode);
+        authStatus.textContent = status;
+      }
       [saveSearchStatus, bookingFormStatus].forEach((statusElement) => {
         if (!statusElement.dataset.notificationStatus) return;
         const state = JSON.parse(statusElement.dataset.notificationStatus);
@@ -2559,6 +2921,13 @@
       agentMessage.href = `mailto:hello@myhome.example?subject=${encodedTitle}`;
       agentWhatsapp.href = `https://wa.me/13125550100?text=${encodeURIComponent(`${t("Viewing request for ")}${title}`)}`;
       agentCall.href = "tel:+13125550100";
+      const canEdit = !dbClient || Boolean(currentUser
+        && (currentProfileRole === "admin" || property.ownerId === currentUser.id));
+      const canDelete = !dbClient || Boolean(currentUser
+        && (currentProfileRole === "admin"
+          || (property.ownerId === currentUser.id && property.status === "pending")));
+      editPropertyButton.classList.toggle("hidden", !canEdit);
+      deletePropertyButton.classList.toggle("hidden", !canDelete);
       if (!propertyModal.hidden) renderPropertyMap(property);
       renderRecommendationCards(modalRecommendations, getRecommendations([property], [property.id], 2));
       initializeFinanceCalculator(property);
@@ -2666,6 +3035,20 @@
     }
 
     function openBrokerModal(property = null, returnFocusElement = null) {
+      if (dbClient && !currentUser) {
+        openAuthModal("login");
+        authStatus.textContent = t("Only signed-in clients can submit listings.");
+        return;
+      }
+      if (dbClient && currentProfileRole !== "client" && currentProfileRole !== "admin") {
+        showSupabaseMessage(t("Unable to load your profile."));
+        return;
+      }
+      if (dbClient && property && !(currentProfileRole === "admin"
+        || property.ownerId === currentUser.id)) {
+        showSupabaseMessage(t("Unable to save the listing."));
+        return;
+      }
       clearTimeout(brokerModalCloseTimer);
       lastBrokerFocusedElement = returnFocusElement || document.activeElement;
       previousBrokerBodyOverflow = document.body.style.overflow;
@@ -3017,9 +3400,8 @@
         remove.className = "remove-saved rounded-lg border border-white/10 px-2.5 py-1.5 text-[10px] font-medium text-zinc-400 transition hover:border-rose-300/20 hover:text-rose-200";
         remove.textContent = t("Remove");
         remove.setAttribute("aria-label", `${t("Remove from saved")}: ${localizedPropertyField(property, "title")}`);
-        remove.addEventListener("click", () => {
-          property.saved = false;
-          renderPropertyGrid();
+        remove.addEventListener("click", async () => {
+          await saveFavorite(property, false);
           (favoritesList.querySelector(".remove-saved") || document.querySelector("#close-favorites")).focus();
         });
         actions.append(view, remove);
@@ -3284,6 +3666,7 @@
       saveSearchReturnFocus = document.activeElement;
       saveSearchPreviousBodyOverflow = document.body.style.overflow;
       savedSearchCriteria.value = promptInput.value.trim() || t("All listed properties in Greece");
+      if (currentUser?.email) savedSearchEmail.value = currentUser.email;
       delete saveSearchStatus.dataset.notificationStatus;
       saveSearchStatus.textContent = "";
       saveSearchModal.hidden = false;
@@ -3444,14 +3827,9 @@
           document.querySelector("#homes").scrollIntoView({ behavior: "smooth", block: "start" });
         });
       });
-      saveButton.addEventListener("click", () => {
-        const icon = saveButton.querySelector("i");
-        const saved = icon.classList.toggle("fa-solid");
-        icon.classList.toggle("fa-regular", !saved);
-        saveButton.setAttribute("aria-pressed", String(saved));
-        listing.saved = saved;
-        renderPropertyGrid();
-        const updatedCard = cards.find((card) => card.dataset.propertyId === listing.id);
+      saveButton.addEventListener("click", async () => {
+        await saveFavorite(listing, !listing.saved);
+        const updatedCard = cards.find((item) => item.dataset.propertyId === listing.id);
         updatedCard?.querySelector("button[aria-pressed]")?.focus();
       });
       return card;
@@ -3861,6 +4239,18 @@
     favoritesButton.addEventListener("click", openFavoritesDrawer);
     document.querySelector("#close-favorites").addEventListener("click", () => closeFavoritesDrawer());
     document.querySelector("#favorites-backdrop").addEventListener("click", () => closeFavoritesDrawer());
+    document.querySelector("#open-login").addEventListener("click", (event) => {
+      event.preventDefault();
+      openAuthModal("login");
+    });
+    document.querySelector("#open-register").addEventListener("click", (event) => {
+      event.preventDefault();
+      openAuthModal("signup");
+    });
+    document.querySelector("#close-auth").addEventListener("click", closeAuthModal);
+    authModeToggle.addEventListener("click", () => setAuthMode(authMode === "login" ? "signup" : "login"));
+    authForm.addEventListener("submit", submitAuthForm);
+    authSignOut.addEventListener("click", signOut);
     document.querySelector("#toggle-concierge").addEventListener("click", () => {
       if (conciergeOpen) closeConcierge();
       else openConcierge();
@@ -3990,7 +4380,7 @@
       clearTimeout(bookingToastTimer);
       bookingToast.hidden = true;
     });
-    listingForm.addEventListener("submit", (event) => {
+    listingForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       if (pendingFileReads > 0) {
         listingFormStatus.textContent = t("Please wait for photos to finish loading.");
@@ -4014,7 +4404,7 @@
         return;
       }
       const originalProperty = properties.find((item) => item.id === editingPropertyId);
-      const property = {
+      let property = {
         ...(originalProperty || {}),
         id: originalProperty?.id || `listing-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         title: listingTitle.value.trim(),
@@ -4047,6 +4437,26 @@
       };
       if (!property.tags.length) property.tags = inferLifestyleTags(`${property.title} ${property.location} ${property.description}`, property.sqm, property.bedrooms, property.bathrooms);
       property.baseScore = Math.min(98, 80 + property.tags.length * 3);
+      const listingStatus = !dbClient
+        ? originalProperty?.status || "approved"
+        : currentProfileRole === "admin"
+          ? originalProperty?.status || "approved"
+          : originalProperty?.status || "pending";
+      property.status = listingStatus;
+      property.ownerId = originalProperty?.ownerId || currentUser?.id || null;
+      if (dbClient) {
+        const row = mapListingToRow(property, listingStatus);
+        const response = originalProperty
+          ? await dbClient.from("listings").update(row).eq("id", property.id).select("*").single()
+          : await dbClient.from("listings").insert(row).select("*").single();
+        if (response.error) {
+          showSupabaseMessage(t(originalProperty ? "Unable to save the listing." : "Unable to submit the listing."), response.error);
+          listingFormStatus.textContent = t(originalProperty ? "Unable to save the listing." : "Unable to submit the listing.");
+          return;
+        }
+        property = mapListingRow(response.data);
+        property.saved = Boolean(originalProperty?.saved);
+      }
       if (originalProperty) {
         properties = properties.map((item) => item.id === property.id ? property : item);
       } else {
@@ -4062,6 +4472,11 @@
       const savedId = property.id;
       closeBrokerModal(null, false);
       editingPropertyId = null;
+      if (dbClient && listingStatus === "pending") {
+        showSupabaseMessage(t("Listing submitted for review."));
+      } else {
+        clearSupabaseMessage();
+      }
       currentPropertyId = savedId;
       document.querySelector("#homes").scrollIntoView({ behavior: "smooth", block: "start" });
     });
@@ -4073,8 +4488,24 @@
     deleteModal.addEventListener("click", (event) => {
       if (event.target === deleteModal) cancelDeleteButton.click();
     });
-    confirmDeleteButton.addEventListener("click", () => {
+    confirmDeleteButton.addEventListener("click", async () => {
       if (!pendingDeleteId) return;
+      if (dbClient) {
+        const { data, error } = await dbClient
+          .from("listings")
+          .delete()
+          .eq("id", pendingDeleteId)
+          .select("id")
+          .single();
+        if (error) {
+          showSupabaseMessage(t("Unable to delete the listing."), error);
+          return;
+        }
+        if (!data) {
+          showSupabaseMessage(t("Unable to delete the listing."));
+          return;
+        }
+      }
       selectedForComparison.delete(pendingDeleteId);
       properties = properties.filter((item) => item.id !== pendingDeleteId);
       pendingDeleteId = null;
@@ -4094,6 +4525,11 @@
       const criteria = savedSearchCriteria.value.trim();
       const email = savedSearchEmail.value.trim();
       if (!criteria || !email) return;
+      if (dbClient && !currentUser) {
+        openAuthModal("login");
+        authStatus.textContent = t("Please sign in to save homes and searches.");
+        return;
+      }
       const savedSearch = {
         notificationType: t("Saved search"),
         subject: `${t("Saved search")}: ${criteria.slice(0, 100)}`,
@@ -4102,6 +4538,35 @@
         alertsEnabled: savedSearchAlerts.checked,
         message: `${t("Search criteria")}: ${criteria}\n${t("Email")}: ${email}`
       };
+      if (dbClient) {
+        saveSearchStatus.textContent = t("Saving search and sending notification…");
+        const { data, error } = await dbClient.from("saved_searches").insert({
+          owner_id: currentUser.id,
+          criteria,
+          email,
+          alerts_enabled: savedSearchAlerts.checked
+        }).select("*").single();
+        if (error) {
+          showSupabaseMessage(t("Unable to save the search."), error);
+          saveSearchStatus.textContent = t("Unable to save the search.");
+          return;
+        }
+        savedSearches.push(data);
+        let notificationStatus = "";
+        if (savedSearchAlerts.checked) {
+          try {
+            notificationStatus = await sendEmailJsNotification(savedSearch)
+              ? t("Η ειδοποίηση email στάλθηκε στη myHome.")
+              : t("Το EmailJS δεν έχει ρυθμιστεί· δεν στάλθηκε email.");
+          } catch (error) {
+            console.error("EmailJS notification failed.", error);
+            notificationStatus = t("Το EmailJS δεν μπόρεσε να στείλει την ειδοποίηση.");
+          }
+        }
+        saveSearchStatus.textContent = [t("Search saved to your account."), notificationStatus].filter(Boolean).join(" ");
+        clearSupabaseMessage();
+        return;
+      }
       savedSearches.push(savedSearch);
       saveSearchStatus.textContent = t("Saving search and sending notification…");
       await persistAndNotify(savedSearch, saveSearchStatus, savedSearch.alertsEnabled);
@@ -4163,6 +4628,7 @@
       if (event.key !== "Escape") return;
       if (!aiConfigModal.hidden) closeAiConfigModal();
       else if (!saveSearchModal.hidden) closeSaveSearchModal();
+      else if (!authModal.hidden) closeAuthModal();
       else if (!comparisonModal.hidden) closeComparisonModal();
       else if (!favoritesDrawer.hidden) closeFavoritesDrawer();
       else if (conciergeOpen) closeConcierge();
@@ -4203,6 +4669,9 @@
     initializeProperties();
     applyLanguage("el");
     initializeListingsMap();
+    initializeSupabase().catch((error) => {
+      showSupabaseMessage(t("Unable to load listings."), error);
+    });
   </script>
 </body>
 </html>
